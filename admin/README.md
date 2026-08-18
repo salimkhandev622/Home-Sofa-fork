@@ -127,8 +127,8 @@ This admin dashboard uses a file-based CMS system with GitHub API integration. A
 ### Step 2: Configure Admin Dashboard
 1. Go to Settings in the admin dashboard
 2. Fill in the GitHub API configuration:
-   - **Repository Owner**: Your GitHub username (e.g., `salimkhandev`)
-   - **Repository Name**: Your repository name (e.g., `Home-Sofa`)
+   - **Repository Owner**: Your GitHub username (e.g., `salimkhandev622`)
+   - **Repository Name**: Your repository name (e.g., `Home-Sofa-fork`)
    - **Personal Access Token**: The token you created in Step 1
    - **Branch Name**: Usually `main`
 3. Click "Save Configuration"
