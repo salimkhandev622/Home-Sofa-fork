@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "image": "assets/images/hero1.jpg",
+    "image": "https://via.placeholder.com/1200x500/8B4513/FFFFFF?text=Custom+Sofa+Beds+&+Upholstery+Solutions",
     "title": "Custom Sofa Beds & Upholstery Solutions",
     "description": "Transform your living space with our custom-made sofa beds and premium upholstery services in Dubai.",
     "order": 1,
@@ -9,7 +9,7 @@
   },
   {
     "id": 2,
-    "image": "assets/images/hero2.jpg",
+    "image": "https://via.placeholder.com/1200x500/8B4513/FFFFFF?text=Luxury+Sofas+at+Affordable+Prices",
     "title": "Luxury Sofas at Affordable Prices",
     "description": "Discover our collection of premium sofas with competitive pricing and exceptional quality.",
     "order": 2,

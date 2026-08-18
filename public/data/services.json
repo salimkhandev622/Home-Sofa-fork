@@ -3,14 +3,14 @@
     "id": 1,
     "title": "Premium Sofa Beds",
     "description": "Professional sofa bed solutions",
-    "image": "assets/images/service1.jpg",
+    "image": "https://via.placeholder.com/400x300/8B4513/FFFFFF?text=Premium+Sofa+Beds",
     "features": ["Custom sizes", "Premium materials"]
   },
   {
     "id": 2,
     "title": "Upholstery Services",
     "description": "Expert upholstery services",
-    "image": "assets/images/service2.jpg",
+    "image": "https://via.placeholder.com/400x300/8B4513/FFFFFF?text=Upholstery+Services",
     "features": ["Fabric replacement", "Foam replacement"]
   }
 ]

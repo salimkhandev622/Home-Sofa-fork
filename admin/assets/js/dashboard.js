@@ -192,6 +192,11 @@ async function checkDeploymentStatus() {
         return;
     }
     
+    if (!config.githubOwner || !config.githubRepo) {
+        statusDiv.innerHTML = '<p class="status-warning">⚠️ GitHub repository not configured. Please configure repository details in settings.</p>';
+        return;
+    }
+    
     try {
         statusDiv.innerHTML = '<p class="status-loading">🔄 Checking deployment status...</p>';
         
@@ -207,11 +212,17 @@ async function checkDeploymentStatus() {
         );
         
         if (!response.ok) {
-            throw new Error('Failed to fetch workflow status');
+            if (response.status === 404) {
+                throw new Error('Repository not found or GitHub Actions not enabled. Please check your repository configuration.');
+            } else if (response.status === 403) {
+                throw new Error('Access denied. Please check your GitHub token permissions.');
+            } else {
+                throw new Error(`GitHub API error: ${response.status}`);
+            }
         }
         
         const data = await response.json();
-        const latestRun = data.workflow_runs[0];
+        const latestRun = data.workflow_runs && data.workflow_runs[0];
         
         if (latestRun) {
             const statusIcon = latestRun.status === 'completed' ? '✅' : '🔄';
@@ -233,7 +244,7 @@ async function checkDeploymentStatus() {
                 <a href="${latestRun.html_url}" target="_blank" class="btn btn-secondary btn-sm">View Workflow Run</a>
             `;
         } else {
-            statusDiv.innerHTML = '<p class="status-info">ℹ️ No workflow runs found</p>';
+            statusDiv.innerHTML = '<p class="status-info">ℹ️ No workflow runs found. GitHub Actions may not be configured for this repository.</p>';
         }
     } catch (error) {
         console.error('Error checking deployment status:', error);
@@ -614,7 +625,7 @@ function saveProduct() {
     } else {
         // Add new product
         productData.id = Date.now();
-        productData.mainImage = 'assets/images/product-placeholder.jpg';
+        productData.mainImage = 'https://via.placeholder.com/400x300/8B4513/FFFFFF?text=Product';
         productData.galleryImages = [];
         state.products.push(productData);
     }
@@ -843,7 +854,7 @@ function saveService() {
         title: document.getElementById('serviceTitle').value,
         description: document.getElementById('serviceDescription').value,
         features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f),
-        image: 'assets/images/service-placeholder.jpg'
+        image: 'https://via.placeholder.com/400x300/8B4513/FFFFFF?text=Service'
     };
     
     if (serviceId) {
@@ -937,7 +948,7 @@ function saveHero() {
         description: document.getElementById('heroDescription').value,
         order: parseInt(document.getElementById('heroOrder').value),
         active: document.getElementById('heroActive').checked,
-        image: 'assets/images/hero-placeholder.jpg'
+        image: 'https://via.placeholder.com/1200x500/8B4513/FFFFFF?text=Hero+Slide'
     };
     
     if (heroId) {
