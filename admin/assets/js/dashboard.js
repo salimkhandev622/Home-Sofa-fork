@@ -25,15 +25,9 @@ async function loadDataFromFile(filename) {
 
 async function saveDataToFile(filename, data) {
     try {
-        // Save to localStorage for immediate testing
+        // Save to localStorage only (manual deployment via deploy button)
         localStorage.setItem(filename, JSON.stringify(data));
         console.log(`Data saved to localStorage ${filename}:`, data);
-        
-        // Try to save to GitHub if configured
-        const githubConfig = getGitHubConfig();
-        if (githubConfig && githubConfig.githubToken) {
-            await saveToGitHub(filename, data, githubConfig);
-        }
         
         return true;
     } catch (error) {
@@ -180,6 +174,97 @@ async function updatePublicDataFile(filename, data, config) {
     } catch (error) {
         console.error('Error saving public file to GitHub:', error);
         throw error;
+    }
+}
+
+async function manualDeploy() {
+    const deployBtn = document.getElementById('deployBtn');
+    const originalText = deployBtn.innerHTML;
+    
+    try {
+        deployBtn.innerHTML = '🔄 Deploying...';
+        deployBtn.disabled = true;
+        
+        const githubConfig = getGitHubConfig();
+        if (!githubConfig.githubToken) {
+            alert('⚠️ GitHub API not configured. Please configure GitHub credentials in settings.');
+            deployBtn.innerHTML = originalText;
+            deployBtn.disabled = false;
+            return;
+        }
+        
+        if (!githubConfig.githubOwner || !githubConfig.githubRepo) {
+            alert('⚠️ GitHub repository not configured. Please configure repository details in settings.');
+            deployBtn.innerHTML = originalText;
+            deployBtn.disabled = false;
+            return;
+        }
+        
+        // Load all current data from localStorage
+        const products = JSON.parse(localStorage.getItem('products.json') || '[]');
+        const services = JSON.parse(localStorage.getItem('services.json') || '[]');
+        const reviews = JSON.parse(localStorage.getItem('reviews.json') || '[]');
+        const heroSlides = JSON.parse(localStorage.getItem('hero-slides.json') || '[]');
+        const businessInfo = JSON.parse(localStorage.getItem('business-info.json') || '{}');
+        
+        // Deploy all data files to GitHub
+        const deployResults = [];
+        
+        // Deploy products
+        try {
+            await saveToGitHub('products.json', products, githubConfig);
+            deployResults.push('✅ Products deployed');
+        } catch (error) {
+            deployResults.push(`❌ Products failed: ${error.message}`);
+        }
+        
+        // Deploy services
+        try {
+            await saveToGitHub('services.json', services, githubConfig);
+            deployResults.push('✅ Services deployed');
+        } catch (error) {
+            deployResults.push(`❌ Services failed: ${error.message}`);
+        }
+        
+        // Deploy reviews
+        try {
+            await saveToGitHub('reviews.json', reviews, githubConfig);
+            deployResults.push('✅ Reviews deployed');
+        } catch (error) {
+            deployResults.push(`❌ Reviews failed: ${error.message}`);
+        }
+        
+        // Deploy hero slides
+        try {
+            await saveToGitHub('hero-slides.json', heroSlides, githubConfig);
+            deployResults.push('✅ Hero slides deployed');
+        } catch (error) {
+            deployResults.push(`❌ Hero slides failed: ${error.message}`);
+        }
+        
+        // Deploy business info
+        try {
+            await saveToGitHub('business-info.json', businessInfo, githubConfig);
+            deployResults.push('✅ Business info deployed');
+        } catch (error) {
+            deployResults.push(`❌ Business info failed: ${error.message}`);
+        }
+        
+        // Show deployment results
+        const successCount = deployResults.filter(r => r.startsWith('✅')).length;
+        const totalCount = deployResults.length;
+        
+        alert(`Deployment Complete!\n\n${deployResults.join('\n')}\n\n${successCount}/${totalCount} files deployed successfully.`);
+        
+        // Refresh deployment status
+        checkDeploymentStatus();
+        
+    } catch (error) {
+        console.error('Deployment error:', error);
+        alert(`❌ Deployment failed: ${error.message}`);
+    } finally {
+        deployBtn.innerHTML = originalText;
+        deployBtn.disabled = false;
     }
 }
 
@@ -334,13 +419,23 @@ async function initializeDashboard() {
 }
 
 async function loadDashboardData() {
-    // Load data from JSON files
-    state.products = await loadDataFromFile('products.json') || [];
-    state.services = await loadDataFromFile('services.json') || [];
-    state.reviews = await loadDataFromFile('reviews.json') || [];
-    state.heroSlides = await loadDataFromFile('hero-slides.json') || [];
-    state.businessInfo = await loadDataFromFile('business-info.json') || {};
+    // Load data from localStorage first (dashboard is source of truth)
+    // Fall back to JSON files if localStorage is empty
+    state.products = await loadFromStorageOrFile('products.json', []);
+    state.services = await loadFromStorageOrFile('services.json', []);
+    state.reviews = await loadFromStorageOrFile('reviews.json', []);
+    state.heroSlides = await loadFromStorageOrFile('hero-slides.json', []);
+    state.businessInfo = await loadFromStorageOrFile('business-info.json', {});
     state.contactRequests = await loadDataFromFile('contact-requests.json') || [];
+}
+
+async function loadFromStorageOrFile(filename, defaultValue) {
+    const localData = localStorage.getItem(filename);
+    if (localData) {
+        return JSON.parse(localData);
+    }
+    // Fall back to file loading
+    return await loadDataFromFile(filename) || defaultValue;
     
     // Check localStorage for any unsaved changes
     const localStorageProducts = localStorage.getItem('products.json');

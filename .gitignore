@@ -8,3 +8,4 @@ build/
 .vercel/
 .netlify/
 .devin/
+admin/github-config.js
