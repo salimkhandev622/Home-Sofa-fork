@@ -5,18 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Premium sofa shop in Dubai - Custom sofa beds, upholstery solutions, and premium furniture">
     <title>Home Sofa - Premium Sofa Shop in Dubai</title>
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
-    <link rel="stylesheet" href="assets/css/products.css">
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <script>
+        // Simple routing script to handle admin vs public site
+        (function() {
+            const path = window.location.pathname;
+            
+            // If accessing admin routes, redirect to admin directory
+            if (path.startsWith('/admin') || path === '/admin') {
+                window.location.href = '/admin/index.html';
+                return;
+            }
+            
+            // For public routes, redirect to public directory
+            if (path === '/' || path.startsWith('/products') || path.startsWith('/services') || 
+                path.startsWith('/about') || path.startsWith('/reviews') || path.startsWith('/contact')) {
+                window.location.href = '/public/index.html';
+                return;
+            }
+            
+            // Default to public site
+            window.location.href = '/public/index.html';
+        })();
+    </script>
 </head>
 <body>
-    <div id="app"></div>
-
-    <script src="assets/js/router.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/products.js"></script>
-    <script src="assets/js/login.js"></script>
-    <script src="assets/js/dashboard.js"></script>
+    <p>Redirecting...</p>
 </body>
 </html>

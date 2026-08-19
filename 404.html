@@ -5,9 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Sofa - Page Not Found</title>
     <script>
-        // SPA routing - redirect all 404s to index.html
-        // This enables client-side routing on GitHub Pages
-        window.location.href = '/';
+        // Handle routing for both public and admin sites
+        (function() {
+            const path = window.location.pathname;
+            
+            // If accessing admin routes, redirect to admin directory
+            if (path.startsWith('/admin') || path === '/admin') {
+                window.location.href = '/admin/index.html';
+                return;
+            }
+            
+            // For public routes, redirect to public directory
+            window.location.href = '/public/index.html';
+        })();
     </script>
 </head>
 <body>
