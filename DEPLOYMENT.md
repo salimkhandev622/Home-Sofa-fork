@@ -326,3 +326,61 @@ zip -r ../public-site.zip .
 - Monitor security advisories
 - Update SSL certificates
 - Review access controls regularly
+## GitHub Integration Setup
+
+### GitHub Personal Access Token Configuration
+
+The admin dashboard uses GitHub's Contents API to directly update data files in the repository. This requires a Personal Access Token (PAT) with proper permissions.
+
+#### Required Token Permissions
+
+**Classic PAT (Recommended):**
+- **repo** scope (full repository access)
+  - This includes: `repo:status`, `repo_deployment`, `public_repo`, `repo:invite`, `security_events`
+
+**Fine-grained PAT:**
+- **Contents**: Read and write
+- **Metadata**: Read (required for API access)
+
+#### Token Creation Steps
+
+1. Go to GitHub Settings ? Developer settings ? Personal access tokens ? Tokens (classic)
+2. Click "Generate new token (classic)"
+3. Set token name: "Home-Sofa Admin Dashboard"
+4. Select scopes: Check the **repo** checkbox (this gives full repository access)
+5. Click "Generate token"
+6. **IMPORTANT**: Copy the token immediately - you won't see it again
+
+#### Token Storage
+
+The token is stored in the browser's localStorage under the key `githubToken`:
+- Enter the token in the admin dashboard settings form
+- Or enter it when prompted during manual deployment
+- The token persists in localStorage for future sessions
+
+#### Security Notes
+
+- ?? **Never commit the token to git** - admin/github-config.js is in .gitignore
+- ?? **Token provides full repository access** - keep it secure
+- ? **Token is only stored client-side** in localStorage
+- ? **Token is only used for GitHub Contents API** calls
+- Consider using repository secrets for automated deployments instead
+
+#### Current GitHub Configuration
+
+- **Owner**: salimkhandev622
+- **Repository**: Home-Sofa-fork  
+- **Branch**: main
+- **Deploy Path**: public/data/*.json files
+- **Workflow**: .github/workflows/static.yml deploys public/ directory to GitHub Pages
+
+#### Data Write Paths
+
+The admin dashboard writes to these paths via GitHub API:
+- `public/data/products.json`
+- `public/data/services.json`
+- `public/data/reviews.json`
+- `public/data/hero-slides.json`
+- `public/data/business-info.json`
+
+All paths are within the `public/` directory that gets deployed to GitHub Pages.

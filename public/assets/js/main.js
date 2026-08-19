@@ -516,3 +516,6 @@ if (heroSlider) {
     heroSlider.addEventListener('mouseenter', stopAutoSlide);
     heroSlider.addEventListener('mouseleave', startAutoSlide);
 }
+
+// Initialize the app when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeApp);
