@@ -165,24 +165,25 @@ function renderHeroSlider() {
         const secondaryLink = slide.secondaryButtonLink === 'phone' ? phoneLink : slide.secondaryButtonLink;
         
         return `
-        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}');" onclick="openLightbox('${slide.image}', '${slide.title}')">
+        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}');">
+            <div class="hero-slide-bg" onclick="openLightbox('${slide.image}', '${slide.title}')"></div>
             <div class="hero-content">
                 <span class="hero-badge">${slide.badge}</span>
                 <h2 class="hero-title">${slide.title}</h2>
                 <p class="hero-description">${slide.description}</p>
                 <div class="hero-buttons">
-                    <a href="${primaryLink}" class="btn btn-primary">${slide.primaryButtonText}</a>
-                    <a href="${secondaryLink}" class="btn btn-secondary">${slide.secondaryButtonText}</a>
+                    <a href="${primaryLink}" class="btn btn-primary" onclick="event.stopPropagation()">${slide.primaryButtonText}</a>
+                    <a href="${secondaryLink}" class="btn btn-secondary" onclick="event.stopPropagation()">${slide.secondaryButtonText}</a>
                 </div>
             </div>
         </div>
     `;
     }).join('') + `
-        <button class="hero-arrow prev" onclick="prevSlide()">❮</button>
-        <button class="hero-arrow next" onclick="nextSlide()">❯</button>
+        <button class="hero-arrow prev" onclick="event.stopPropagation(); prevSlide()">❮</button>
+        <button class="hero-arrow next" onclick="event.stopPropagation(); nextSlide()">❯</button>
         <div class="hero-nav">
             ${slidesWithFixedPaths.map((_, index) => `
-                <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>
+                <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="event.stopPropagation(); goToSlide(${index})"></div>
             `).join('')}
         </div>
     `;
