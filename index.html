@@ -9,26 +9,29 @@
         // Simple routing script to handle admin vs public site
         (function() {
             const path = window.location.pathname;
+            const repoName = '/Home-Sofa-fork';
+            
+            // Remove repo name from path for matching
+            const cleanPath = path.replace(repoName, '');
             
             // If accessing admin routes, redirect to admin directory
-            if (path.startsWith('/admin') || path === '/admin') {
-                window.location.href = '/admin/index.html';
+            if (cleanPath.startsWith('/admin') || cleanPath === '/admin') {
+                window.location.href = repoName + '/admin/index.html';
                 return;
             }
             
             // For public routes, redirect to public directory
-            if (path === '/' || path.startsWith('/products') || path.startsWith('/services') || 
-                path.startsWith('/about') || path.startsWith('/reviews') || path.startsWith('/contact')) {
-                window.location.href = '/public/index.html';
+            if (cleanPath === '/' || cleanPath.startsWith('/products') || cleanPath.startsWith('/services') || 
+                cleanPath.startsWith('/about') || cleanPath.startsWith('/reviews') || cleanPath.startsWith('/contact')) {
+                window.location.href = repoName + '/public/index.html';
                 return;
             }
             
             // Default to public site
-            window.location.href = '/public/index.html';
+            window.location.href = repoName + '/public/index.html';
         })();
     </script>
 </head>
-<!-- hello -->
 <body>
     <p>Redirecting...</p>
 </body>

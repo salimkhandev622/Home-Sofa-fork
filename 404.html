@@ -8,15 +8,19 @@
         // Handle routing for both public and admin sites
         (function() {
             const path = window.location.pathname;
+            const repoName = '/Home-Sofa-fork';
+            
+            // Remove repo name from path for matching
+            const cleanPath = path.replace(repoName, '');
             
             // If accessing admin routes, redirect to admin directory
-            if (path.startsWith('/admin') || path === '/admin') {
-                window.location.href = '/admin/index.html';
+            if (cleanPath.startsWith('/admin') || cleanPath === '/admin') {
+                window.location.href = repoName + '/admin/index.html';
                 return;
             }
             
             // For public routes, redirect to public directory
-            window.location.href = '/public/index.html';
+            window.location.href = repoName + '/public/index.html';
         })();
     </script>
 </head>
