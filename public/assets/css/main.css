@@ -262,7 +262,7 @@ body {
     position: relative;
     z-index: 1;
     text-align: center;
-    color: var(--white);
+    color: var(--dark-blue);
     max-width: 800px;
     padding: 20px;
 }
@@ -312,7 +312,7 @@ body {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
     cursor: pointer;
     transition: var(--transition);
 }
@@ -326,7 +326,7 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     color: var(--text-color);
     border: none;
     width: 50px;
@@ -799,7 +799,7 @@ section {
 
 /* Process Section */
 .process-section {
-    background-color: var(--light-blue);
+    background-color: var(--white);
 }
 
 .process-steps {
@@ -1009,7 +1009,7 @@ textarea {
 .footer-bottom {
     text-align: center;
     padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
     opacity: 0.8;
 }
 
@@ -1138,13 +1138,12 @@ form button {
     color: var(--dark-blue);
     line-height: 1.15;
     margin-bottom: 20px;
-    color: var(--white);
 }
 
 .hero-description {
     font-size: 15px;
     opacity: 0.9;
-    color: var(--light-blue);
+    color: var(--text-color);
     margin-bottom: 30px;
     line-height: 1.6;
 }
@@ -1157,8 +1156,8 @@ form button {
 }
 
 .hero-buttons .btn-primary {
-    background-color: var(--accent-cyan);
-    color: var(--dark-gray);
+    background-color: var(--primary-blue);
+    color: var(--white);
     border: none;
     font-weight: 700;
 }
@@ -1169,8 +1168,8 @@ form button {
 }
 
 .hero-buttons .btn-secondary {
-    border-color: var(--white);
-    color: var(--white);
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
     background: transparent;
 }
 
@@ -1194,7 +1193,7 @@ form button {
     height: 90px;
     border-radius: 4px;
     overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: var(--transition);
 }
@@ -1207,7 +1206,7 @@ form button {
 
 .hero-thumbnail-item:hover,
 .hero-thumbnail-item.active {
-    border-color: var(--accent-cyan);
+    border-color: var(--primary-blue);
     transform: translateY(-5px);
 }
 
@@ -1245,7 +1244,7 @@ form button {
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    background-color: var(--light-blue);
+    background-color: var(--medium-gray);
     color: var(--primary-blue);
     display: flex;
     align-items: center;
@@ -1265,10 +1264,10 @@ form button {
     font-weight: 700;
 }
 
-/* Testimonial slider / Highlight box (Black Background) */
+/* Testimonial slider / Highlight box (Light Background) */
 .highlight-carousel-section {
-    background-color: var(--accent-navy);
-    color: var(--white);
+    background-color: var(--light-gray);
+    color: var(--text-color);
     padding: 60px 0;
     overflow: hidden;
 }
@@ -1291,14 +1290,14 @@ form button {
 
 .highlight-quote {
     font-size: 16px;
-    color: var(--light-blue);
+    color: var(--text-color);
     line-height: 1.6;
     margin-bottom: 20px;
 }
 
 .highlight-author {
     font-weight: 700;
-    color: var(--accent-cyan);
+    color: var(--primary-blue);
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -1315,12 +1314,12 @@ form button {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.3);
     cursor: pointer;
 }
 
 .highlight-bullet.active {
-    background-color: var(--accent-cyan);
+    background-color: var(--primary-blue);
 }
 
 /* Specialty Services */
@@ -1728,8 +1727,8 @@ form button {
 }
 
 .process-right {
-    background-color: var(--dark-blue);
-    color: var(--white);
+    background-color: var(--light-gray);
+    color: var(--text-color);
     padding: 45px;
     border-radius: var(--border-radius);
     display: flex;
@@ -1741,12 +1740,12 @@ form button {
     font-size: 28px;
     font-weight: 800;
     margin-bottom: 10px;
-    color: var(--white);
+    color: var(--dark-blue);
 }
 
 .process-right p.process-sub {
     font-size: 14px;
-    color: var(--light-blue);
+    color: var(--text-light);
     opacity: 0.8;
     margin-bottom: 35px;
 }
@@ -1767,8 +1766,8 @@ form button {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background-color: var(--accent-cyan);
-    color: var(--dark-gray);
+    background-color: var(--primary-blue);
+    color: var(--white);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -1780,12 +1779,12 @@ form button {
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 5px;
-    color: var(--white);
+    color: var(--dark-blue);
 }
 
 .process-step-info p {
     font-size: 13px;
-    color: var(--light-blue);
+    color: var(--text-light);
     opacity: 0.9;
     line-height: 1.5;
 }
@@ -1830,8 +1829,8 @@ form button {
 }
 
 .consultation-form-card form button.btn-primary {
-    background-color: var(--accent-cyan);
-    color: var(--dark-gray);
+    background-color: var(--primary-blue);
+    color: var(--white);
     font-weight: 700;
     width: 100%;
 }
@@ -1848,8 +1847,8 @@ form button {
 }
 
 .contact-card-item {
-    background-color: var(--primary-blue);
-    color: var(--white);
+    background-color: var(--light-gray);
+    color: var(--text-color);
     padding: 20px 25px;
     border-radius: var(--border-radius);
     display: flex;
@@ -1867,7 +1866,8 @@ form button {
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--primary-blue);
+    color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1885,15 +1885,15 @@ form button {
 .contact-card-text a {
     font-size: 15px;
     font-weight: 600;
-    color: var(--white);
+    color: var(--primary-blue);
     text-decoration: none;
 }
 
 /* Serving Locations Area Cloud */
 .serving-locations-section {
     padding: 50px 0;
-    background-color: var(--dark-blue);
-    color: var(--white);
+    background-color: var(--light-gray);
+    color: var(--text-color);
     text-align: center;
 }
 
@@ -1913,8 +1913,8 @@ form button {
 }
 
 .location-tag {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--light-blue);
+    background-color: var(--white);
+    color: var(--primary-blue);
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 13px;
@@ -1923,8 +1923,8 @@ form button {
 }
 
 .location-tag:hover {
-    background-color: var(--accent-cyan);
-    color: var(--dark-gray);
+    background-color: var(--primary-blue);
+    color: var(--white);
     transform: scale(1.05);
 }
 

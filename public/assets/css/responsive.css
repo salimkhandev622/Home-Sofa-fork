@@ -315,38 +315,6 @@
 }
 
 /* Dark Mode Support - Disabled for White Theme */
-/* @media (prefers-color-scheme: dark) {
-    :root {
-        --white: #1a1a1a;
-        --light-gray: #2a2a2a;
-        --medium-gray: #3a3a3a;
-        --text-color: #e0e0e0;
-        --text-light: #b0b0b0;
-        --light-blue: #1a3a5c;
-    }
-
-    .header {
-        background-color: #2a2a2a;
-    }
-
-    .nav-menu a {
-        color: var(--text-color);
-    }
-
-    .review-card,
-    .service-card,
-    .product-card,
-    .feature-item,
-    .contact-item {
-        background-color: #2a2a2a;
-    }
-
-    input, select, textarea {
-        background-color: #2a2a2a;
-        color: var(--text-color);
-        border-color: var(--medium-gray);
-    }
-} */
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
