@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "Sarah Johnson",
+    "rating": 5,
+    "reviewText": "Amazing quality and service!",
+    "status": "approved"
+  },
+  {
+    "id": 2,
+    "name": "Mohammed Ali",
+    "rating": 5,
+    "reviewText": "Best sofa shop in Dubai.",
+    "status": "approved"
+  }
+]

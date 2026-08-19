@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "+971 50 123 4567",
+    "service": "sofa-bed",
+    "message": "Interested in custom sofa bed",
+    "date": "2024-01-15",
+    "status": "pending"
+  }
+]

@@ -111,9 +111,76 @@
             // Also update public data file
             await updatePublicDataFile(filename, data, config);
             
+            // Also update root data file for GitHub Pages compatibility
+            await updateRootDataFile(filename, data, config);
+            
             return true;
         } catch (error) {
             console.error('Error saving to GitHub:', error);
+            throw error;
+        }
+    }
+
+    async function updateRootDataFile(filename, data, config) {
+        try {
+            const rootFilePath = `data/${filename}`;
+            const content = utf8ToBase64(JSON.stringify(data, null, 2));
+            
+            // Get current file SHA if it exists
+            let sha = null;
+            try {
+                const getFileResponse = await fetch(
+                    `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${rootFilePath}?ref=${config.githubBranch}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${config.githubToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+                
+                if (getFileResponse.ok) {
+                    const fileData = await getFileResponse.json();
+                    sha = fileData.sha;
+                }
+            } catch (error) {
+                console.log('Root file does not exist yet, will create new');
+            }
+            
+            // Create or update file
+            const putData = {
+                message: `Update root ${filename} via admin dashboard`,
+                content: content,
+                branch: config.githubBranch
+            };
+            
+            if (sha) {
+                putData.sha = sha;
+            }
+            
+            const putResponse = await fetch(
+                `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${rootFilePath}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${config.githubToken}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(putData)
+                }
+            );
+            
+            if (!putResponse.ok) {
+                throw new Error(`GitHub API error for root file: ${putResponse.status}`);
+            }
+            
+            const result = await putResponse.json();
+            console.log('Root file saved to GitHub:', result);
+            
+            return true;
+        } catch (error) {
+            console.error('Error saving root file to GitHub:', error);
             throw error;
         }
     }
