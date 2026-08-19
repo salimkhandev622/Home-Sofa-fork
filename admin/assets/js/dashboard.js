@@ -1108,8 +1108,13 @@
             if (slide) {
                 title.textContent = 'Edit Hero Slide';
                 document.getElementById('heroId').value = slide.id;
+                document.getElementById('heroBadge').value = slide.badge || '';
                 document.getElementById('heroTitle').value = slide.title;
                 document.getElementById('heroDescription').value = slide.description || '';
+                document.getElementById('heroPrimaryButtonText').value = slide.primaryButtonText || '';
+                document.getElementById('heroPrimaryButtonLink').value = slide.primaryButtonLink || '';
+                document.getElementById('heroSecondaryButtonText').value = slide.secondaryButtonText || '';
+                document.getElementById('heroSecondaryButtonLink').value = slide.secondaryButtonLink || '';
                 document.getElementById('heroOrder').value = slide.order;
                 document.getElementById('heroActive').checked = slide.active;
             }
@@ -1132,8 +1137,13 @@
         const heroId = document.getElementById('heroId').value;
         
         const heroData = {
+            badge: document.getElementById('heroBadge').value,
             title: document.getElementById('heroTitle').value,
             description: document.getElementById('heroDescription').value,
+            primaryButtonText: document.getElementById('heroPrimaryButtonText').value,
+            primaryButtonLink: document.getElementById('heroPrimaryButtonLink').value,
+            secondaryButtonText: document.getElementById('heroSecondaryButtonText').value,
+            secondaryButtonLink: document.getElementById('heroSecondaryButtonLink').value,
             order: parseInt(document.getElementById('heroOrder').value),
             active: document.getElementById('heroActive').checked
         };
@@ -1147,9 +1157,6 @@
             
             await saveImageToGitHub(heroImageFileName, heroImageBase64);
             heroData.image = `assets/images/${heroImageFileName}`;
-        } else if (!heroId) {
-            // New hero without image - use default
-            heroData.image = 'assets/images/hero_sofa.jpg';
         }
         
         if (heroId) {
@@ -1160,11 +1167,26 @@
                 if (!heroData.image) {
                     heroData.image = state.heroSlides[index].image;
                 }
+                // Use default values for empty fields
+                heroData.badge = heroData.badge || state.heroSlides[index].badge || 'Premium Custom Made';
+                heroData.primaryButtonText = heroData.primaryButtonText || state.heroSlides[index].primaryButtonText || 'Get Free Consultation';
+                heroData.primaryButtonLink = heroData.primaryButtonLink || state.heroSlides[index].primaryButtonLink || '#contact';
+                heroData.secondaryButtonText = heroData.secondaryButtonText || state.heroSlides[index].secondaryButtonText || 'Call Us';
+                heroData.secondaryButtonLink = heroData.secondaryButtonLink || state.heroSlides[index].secondaryButtonLink || 'phone';
+                
                 state.heroSlides[index] = { ...state.heroSlides[index], ...heroData };
             }
         } else {
             // Add new slide
             const newId = Math.max(...state.heroSlides.map(s => s.id), 0) + 1;
+            // Set default values for new slides
+            heroData.badge = heroData.badge || 'Premium Custom Made';
+            heroData.primaryButtonText = heroData.primaryButtonText || 'Get Free Consultation';
+            heroData.primaryButtonLink = heroData.primaryButtonLink || '#contact';
+            heroData.secondaryButtonText = heroData.secondaryButtonText || 'Call Us';
+            heroData.secondaryButtonLink = heroData.secondaryButtonLink || 'phone';
+            heroData.image = heroData.image || 'assets/images/hero_sofa.jpg';
+            
             state.heroSlides.push({ id: newId, ...heroData });
         }
         
