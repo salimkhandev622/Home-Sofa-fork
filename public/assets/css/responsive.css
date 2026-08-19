@@ -314,8 +314,8 @@
     }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
+/* Dark Mode Support - Disabled for White Theme */
+/* @media (prefers-color-scheme: dark) {
     :root {
         --white: #1a1a1a;
         --light-gray: #2a2a2a;
@@ -346,7 +346,7 @@
         color: var(--text-color);
         border-color: var(--medium-gray);
     }
-}
+} */
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
