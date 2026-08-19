@@ -36,10 +36,15 @@ function initializeApp() {
             initHighlightSlider();
             
             hideLoading();
+        }).catch(error => {
+            console.error('Error in content loading:', error);
+            hideLoading(); // Ensure loading is hidden even on error
+            showError('Some content failed to load. Please refresh the page.');
         });
         
     } catch (error) {
         console.error('Error initializing app:', error);
+        hideLoading(); // Ensure loading is hidden even on error
         showError('Failed to load content. Please refresh the page.');
     }
 }
@@ -148,7 +153,7 @@ function renderHeroSlider() {
     // Fix image paths to use correct relative path
     const slidesWithFixedPaths = activeSlides.map(slide => ({
         ...slide,
-        image: slide.image.startsWith('http') ? slide.image : `assets/images/${slide.image.split('/').pop()}`
+        image: slide.image.startsWith('http') ? slide.image : slide.image
     }));
     
     heroSlider.innerHTML = slidesWithFixedPaths.map((slide, index) => `

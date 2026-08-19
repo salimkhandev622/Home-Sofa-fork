@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Custom Sofa Beds",
+    "description": "Transform your living space with our custom-made sofa beds designed for comfort and style.",
+    "image": "assets/images/service_sofa_beds.jpg",
+    "features": [
+      "High-density foam for lasting comfort",
+      "Premium fabric options",
+      "Customizable sizes and configurations",
+      "Easy conversion mechanism"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "https://wa.me/971500000000"
+  },
+  {
+    "id": 2,
+    "title": "Corner Sofa Beds",
+    "description": "Maximize your space with our stylish corner sofa beds that combine functionality with elegance.",
+    "image": "assets/images/service_upholstery.jpg",
+    "features": [
+      "Space-saving design",
+      "Multiple configuration options",
+      "Premium upholstery fabrics",
+      "Durable wooden frame"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "https://wa.me/971500000000"
+  },
+  {
+    "id": 3,
+    "title": "Upholstery Services",
+    "description": "Breathe new life into your existing furniture with our professional upholstery services.",
+    "image": "assets/images/service_upholstery.jpg",
+    "features": [
+      "Wide range of premium fabrics",
+      "Expert craftsmanship",
+      "Foam replacement options",
+      "Quick turnaround time"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "https://wa.me/971500000000"
+  },
+  {
+    "id": 4,
+    "title": "Custom Sofas",
+    "description": "Design your dream sofa with our custom manufacturing service tailored to your specifications.",
+    "image": "assets/images/hero_sofa.jpg",
+    "features": [
+      "Fully customizable dimensions",
+      "Premium material selection",
+      "Expert design consultation",
+      "10-year frame warranty"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "https://wa.me/971500000000"
+  },
+  {
+    "id": 5,
+    "title": "Sofa Repair",
+    "description": "Professional repair services to restore your sofa to its original comfort and appearance.",
+    "image": "assets/images/service_upholstery.jpg",
+    "features": [
+      "Frame repair and reinforcement",
+      "Spring replacement",
+      "Fabric patching and replacement",
+      "Foam restoration"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "https://wa.me/971500000000"
+  },
+  {
+    "id": 6,
+    "title": "Sofa Maintenance",
+    "description": "Regular maintenance services to keep your sofa looking and feeling like new.",
+    "image": "assets/images/service_sofa_beds.jpg",
+    "features": [
+      "Professional cleaning",
+      "Fabric protection treatment",
+      "Minor repairs included",
+      "Extended lifespan guarantee"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "https://wa.me/971500000000"
+  }
+]

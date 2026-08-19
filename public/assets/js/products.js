@@ -37,7 +37,7 @@ function initializeProductsPage() {
 async function fetchProducts() {
     try {
         const timestamp = new Date().getTime();
-        const response = await fetch(`public/data/products.json?t=${timestamp}`);
+        const response = await fetch(`data/products.json?t=${timestamp}`);
         if (!response.ok) {
             throw new Error('Failed to load products');
         }
@@ -315,15 +315,22 @@ function handleModalKeydown(e) {
     }
 }
 
-// Close modal when clicking outside
-const productModal = document.getElementById('productModal');
-if (productModal) {
-    productModal.addEventListener('click', (e) => {
-        if (e.target === productModal) {
-            closeProductModal();
-        }
-    });
-}
+// Close modal when clicking outside - only on products page
+document.addEventListener('DOMContentLoaded', () => {
+    const productModal = document.getElementById('productModal');
+    if (productModal) {
+        productModal.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                closeProductModal();
+            }
+        });
+    }
+    
+    // Only initialize products page if we're on the products page
+    if (document.getElementById('productsGrid')) {
+        initializeProductsPage();
+    }
+});
 
 // Utility Functions
 function showLoading() {

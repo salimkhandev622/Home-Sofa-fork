@@ -1,1 +1,163 @@
-This is a test file created by the GitHub API test script.
+
+8m
+2m
+hi
+
+
+Hi! How can I help you with your project today?
+
+
+
+
+
+
+
+why this website dont load fully even  in fast internet find the root cause and fix them
+
+
+I'll help you investigate why the website isn't loading fully. Let me start by exploring the project structure and examining the key files.
+
+Command ls in …\Home-Sofa
+
+ls -la
+Get-ChildItem : A parameter cannot be found that matches parameter name 'la'.
+At line:1 char:4
++ ls -la
++    ~~~
+    + CategoryInfo          : InvalidArgument: (:) [Get-ChildItem], ParameterBindingException
+    + FullyQualifiedErrorId : NamedParameterNotFound,Microsoft.PowerShell.Commands.GetChildItemCommand
+
+Command Get-ChildItem in …\Home-Sofa
+
+Get-ChildItem
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         8/19/2026  12:48 AM                .devin
+d-----         8/18/2026  11:58 PM                .github
+d-----         8/19/2026   4:20 PM                admin
+d-----         8/18/2026  11:49 PM                assets
+d-----         8/19/2026   1:46 AM                public
+-a----         8/19/2026   1:28 AM             76 .env
+-a----         8/19/2026   4:20 PM            182 .env.example
+-a----         8/19/2026   2:09 AM            120 .gitignore
+-a----         8/18/2026  11:58 PM              0 .nojekyll
+-a----         8/19/2026   8:49 PM           1002 404.html
+-a----         8/19/2026   9:25 PM           1331 batch_svg_convert.py
+-a----         8/18/2026  11:44 PM           7410 CMS_SETUP.md
+-a----         8/19/2026   4:21 PM           9916 DEPLOYMENT.md
+-a----         8/19/2026   8:49 PM           1546 index.html
+-a----         8/19/2026   1:18 AM            671 package.json
+-a----         8/19/2026   4:54 PM           8217 PROJECT_REVIEW.md
+-a----         8/19/2026   1:01 AM           7159 README.md
+-a----         8/18/2026  11:36 PM          35634 srs.md
+-a----         8/19/2026   1:46 AM             58 test-api-test.txt
+
+Command Get-ChildItem in …\Home-Sofa
+
+Get-ChildItem -Path "D:\Downloads\Home-Sofa\assets" -Recurse
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         8/18/2026  11:44 PM            153 .gitkeep
+-a----         8/19/2026   5:24 PM         742854 hero_sofa.jpg
+-a----         8/19/2026   5:47 PM         705319 service_sofa_beds.jpg
+-a----         8/19/2026   5:49 PM         950537 service_upholstery.jpg
+-a----         8/19/2026   5:27 PM         503498 thumb_sofa1.jpg
+-a----         8/19/2026   5:30 PM         601562 thumb_sofa2.jpg
+-a----         8/19/2026   5:33 PM         533119 thumb_sofa3.jpg
+-a----         8/19/2026   5:41 PM         517644 thumb_sofa4.jpg
+
+
+    Directory: D:\Downloads\Home-Sofa\assets\js
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         8/19/2026   1:24 AM           4197 login.js
+-a----         8/19/2026   9:26 PM          20097 main.js
+-a----         8/19/2026   9:16 PM          15592 products.js
+-a----         8/19/2026   9:55 PM          64686 router.js
+
+I found several root causes preventing your website from loading fully:
+
+CSS Syntax Error: main.css has f = on line 1 (invalid CSS)
+Empty JSON Data Files: products.json, services.json, and hero-slides.json are empty
+JavaScript File Paths: Script references may be incorrect
+Missing Assets: Some images and assets may not be properly linked
+Let me fix these issues:
+
+Read
+main.css
+main.css
+-1
+f =
+/* Main CSS Variables */
+Command Get-ChildItem in …\Home-Sofa
+
+Get-ChildItem -Path "D:\Downloads\Home-Sofa\public" -Recurse
+    Directory: D:\Downloads\Home-Sofa\public\assets\js
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         8/19/2026   1:24 AM           4197 login.js
+-a----         8/19/2026   9:21 PM          21088 main.js
+-a----         8/19/2026   8:59 PM          12044 products.js
+-a----         8/18/2026  11:56 PM          57754 router.js
+
+
+    Directory: D:\Downloads\Home-Sofa\public\data
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         8/19/2026  10:02 PM            264 business-info.json
+-a----         8/19/2026   9:59 PM              2 hero-slides.json
+-a----         8/19/2026   9:59 PM              2 products.json
+-a----         8/19/2026   9:59 PM            298 reviews.json
+-a----         8/19/2026   9:59 PM              2 services.json
+
+Read
+index.html
+#L485-494
+Read
+main.js
+#L1-10
+Read
+main.js
+#L575
+Read
+main.js
+#L600
+hero-slides.json
++15
+    "secondaryButtonLink": "tel:+971500000000",
+    "order": 1,
+    "active": true
+  }
+]
+
+products.json
++42
+    "bestSeller": false,
+    "featured": false,
+    "displayOrder": 4
+  }
+]
+
+services.json
++86
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "https://wa.me/971500000000"
+  }
+]
+
+Read
+main.css
+#L1-5
+
+
+
+
+
+

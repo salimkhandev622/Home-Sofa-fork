@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "Nebraska L-Shape Sofa Bed",
+    "mainImage": "assets/images/thumb_sofa1.jpg",
+    "shortDescription": "Premium L-shaped sofa bed with high-density foam and durable fabric.",
+    "price": 4500,
+    "bestSeller": true,
+    "featured": true,
+    "displayOrder": 1
+  },
+  {
+    "id": 2,
+    "name": "Nebraska U-Shape Sofa",
+    "mainImage": "assets/images/thumb_sofa2.jpg",
+    "shortDescription": "Spacious U-shaped sofa perfect for large living rooms.",
+    "price": 5500,
+    "bestSeller": true,
+    "featured": false,
+    "displayOrder": 2
+  },
+  {
+    "id": 3,
+    "name": "Corner Sofa Bed",
+    "mainImage": "assets/images/thumb_sofa3.jpg",
+    "shortDescription": "Space-saving corner sofa with comfortable sleeping solution.",
+    "price": 3800,
+    "bestSeller": true,
+    "featured": true,
+    "displayOrder": 3
+  },
+  {
+    "id": 4,
+    "name": "Custom 3-Seater Sofa",
+    "mainImage": "assets/images/thumb_sofa4.jpg",
+    "shortDescription": "Elegant 3-seater sofa with premium upholstery options.",
+    "price": 3200,
+    "bestSeller": false,
+    "featured": false,
+    "displayOrder": 4
+  }
+]
