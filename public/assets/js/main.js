@@ -18,12 +18,9 @@ const state = {
 // Initialize App
 function initializeApp() {
     try {
-        // Show loading state
         showLoading();
         
-        // Fetch all content from CMS
         fetchAllContent().then(() => {
-            // Render content
             renderHeroSlider();
             renderGallery();
             renderReviews();
@@ -31,12 +28,11 @@ function initializeApp() {
             renderBestsellers();
             renderBusinessInfo();
             
-            // Initialize interactions
             initializeHeroSlider();
             initializeForms();
             initializeMobileMenu();
+            initHighlightSlider();
             
-            // Hide loading state
             hideLoading();
         });
         
@@ -60,21 +56,18 @@ async function fetchAllContent() {
 
 async function fetchHeroSlides() {
     try {
-        const response = await fetch('public/data/hero-slides.json');
-        if (!response.ok) {
-            throw new Error('Failed to load hero slides');
-        }
+        const response = await fetch('data/hero-slides.json');
+        if (!response.ok) throw new Error('Failed to load hero slides');
         return await response.json();
     } catch (error) {
         console.error('Error loading hero slides:', error);
-        // Fallback to placeholder data
         return [
             {
                 id: 1,
-                image: 'assets/images/hero1.jpg',
-                badge: 'Premium Quality',
-                title: 'Custom Sofa Beds & Upholstery Solutions',
-                description: 'Transform your living space with our custom-made sofa beds and premium upholstery services in Dubai.',
+                image: 'assets/images/hero_sofa.jpg',
+                badge: 'Dubai Sofa Factory',
+                title: 'Custom Sofa Beds & Upholstery Solutions in Dubai',
+                description: 'Transform your living space with our custom-made sofa beds and premium upholstery services.',
                 primaryButtonText: 'WhatsApp Us',
                 primaryButtonLink: 'https://wa.me/971500000000',
                 secondaryButtonText: 'Call Now',
@@ -88,89 +81,44 @@ async function fetchHeroSlides() {
 
 async function fetchProducts() {
     try {
-        const response = await fetch('public/data/products.json');
-        if (!response.ok) {
-            throw new Error('Failed to load products');
-        }
+        const response = await fetch('data/products.json');
+        if (!response.ok) throw new Error('Failed to load products');
         return await response.json();
     } catch (error) {
         console.error('Error loading products:', error);
-        // Fallback to placeholder data
-        return [
-            {
-                id: 1,
-                name: 'Nebraska U-Shape',
-                price: 4200,
-                shortDescription: 'Custom-made U-shaped sofa with premium fabric',
-                fullDescription: 'Elegant U-shaped sofa perfect for large living rooms. Features high-density foam cushions and durable upholstery.',
-                category: 'Sofa',
-                mainImage: 'assets/images/product1.jpg',
-                galleryImages: ['assets/images/product1-1.jpg', 'assets/images/product1-2.jpg'],
-                featured: true,
-                bestSeller: true,
-                available: true,
-                displayOrder: 1
-            }
-        ];
+        return [];
     }
 }
 
 async function fetchServices() {
     try {
-        const response = await fetch('public/data/services.json');
-        if (!response.ok) {
-            throw new Error('Failed to load services');
-        }
+        const response = await fetch('data/services.json');
+        if (!response.ok) throw new Error('Failed to load services');
         return await response.json();
     } catch (error) {
         console.error('Error loading services:', error);
-        // Fallback to placeholder data
-        return [
-            {
-                id: 1,
-                title: 'Premium Sofa Beds',
-                description: 'Professional sofa bed solutions with custom sizes and premium materials',
-                image: 'assets/images/service1.jpg',
-                features: ['Custom sizes', 'Premium materials', 'Multiple designs'],
-                buttonText: 'Learn More',
-                buttonLink: '/#contact'
-            }
-        ];
+        return [];
     }
 }
 
 async function fetchReviews() {
     try {
-        const response = await fetch('public/data/reviews.json');
-        if (!response.ok) {
-            throw new Error('Failed to load reviews');
-        }
+        const response = await fetch('data/reviews.json');
+        if (!response.ok) throw new Error('Failed to load reviews');
         return await response.json();
     } catch (error) {
         console.error('Error loading reviews:', error);
-        // Fallback to placeholder data
-        return [
-            {
-                id: 1,
-                name: 'Sarah Johnson',
-                rating: 5,
-                reviewText: 'Amazing quality and service! The custom sofa bed fits perfectly in our apartment.',
-                profilePicture: 'assets/images/reviewer1.jpg'
-            }
-        ];
+        return [];
     }
 }
 
 async function fetchBusinessInfo() {
     try {
-        const response = await fetch('public/data/business-info.json');
-        if (!response.ok) {
-            throw new Error('Failed to load business info');
-        }
+        const response = await fetch('data/business-info.json');
+        if (!response.ok) throw new Error('Failed to load business info');
         return await response.json();
     } catch (error) {
         console.error('Error loading business info:', error);
-        // Fallback to placeholder data
         return {
             shopName: 'Home Sofa',
             phone: '+971 50 000 0000',
@@ -518,3 +466,37 @@ if (heroSlider) {
 
 // Initialize the app when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeApp);
+
+// Highlight/Testimonial Slider
+function initHighlightSlider() {
+    let activeIndex = 0;
+
+    window.goToHighlightSlide = function(index) {
+        const slides = document.querySelectorAll('.highlight-slide');
+        const bullets = document.querySelectorAll('.highlight-bullet');
+        if (!slides.length) return;
+        slides.forEach(s => s.classList.remove('active'));
+        bullets.forEach(b => b.classList.remove('active'));
+        const target = document.querySelector(`.highlight-slide[data-highlight-index="${index}"]`);
+        if (target) target.classList.add('active');
+        if (bullets[index]) bullets[index].classList.add('active');
+        activeIndex = index;
+    };
+
+    // Auto-scroll every 5s
+    if (window.highlightInterval) clearInterval(window.highlightInterval);
+    window.highlightInterval = setInterval(() => {
+        const slides = document.querySelectorAll('.highlight-slide');
+        if (!slides.length) return;
+        activeIndex = (activeIndex + 1) % slides.length;
+        window.goToHighlightSlide(activeIndex);
+    }, 5000);
+}
+
+// Hero thumbnail background switcher
+window.changeHeroBg = function(imageUrl, element) {
+    const activeSlide = document.querySelector('.hero-slide.active');
+    if (activeSlide) activeSlide.style.backgroundImage = `url(${imageUrl})`;
+    document.querySelectorAll('.hero-thumbnail-item').forEach(t => t.classList.remove('active'));
+    element.classList.add('active');
+};

@@ -18,12 +18,9 @@ const state = {
 // Initialize App
 function initializeApp() {
     try {
-        // Show loading state
         showLoading();
         
-        // Fetch all content from CMS
         fetchAllContent().then(() => {
-            // Render content
             renderHeroSlider();
             renderGallery();
             renderReviews();
@@ -31,12 +28,11 @@ function initializeApp() {
             renderBestsellers();
             renderBusinessInfo();
             
-            // Initialize interactions
             initializeHeroSlider();
             initializeForms();
             initializeMobileMenu();
+            initHighlightSlider();
             
-            // Hide loading state
             hideLoading();
         });
         
@@ -59,156 +55,72 @@ async function fetchAllContent() {
 }
 
 async function fetchHeroSlides() {
-    // Placeholder data - replace with Contentful API call
-    return [
-        {
+    try {
+        const r = await fetch('public/data/hero-slides.json');
+        if (!r.ok) throw new Error();
+        return await r.json();
+    } catch {
+        return [{
             id: 1,
-            image: 'assets/images/hero1.jpg',
-            badge: 'Premium Quality',
-            title: 'Custom Sofa Beds & Upholstery Solutions',
-            description: 'Transform your living space with our custom-made sofa beds and premium upholstery services in Dubai.',
+            image: 'assets/images/hero_sofa.jpg',
+            badge: 'Dubai Sofa Factory',
+            title: 'Custom Sofa Beds & Upholstery Solutions in Dubai',
+            description: 'Transform your living space with our custom-made sofa beds and premium upholstery services.',
             primaryButtonText: 'WhatsApp Us',
             primaryButtonLink: 'https://wa.me/971500000000',
             secondaryButtonText: 'Call Now',
             secondaryButtonLink: 'tel:+971500000000',
             order: 1,
             active: true
-        },
-        {
-            id: 2,
-            image: 'assets/images/hero2.jpg',
-            badge: 'Best Prices',
-            title: 'Luxury Sofas at Affordable Prices',
-            description: 'Discover our collection of premium sofas with competitive pricing and exceptional quality.',
-            primaryButtonText: 'View Collection',
-            primaryButtonLink: '/products',
-            secondaryButtonText: 'Get Quote',
-            secondaryButtonLink: '/#contact',
-            order: 2,
-            active: true
-        }
-    ];
+        }];
+    }
 }
 
 async function fetchProducts() {
-    // Placeholder data - replace with Contentful API call
-    return [
-        {
-            id: 1,
-            name: 'Nebraska U-Shape',
-            price: 4200,
-            shortDescription: 'Custom-made U-shaped sofa with premium fabric',
-            fullDescription: 'Elegant U-shaped sofa perfect for large living rooms. Features high-density foam cushions and durable upholstery.',
-            category: 'Sofa',
-            mainImage: 'assets/images/product1.jpg',
-            galleryImages: ['assets/images/product1-1.jpg', 'assets/images/product1-2.jpg'],
-            featured: true,
-            bestSeller: true,
-            available: true,
-            displayOrder: 1
-        },
-        {
-            id: 2,
-            name: 'L-Shaped Modern',
-            price: 3500,
-            shortDescription: 'Contemporary L-shaped sofa with sleek design',
-            fullDescription: 'Modern L-shaped sofa with clean lines and comfortable seating. Perfect for contemporary homes.',
-            category: 'Sofa',
-            mainImage: 'assets/images/product2.jpg',
-            galleryImages: ['assets/images/product2-1.jpg', 'assets/images/product2-2.jpg'],
-            featured: true,
-            bestSeller: false,
-            available: true,
-            displayOrder: 2
-        },
-        {
-            id: 3,
-            name: 'Chesterfield Classic',
-            price: 5500,
-            shortDescription: 'Timeless Chesterfield design with tufted upholstery',
-            fullDescription: 'Classic Chesterfield sofa with button-tufted detailing and premium leather upholstery.',
-            category: 'Sofa',
-            mainImage: 'assets/images/product3.jpg',
-            galleryImages: ['assets/images/product3-1.jpg', 'assets/images/product3-2.jpg'],
-            featured: false,
-            bestSeller: true,
-            available: true,
-            displayOrder: 3
-        }
-    ];
+    try {
+        const r = await fetch('public/data/products.json');
+        if (!r.ok) throw new Error();
+        return await r.json();
+    } catch {
+        return [];
+    }
 }
 
 async function fetchServices() {
-    // Placeholder data - replace with Contentful API call
-    return [
-        {
-            id: 1,
-            title: 'Premium Sofa Beds',
-            description: 'Professional sofa bed solutions with custom sizes and premium materials',
-            image: 'assets/images/service1.jpg',
-            features: ['Custom sizes', 'Premium materials', 'Multiple designs'],
-            buttonText: 'Learn More',
-            buttonLink: '/#contact'
-        },
-        {
-            id: 2,
-            title: 'Upholstery Services',
-            description: 'Expert upholstery services to restore and transform your furniture',
-            image: 'assets/images/service2.jpg',
-            features: ['Fabric replacement', 'Foam replacement', 'Frame repair'],
-            buttonText: 'Get Quote',
-            buttonLink: '/#contact'
-        },
-        {
-            id: 3,
-            title: 'Custom Sofas',
-            description: 'Design your perfect sofa with our custom manufacturing service',
-            image: 'assets/images/service3.jpg',
-            features: ['Bespoke design', 'Material selection', 'Size customization'],
-            buttonText: 'Start Design',
-            buttonLink: '/#contact'
-        }
-    ];
+    try {
+        const r = await fetch('public/data/services.json');
+        if (!r.ok) throw new Error();
+        return await r.json();
+    } catch {
+        return [];
+    }
 }
 
 async function fetchReviews() {
-    // Placeholder data - replace with Contentful API call
-    return [
-        {
-            id: 1,
-            name: 'Sarah Johnson',
-            rating: 5,
-            reviewText: 'Amazing quality and service! The custom sofa bed fits perfectly in our apartment.',
-            profilePicture: 'assets/images/reviewer1.jpg'
-        },
-        {
-            id: 2,
-            name: 'Mohammed Ali',
-            rating: 5,
-            reviewText: 'Best sofa shop in Dubai. Great prices and excellent craftsmanship.',
-            profilePicture: 'assets/images/reviewer2.jpg'
-        },
-        {
-            id: 3,
-            name: 'Emily Chen',
-            rating: 4,
-            reviewText: 'Very happy with our new sofa. The delivery was quick and professional.',
-            profilePicture: 'assets/images/reviewer3.jpg'
-        }
-    ];
+    try {
+        const r = await fetch('public/data/reviews.json');
+        if (!r.ok) throw new Error();
+        return await r.json();
+    } catch {
+        return [];
+    }
 }
 
 async function fetchBusinessInfo() {
-    // Placeholder data - replace with Contentful API call
-    return {
-        shopName: 'Home Sofa',
-        phone: '+971 50 000 0000',
-        whatsapp: '+971 50 000 0000',
-        email: 'info@homesofa.ae',
-        address: 'Dubai, United Arab Emirates',
-        openingHours: '9:00 AM - 10:00 PM',
-        logo: 'assets/images/logo.png'
-    };
+    try {
+        const r = await fetch('public/data/business-info.json');
+        if (!r.ok) throw new Error();
+        return await r.json();
+    } catch {
+        return {
+            shopName: 'Home Sofa',
+            phone: '+971 50 000 0000',
+            whatsapp: '+971500000000',
+            email: 'info@homesofa.ae',
+            address: 'Dubai, United Arab Emirates',
+            logo: 'assets/images/logo.png'
+        };
+    }
 }
 
 // Render Functions
@@ -219,13 +131,13 @@ function renderHeroSlider() {
     const activeSlides = state.heroSlides.filter(slide => slide.active).sort((a, b) => a.order - b.order);
     
     heroSlider.innerHTML = activeSlides.map((slide, index) => `
-        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}">
+        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}')">
             <div class="hero-content">
                 <span class="hero-badge">${slide.badge}</span>
                 <h2 class="hero-title">${slide.title}</h2>
                 <p class="hero-description">${slide.description}</p>
                 <div class="hero-buttons">
-                    <a href="${slide.primaryButtonLink}" class="btn btn-primary" target="_blank">${slide.primaryButtonText}</a>
+                    <a href="${slide.primaryButtonLink}" class="btn btn-primary">${slide.primaryButtonText}</a>
                     <a href="${slide.secondaryButtonLink}" class="btn btn-secondary">${slide.secondaryButtonText}</a>
                 </div>
             </div>
@@ -275,12 +187,12 @@ function renderServices() {
     if (!servicesGrid || state.services.length === 0) return;
     
     servicesGrid.innerHTML = state.services.map(service => `
-        <div class="service-card">
-            <img src="${service.image}" alt="${service.title}" class="service-image">
-            <div class="service-content">
-                <h3>${service.title}</h3>
-                <p>${service.description}</p>
-                <ul class="service-features">
+        <div class="specialty-card">
+            <img src="${service.image}" alt="${service.title}" class="specialty-card-img" loading="lazy">
+            <div class="specialty-card-body">
+                <h3 class="specialty-card-title">${service.title}</h3>
+                <p class="specialty-card-text">${service.description}</p>
+                <ul class="specialty-card-features">
                     ${service.features.map(feature => `<li>${feature}</li>`).join('')}
                 </ul>
                 <a href="${service.buttonLink}" class="btn btn-primary">${service.buttonText}</a>
@@ -298,7 +210,7 @@ function renderBestsellers() {
     bestsellersGrid.innerHTML = bestsellers.map(product => `
         <div class="product-card">
             <div class="product-image">
-                <img src="${product.mainImage}" alt="${product.name}">
+                <img src="${product.mainImage}" alt="${product.name}" loading="lazy">
                 ${product.featured ? '<span class="product-badge featured">Featured</span>' : ''}
                 <span class="product-badge bestseller">Best Seller</span>
             </div>
@@ -307,8 +219,7 @@ function renderBestsellers() {
                 <div class="product-price">AED ${product.price.toLocaleString()}</div>
                 <p class="product-description">${product.shortDescription}</p>
                 <div class="product-actions">
-                    <a href="/products?id=${product.id}" class="btn btn-primary">View Details</a>
-                    <a href="https://wa.me/971500000000" class="btn btn-secondary" target="_blank">WhatsApp</a>
+                    <a href="https://wa.me/971500000000?text=I%20want%20a%20custom%20quote%20for%20${encodeURIComponent(product.name)}" class="btn btn-primary" target="_blank" style="width:100%;">Get Custom Quote</a>
                 </div>
             </div>
         </div>
@@ -544,3 +455,36 @@ if (heroSlider) {
     heroSlider.addEventListener('mouseenter', stopAutoSlide);
     heroSlider.addEventListener('mouseleave', startAutoSlide);
 }
+
+// Highlight/Testimonial Slider (called from router after page renders)
+function initHighlightSlider() {
+    let activeIndex = 0;
+
+    window.goToHighlightSlide = function(index) {
+        const slides = document.querySelectorAll('.highlight-slide');
+        const bullets = document.querySelectorAll('.highlight-bullet');
+        if (!slides.length) return;
+        slides.forEach(s => s.classList.remove('active'));
+        bullets.forEach(b => b.classList.remove('active'));
+        const target = document.querySelector(`.highlight-slide[data-highlight-index="${index}"]`);
+        if (target) target.classList.add('active');
+        if (bullets[index]) bullets[index].classList.add('active');
+        activeIndex = index;
+    };
+
+    if (window.highlightInterval) clearInterval(window.highlightInterval);
+    window.highlightInterval = setInterval(() => {
+        const slides = document.querySelectorAll('.highlight-slide');
+        if (!slides.length) return;
+        activeIndex = (activeIndex + 1) % slides.length;
+        window.goToHighlightSlide(activeIndex);
+    }, 5000);
+}
+
+// Hero thumbnail background switcher
+window.changeHeroBg = function(imageUrl, element) {
+    const activeSlide = document.querySelector('.hero-slide.active');
+    if (activeSlide) activeSlide.style.backgroundImage = `url(${imageUrl})`;
+    document.querySelectorAll('.hero-thumbnail-item').forEach(t => t.classList.remove('active'));
+    element.classList.add('active');
+};
