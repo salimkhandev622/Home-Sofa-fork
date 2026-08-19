@@ -36,7 +36,8 @@ function initializeProductsPage() {
 // Fetch Products (load from JSON data file)
 async function fetchProducts() {
     try {
-        const response = await fetch('public/data/products.json');
+        const timestamp = new Date().getTime();
+        const response = await fetch(`public/data/products.json?t=${timestamp}`);
         if (!response.ok) {
             throw new Error('Failed to load products');
         }

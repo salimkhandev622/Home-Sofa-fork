@@ -56,7 +56,8 @@ async function fetchAllContent() {
 
 async function fetchHeroSlides() {
     try {
-        const response = await fetch('data/hero-slides.json');
+        const timestamp = new Date().getTime();
+        const response = await fetch(`data/hero-slides.json?t=${timestamp}`);
         if (!response.ok) throw new Error('Failed to load hero slides');
         return await response.json();
     } catch (error) {
@@ -81,7 +82,8 @@ async function fetchHeroSlides() {
 
 async function fetchProducts() {
     try {
-        const response = await fetch('data/products.json');
+        const timestamp = new Date().getTime();
+        const response = await fetch(`data/products.json?t=${timestamp}`);
         if (!response.ok) throw new Error('Failed to load products');
         return await response.json();
     } catch (error) {
@@ -92,7 +94,8 @@ async function fetchProducts() {
 
 async function fetchServices() {
     try {
-        const response = await fetch('data/services.json');
+        const timestamp = new Date().getTime();
+        const response = await fetch(`data/services.json?t=${timestamp}`);
         if (!response.ok) throw new Error('Failed to load services');
         return await response.json();
     } catch (error) {
@@ -103,7 +106,8 @@ async function fetchServices() {
 
 async function fetchReviews() {
     try {
-        const response = await fetch('data/reviews.json');
+        const timestamp = new Date().getTime();
+        const response = await fetch(`data/reviews.json?t=${timestamp}`);
         if (!response.ok) throw new Error('Failed to load reviews');
         return await response.json();
     } catch (error) {
@@ -114,7 +118,8 @@ async function fetchReviews() {
 
 async function fetchBusinessInfo() {
     try {
-        const response = await fetch('data/business-info.json');
+        const timestamp = new Date().getTime();
+        const response = await fetch(`data/business-info.json?t=${timestamp}`);
         if (!response.ok) throw new Error('Failed to load business info');
         return await response.json();
     } catch (error) {
