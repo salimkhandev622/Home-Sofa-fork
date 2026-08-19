@@ -13,9 +13,14 @@
     async function loadDataFromFile(filename) {
         try {
             const timestamp = new Date().getTime();
-            const response = await fetch(`../public/data/${filename}?t=${timestamp}`);
+            // Try loading from admin data folder first
+            let response = await fetch(`data/${filename}?t=${timestamp}`);
             if (!response.ok) {
-                throw new Error(`Failed to load ${filename}`);
+                // Fall back to public data folder
+                response = await fetch(`../public/data/${filename}?t=${timestamp}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${filename}`);
+                }
             }
             return await response.json();
         } catch (error) {
@@ -29,6 +34,20 @@
             // Save to localStorage only (manual deployment via deploy button)
             localStorage.setItem(filename, JSON.stringify(data));
             console.log(`Data saved to localStorage ${filename}:`, data);
+            
+            // Also save to admin data folder for local syncing
+            try {
+                const adminResponse = await fetch(`data/${filename}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                console.log(`Data saved to admin/data/${filename}`);
+            } catch (error) {
+                console.log(`Could not save to admin/data/${filename} (may not be supported in this environment)`);
+            }
             
             return true;
         } catch (error) {
@@ -75,58 +94,64 @@
         }
 
         try {
-            const filePath = `public/assets/images/${filename}`;
+            const filePaths = [
+                `public/assets/images/${filename}`,
+                `admin/assets/images/${filename}`
+            ];
             
-            // Get current file SHA if it exists
-            let sha = null;
-            try {
-                const getFileResponse = await fetch(
-                    `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}?ref=${githubConfig.githubBranch}`,
+            for (const filePath of filePaths) {
+                // Get current file SHA if it exists
+                let sha = null;
+                try {
+                    const getFileResponse = await fetch(
+                        `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}?ref=${githubConfig.githubBranch}`,
+                        {
+                            headers: {
+                                'Authorization': `token ${githubConfig.githubToken}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        }
+                    );
+                    
+                    if (getFileResponse.ok) {
+                        const fileData = await getFileResponse.json();
+                        sha = fileData.sha;
+                    }
+                } catch (error) {
+                    console.log(`Image file ${filePath} does not exist yet, will create new`);
+                }
+                
+                // Create or update file
+                const putData = {
+                    message: `Upload image ${filename} via admin dashboard`,
+                    content: base64Content,
+                    branch: githubConfig.githubBranch
+                };
+                
+                if (sha) {
+                    putData.sha = sha;
+                }
+                
+                const putResponse = await fetch(
+                    `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}`,
                     {
+                        method: 'PUT',
                         headers: {
                             'Authorization': `token ${githubConfig.githubToken}`,
+                            'Content-Type': 'application/json',
                             'Accept': 'application/vnd.github.v3+json'
-                        }
+                        },
+                        body: JSON.stringify(putData)
                     }
                 );
                 
-                if (getFileResponse.ok) {
-                    const fileData = await getFileResponse.json();
-                    sha = fileData.sha;
+                if (!putResponse.ok) {
+                    console.warn(`Failed to upload image to ${filePath}: ${putResponse.statusText}`);
+                } else {
+                    console.log(`Image ${filename} uploaded successfully to ${filePath}`);
                 }
-            } catch (error) {
-                console.log('Image file does not exist yet, will create new');
             }
             
-            // Create or update file
-            const putData = {
-                message: `Upload image ${filename} via admin dashboard`,
-                content: base64Content,
-                branch: githubConfig.githubBranch
-            };
-            
-            if (sha) {
-                putData.sha = sha;
-            }
-            
-            const putResponse = await fetch(
-                `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubConfig.githubToken}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify(putData)
-                }
-            );
-            
-            if (!putResponse.ok) {
-                throw new Error(`Failed to upload image: ${putResponse.statusText}`);
-            }
-            
-            console.log(`Image ${filename} uploaded successfully`);
             return true;
         } catch (error) {
             console.error('Error uploading image to GitHub:', error);
@@ -136,62 +161,68 @@
 
     async function saveToGitHub(filename, data, config) {
         try {
-            const filePath = `public/data/${filename}`;
             const content = utf8ToBase64(JSON.stringify(data, null, 2));
             
-            // Get current file SHA if it exists
-            let sha = null;
-            try {
-                const getFileResponse = await fetch(
-                    `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}?ref=${config.githubBranch}`,
+            // Save to both public and admin data folders
+            const filePaths = [
+                `public/data/${filename}`,
+                `admin/data/${filename}`
+            ];
+            
+            for (const filePath of filePaths) {
+                // Get current file SHA if it exists
+                let sha = null;
+                try {
+                    const getFileResponse = await fetch(
+                        `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}?ref=${config.githubBranch}`,
+                        {
+                            headers: {
+                                'Authorization': `token ${config.githubToken}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        }
+                    );
+                    
+                    if (getFileResponse.ok) {
+                        const fileData = await getFileResponse.json();
+                        sha = fileData.sha;
+                    }
+                } catch (error) {
+                    console.log(`File ${filePath} does not exist yet, will create new`);
+                }
+                
+                // Create or update file
+                const putData = {
+                    message: `Update ${filename} via admin dashboard`,
+                    content: content,
+                    branch: config.githubBranch
+                };
+                
+                if (sha) {
+                    putData.sha = sha;
+                }
+                
+                const putResponse = await fetch(
+                    `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}`,
                     {
+                        method: 'PUT',
                         headers: {
                             'Authorization': `token ${config.githubToken}`,
+                            'Content-Type': 'application/json',
                             'Accept': 'application/vnd.github.v3+json'
-                        }
+                        },
+                        body: JSON.stringify(putData)
                     }
                 );
                 
-                if (getFileResponse.ok) {
-                    const fileData = await getFileResponse.json();
-                    sha = fileData.sha;
+                if (!putResponse.ok) {
+                    const errorText = await putResponse.text();
+                    console.error('GitHub API error details:', errorText);
+                    throw new Error(`GitHub API error: ${putResponse.status} - ${errorText}`);
                 }
-            } catch (error) {
-                console.log('File does not exist yet, will create new');
+                
+                console.log(`File ${filePath} saved to GitHub`);
             }
-            
-            // Create or update file
-            const putData = {
-                message: `Update ${filename} via admin dashboard`,
-                content: content,
-                branch: config.githubBranch
-            };
-            
-            if (sha) {
-                putData.sha = sha;
-            }
-            
-            const putResponse = await fetch(
-                `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${config.githubToken}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify(putData)
-                }
-            );
-            
-            if (!putResponse.ok) {
-                const errorText = await putResponse.text();
-                console.error('GitHub API error details:', errorText);
-                throw new Error(`GitHub API error: ${putResponse.status} - ${errorText}`);
-            }
-            
-            const result = await putResponse.json();
-            console.log('File saved to GitHub:', result);
             
             return true;
         } catch (error) {
@@ -467,7 +498,25 @@
             return JSON.parse(localData);
         }
         // Fall back to file loading
-        return await loadDataFromFile(filename) || defaultValue;
+        const fileData = await loadDataFromFile(filename) || defaultValue;
+        // Sync to localStorage
+        if (fileData) {
+            localStorage.setItem(filename, JSON.stringify(fileData));
+        }
+        return fileData;
+    }
+
+    // Sync admin data with public data
+    async function syncAdminToPublic(filename) {
+        try {
+            const adminData = await loadDataFromFile(filename.replace('public/', ''));
+            if (adminData) {
+                localStorage.setItem(filename, JSON.stringify(adminData));
+                console.log(`Synced ${filename} from admin to public`);
+            }
+        } catch (error) {
+            console.log(`Could not sync ${filename} from admin to public`);
+        }
     }
 
 
@@ -1003,11 +1052,15 @@
                 document.getElementById('serviceTitle').value = service.title;
                 document.getElementById('serviceDescription').value = service.description;
                 document.getElementById('serviceFeatures').value = service.features ? service.features.join(', ') : '';
+                document.getElementById('serviceButtonText').value = service.buttonText || 'Get Quote';
+                document.getElementById('serviceButtonLink').value = service.buttonLink || 'whatsapp';
             }
         } else {
             title.textContent = 'Add Service';
             form.reset();
             document.getElementById('serviceId').value = '';
+            document.getElementById('serviceButtonText').value = 'Get Quote';
+            document.getElementById('serviceButtonLink').value = 'whatsapp';
         }
         
         modal.style.display = 'block';
@@ -1024,7 +1077,9 @@
         const serviceData = {
             title: document.getElementById('serviceTitle').value,
             description: document.getElementById('serviceDescription').value,
-            features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f)
+            features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f),
+            buttonText: document.getElementById('serviceButtonText').value || 'Get Quote',
+            buttonLink: document.getElementById('serviceButtonLink').value || 'whatsapp'
         };
 
         // Handle service image upload
