@@ -60,7 +60,7 @@ async function fetchAllContent() {
 
 async function fetchHeroSlides() {
     try {
-        const response = await fetch('data/hero-slides.json');
+        const response = await fetch('public/data/hero-slides.json');
         if (!response.ok) {
             throw new Error('Failed to load hero slides');
         }
@@ -88,7 +88,7 @@ async function fetchHeroSlides() {
 
 async function fetchProducts() {
     try {
-        const response = await fetch('data/products.json');
+        const response = await fetch('public/data/products.json');
         if (!response.ok) {
             throw new Error('Failed to load products');
         }
@@ -117,7 +117,7 @@ async function fetchProducts() {
 
 async function fetchServices() {
     try {
-        const response = await fetch('data/services.json');
+        const response = await fetch('public/data/services.json');
         if (!response.ok) {
             throw new Error('Failed to load services');
         }
@@ -141,7 +141,7 @@ async function fetchServices() {
 
 async function fetchReviews() {
     try {
-        const response = await fetch('data/reviews.json');
+        const response = await fetch('public/data/reviews.json');
         if (!response.ok) {
             throw new Error('Failed to load reviews');
         }
@@ -163,7 +163,7 @@ async function fetchReviews() {
 
 async function fetchBusinessInfo() {
     try {
-        const response = await fetch('data/business-info.json');
+        const response = await fetch('public/data/business-info.json');
         if (!response.ok) {
             throw new Error('Failed to load business info');
         }
