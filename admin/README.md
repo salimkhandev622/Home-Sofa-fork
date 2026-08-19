@@ -153,12 +153,8 @@ This admin dashboard uses a file-based CMS system with GitHub API integration. A
 ### Manual Deployment
 1. Make changes in the admin dashboard
 2. Test changes in the browser
-3. Open browser DevTools → Application → Local Storage
-4. Copy the JSON data from localStorage
-5. Update the corresponding file in `admin/data/`
-6. Copy updated files to `public/data/`
-7. Commit and push to GitHub
-8. GitHub Actions will automatically deploy
+3. Click "Deploy" button to push changes to GitHub
+4. GitHub Actions will automatically deploy
 
 ### Quick Update Script:
 ```javascript

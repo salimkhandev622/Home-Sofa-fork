@@ -3,14 +3,16 @@
     "id": 1,
     "name": "Sarah Johnson",
     "rating": 5,
-    "reviewText": "Amazing quality and service!",
+    "reviewText": "Amazing quality and service! The custom sofa bed fits perfectly in our apartment. Highly recommended!",
+    "profilePicture": "assets/images/service_upholstery.jpg",
     "status": "approved"
   },
   {
     "id": 2,
-    "name": "Mohammed Ali",
+    "name": "Mohammad Al-Mansoori",
     "rating": 5,
-    "reviewText": "Best sofa shop in Dubai.",
+    "reviewText": "Excellent craftsmanship. We ordered a Nebraska U-shape sofa and the fabric and cushion density are top notch. Very professional team.",
+    "profilePicture": "assets/images/service_sofa_beds.jpg",
     "status": "approved"
   }
 ]

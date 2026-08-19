@@ -32,7 +32,7 @@ Comprehensive review of the Home Sofa project identified several logical errors,
 ### 3. **Data Loading Inconsistencies**
 **Issue**: Products page (`products.js`) was still using placeholder data instead of loading from JSON files.
 
-**Resolution**: Updated `public/assets/js/products.js` to load from `data/products.json` instead of hardcoded placeholder data.
+**Resolution**: Updated `public/assets/js/products.js` to load from `public/data/products.json` instead of hardcoded placeholder data.
 
 **Files Modified**:
 - `public/assets/js/products.js` (updated fetchProducts function)

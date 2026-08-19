@@ -191,13 +191,13 @@ function renderHeroSlider() {
     const activeSlides = state.heroSlides.filter(slide => slide.active).sort((a, b) => a.order - b.order);
     
     heroSlider.innerHTML = activeSlides.map((slide, index) => `
-        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}">
+        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}')">
             <div class="hero-content">
                 <span class="hero-badge">${slide.badge}</span>
                 <h2 class="hero-title">${slide.title}</h2>
                 <p class="hero-description">${slide.description}</p>
                 <div class="hero-buttons">
-                    <a href="${slide.primaryButtonLink}" class="btn btn-primary" target="_blank">${slide.primaryButtonText}</a>
+                    <a href="${slide.primaryButtonLink}" class="btn btn-primary">${slide.primaryButtonText}</a>
                     <a href="${slide.secondaryButtonLink}" class="btn btn-secondary">${slide.secondaryButtonText}</a>
                 </div>
             </div>
@@ -247,12 +247,12 @@ function renderServices() {
     if (!servicesGrid || state.services.length === 0) return;
     
     servicesGrid.innerHTML = state.services.map(service => `
-        <div class="service-card">
-            <img src="${service.image}" alt="${service.title}" class="service-image">
-            <div class="service-content">
-                <h3>${service.title}</h3>
-                <p>${service.description}</p>
-                <ul class="service-features">
+        <div class="specialty-card">
+            <img src="${service.image}" alt="${service.title}" class="specialty-card-img" loading="lazy">
+            <div class="specialty-card-body">
+                <h3 class="specialty-card-title">${service.title}</h3>
+                <p class="specialty-card-text">${service.description}</p>
+                <ul class="specialty-card-features">
                     ${service.features.map(feature => `<li>${feature}</li>`).join('')}
                 </ul>
                 <a href="${service.buttonLink}" class="btn btn-primary">${service.buttonText}</a>
@@ -270,7 +270,7 @@ function renderBestsellers() {
     bestsellersGrid.innerHTML = bestsellers.map(product => `
         <div class="product-card">
             <div class="product-image">
-                <img src="${product.mainImage}" alt="${product.name}">
+                <img src="${product.mainImage}" alt="${product.name}" loading="lazy">
                 ${product.featured ? '<span class="product-badge featured">Featured</span>' : ''}
                 <span class="product-badge bestseller">Best Seller</span>
             </div>
@@ -279,8 +279,7 @@ function renderBestsellers() {
                 <div class="product-price">AED ${product.price.toLocaleString()}</div>
                 <p class="product-description">${product.shortDescription}</p>
                 <div class="product-actions">
-                    <a href="/products?id=${product.id}" class="btn btn-primary">View Details</a>
-                    <a href="https://wa.me/971500000000" class="btn btn-secondary" target="_blank">WhatsApp</a>
+                    <a href="https://wa.me/971500000000?text=I%20want%20to%20get%20a%20custom%20quote%20for%20${encodeURIComponent(product.name)}" class="btn btn-primary" target="_blank" style="width:100%;">Get Custom Quote</a>
                 </div>
             </div>
         </div>
