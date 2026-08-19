@@ -2,28 +2,85 @@
   {
     "id": 1,
     "title": "Custom Sofa Beds",
-    "description": "We specialize in custom sofa beds tailored to your specific requirements in Dubai. Select your size, fabric, and foam density.",
+    "description": "Transform your living space with our custom-made sofa beds designed for comfort and style.",
     "image": "assets/images/service_sofa_beds.jpg",
-    "features": ["Custom Sizes Available", "Premium Foldable Mechanisms", "Sturdy Metal & Wood Frames"],
-    "buttonText": "Request Free Consultation",
+    "features": [
+      "High-density foam for lasting comfort",
+      "Premium fabric options",
+      "Customizable sizes and configurations",
+      "Easy conversion mechanism"
+    ],
+    "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
   },
   {
     "id": 2,
-    "title": "Corner Sofa Bed & Upholstery",
-    "description": "Premium corner sofa beds and expert upholstery solutions. Give your old couches a premium makeover with our high-quality fabrics.",
+    "title": "Corner Sofa Beds",
+    "description": "Maximize your space with our stylish corner sofa beds that combine functionality with elegance.",
     "image": "assets/images/service_upholstery.jpg",
-    "features": ["L & U Shape Configuration", "Premium Fabric Selection", "High Density Foam Replacement"],
-    "buttonText": "Request Free Consultation",
+    "features": [
+      "Space-saving design",
+      "Multiple configuration options",
+      "Premium upholstery fabrics",
+      "Durable wooden frame"
+    ],
+    "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
   },
   {
     "id": 3,
-    "title": "Custom Sofa Repair",
-    "description": "Professional sofa repair and maintenance services. We fix broken frames, sagging cushions, and worn-out fabrics in Dubai.",
-    "image": "assets/images/thumb_sofa1.jpg",
-    "features": ["Frame and Spring Repair", "Cushion Refilling", "Polishing & Cleaning Services"],
-    "buttonText": "Request Free Consultation",
+    "title": "Upholstery Services",
+    "description": "Breathe new life into your existing furniture with our professional upholstery services.",
+    "image": "assets/images/service_upholstery.jpg",
+    "features": [
+      "Wide range of premium fabrics",
+      "Expert craftsmanship",
+      "Foam replacement options",
+      "Quick turnaround time"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "whatsapp"
+  },
+  {
+    "id": 4,
+    "title": "Custom Sofas",
+    "description": "Design your dream sofa with our custom manufacturing service tailored to your specifications.",
+    "image": "assets/images/hero_sofa.jpg",
+    "features": [
+      "Fully customizable dimensions",
+      "Premium material selection",
+      "Expert design consultation",
+      "10-year frame warranty"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "whatsapp"
+  },
+  {
+    "id": 5,
+    "title": "Sofa Repair",
+    "description": "Professional repair services to restore your sofa to its original comfort and appearance.",
+    "image": "assets/images/service_upholstery.jpg",
+    "features": [
+      "Frame repair and reinforcement",
+      "Spring replacement",
+      "Fabric patching and replacement",
+      "Foam restoration"
+    ],
+    "buttonText": "Get Quote",
+    "buttonLink": "whatsapp"
+  },
+  {
+    "id": 6,
+    "title": "Sofa Maintenance",
+    "description": "Regular maintenance services to keep your sofa looking and feeling like new.",
+    "image": "assets/images/service_sofa_beds.jpg",
+    "features": [
+      "Professional cleaning",
+      "Fabric protection treatment",
+      "Minor repairs included",
+      "Extended lifespan guarantee"
+    ],
+    "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
   }
 ]

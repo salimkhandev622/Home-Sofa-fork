@@ -165,25 +165,24 @@ function renderHeroSlider() {
         const secondaryLink = slide.secondaryButtonLink === 'phone' ? phoneLink : slide.secondaryButtonLink;
         
         return `
-        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}');">
-            <div class="hero-slide-bg" onclick="openLightbox('${slide.image}', '${slide.title}')"></div>
+        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" data-image="${slide.image}" data-title="${slide.title}" style="background-image: url('${slide.image}');">
             <div class="hero-content">
                 <span class="hero-badge">${slide.badge}</span>
                 <h2 class="hero-title">${slide.title}</h2>
                 <p class="hero-description">${slide.description}</p>
                 <div class="hero-buttons">
-                    <a href="${primaryLink}" class="btn btn-primary" onclick="event.stopPropagation()">${slide.primaryButtonText}</a>
-                    <a href="${secondaryLink}" class="btn btn-secondary" onclick="event.stopPropagation()">${slide.secondaryButtonText}</a>
+                    <a href="${primaryLink}" class="btn btn-primary">${slide.primaryButtonText}</a>
+                    <a href="${secondaryLink}" class="btn btn-secondary">${slide.secondaryButtonText}</a>
                 </div>
             </div>
         </div>
     `;
     }).join('') + `
-        <button class="hero-arrow prev" onclick="event.stopPropagation(); prevSlide()">❮</button>
-        <button class="hero-arrow next" onclick="event.stopPropagation(); nextSlide()">❯</button>
+        <button class="hero-arrow prev" onclick="prevSlide()">❮</button>
+        <button class="hero-arrow next" onclick="nextSlide()">❯</button>
         <div class="hero-nav">
             ${slidesWithFixedPaths.map((_, index) => `
-                <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="event.stopPropagation(); goToSlide(${index})"></div>
+                <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>
             `).join('')}
         </div>
     `;
@@ -758,6 +757,22 @@ window.closeLightbox = function() {
 
 // Add click handlers to hero slides for lightbox
 document.addEventListener('DOMContentLoaded', function() {
+    // Add click functionality to hero slider with proper event delegation
+    const heroSlider = document.getElementById('heroSlider');
+    if (heroSlider) {
+        heroSlider.addEventListener('click', function(e) {
+            // Check if click is on hero slide background (not on buttons, arrows, dots, or content)
+            const heroSlide = e.target.closest('.hero-slide');
+            if (heroSlide && !e.target.closest('.hero-content') && !e.target.closest('.hero-arrow') && !e.target.closest('.hero-nav-dot')) {
+                const imageUrl = heroSlide.getAttribute('data-image');
+                const title = heroSlide.getAttribute('data-title');
+                if (imageUrl) {
+                    openLightbox(imageUrl, title);
+                }
+            }
+        });
+    }
+    
     // Add click functionality to thumbnails
     const thumbnails = document.querySelectorAll('.hero-thumbnail-item img');
     thumbnails.forEach(thumb => {
