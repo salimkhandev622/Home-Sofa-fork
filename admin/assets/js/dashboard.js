@@ -260,7 +260,7 @@ async function manualDeploy() {
         const successCount = deployResults.filter(r => r.startsWith('✅')).length;
         const totalCount = deployResults.length;
         
-        alert(`Deployment Complete!\n\n${deployResults.join('\n')}\n\n${successCount}/${totalCount} files deployed successfully.`);
+        alert(`Deployment Complete!\n\n${deployResults.join('\n')}\n\n${successCount}/${totalCount} files deployed successfully.\n\nNote: GitHub Pages will automatically rebuild and your changes will be live within 1-2 minutes.`);
         
         // Refresh deployment status
         checkDeploymentStatus();
