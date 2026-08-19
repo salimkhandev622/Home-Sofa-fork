@@ -137,8 +137,7 @@ async function fetchBusinessInfo() {
             whatsapp: '+971 50 000 0000',
             email: 'info@homesofa.ae',
             address: 'Dubai, United Arab Emirates',
-            openingHours: '9:00 AM - 10:00 PM',
-            logo: 'assets/images/logo.png'
+            openingHours: '9:00 AM - 10:00 PM'
         };
     }
 }
@@ -277,7 +276,6 @@ function renderBusinessInfo() {
     
     const elements = {
         shopName: document.getElementById('shopName'),
-        logo: document.getElementById('logo'),
         address: document.getElementById('address'),
         phone: document.getElementById('phone'),
         whatsapp: document.getElementById('whatsapp'),
@@ -285,12 +283,6 @@ function renderBusinessInfo() {
     };
     
     if (elements.shopName) elements.shopName.textContent = state.businessInfo.shopName;
-    if (elements.logo) {
-        elements.logo.src = state.businessInfo.logo;
-        elements.logo.onerror = function() {
-            this.src = 'https://via.placeholder.com/200x50/8B4513/FFFFFF?text=Home+Sofa';
-        };
-    }
     if (elements.address) elements.address.textContent = state.businessInfo.address;
     if (elements.phone) {
         elements.phone.textContent = state.businessInfo.phone;
