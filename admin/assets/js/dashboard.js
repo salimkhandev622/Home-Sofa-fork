@@ -52,6 +52,88 @@
         return btoa(unescape(encodeURIComponent(str)));
     }
 
+    // Convert file to base64
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                // Remove data URL prefix to get just the base64 content
+                const base64 = reader.result.split(',')[1];
+                resolve(base64);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Save image to GitHub
+    async function saveImageToGitHub(filename, base64Content) {
+        const githubConfig = getGitHubConfig();
+        if (!githubConfig.githubToken) {
+            console.warn('GitHub not configured, skipping image upload');
+            return;
+        }
+
+        try {
+            const filePath = `public/assets/images/${filename}`;
+            
+            // Get current file SHA if it exists
+            let sha = null;
+            try {
+                const getFileResponse = await fetch(
+                    `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}?ref=${githubConfig.githubBranch}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${githubConfig.githubToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+                
+                if (getFileResponse.ok) {
+                    const fileData = await getFileResponse.json();
+                    sha = fileData.sha;
+                }
+            } catch (error) {
+                console.log('Image file does not exist yet, will create new');
+            }
+            
+            // Create or update file
+            const putData = {
+                message: `Upload image ${filename} via admin dashboard`,
+                content: base64Content,
+                branch: githubConfig.githubBranch
+            };
+            
+            if (sha) {
+                putData.sha = sha;
+            }
+            
+            const putResponse = await fetch(
+                `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubConfig.githubToken}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(putData)
+                }
+            );
+            
+            if (!putResponse.ok) {
+                throw new Error(`Failed to upload image: ${putResponse.statusText}`);
+            }
+            
+            console.log(`Image ${filename} uploaded successfully`);
+            return true;
+        } catch (error) {
+            console.error('Error uploading image to GitHub:', error);
+            throw error;
+        }
+    }
+
     async function saveToGitHub(filename, data, config) {
         try {
             const filePath = `public/data/${filename}`;
@@ -621,7 +703,7 @@
         document.getElementById('productModal').style.display = 'none';
     }
 
-    function saveProduct() {
+    async function saveProduct() {
         const form = document.getElementById('productForm');
         const formData = new FormData(form);
         
@@ -639,17 +721,53 @@
         
         const productId = formData.get('productId');
         
+        // Handle main image upload
+        const mainImageInput = document.getElementById('mainImageInput');
+        if (mainImageInput.files.length > 0) {
+            const mainImageFile = mainImageInput.files[0];
+            const mainImageBase64 = await fileToBase64(mainImageFile);
+            const mainImageFileName = `product_${Date.now()}_main.${mainImageFile.name.split('.').pop()}`;
+            
+            // Save image to assets/images directory via GitHub
+            await saveImageToGitHub(mainImageFileName, mainImageBase64);
+            productData.mainImage = `assets/images/${mainImageFileName}`;
+        } else if (!productId) {
+            // New product without image - use default
+            productData.mainImage = 'assets/images/hero_sofa.jpg';
+        }
+
+        // Handle gallery images upload
+        const galleryImagesInput = document.getElementById('galleryImagesInput');
+        if (galleryImagesInput.files.length > 0) {
+            productData.galleryImages = [];
+            for (let i = 0; i < galleryImagesInput.files.length; i++) {
+                const galleryFile = galleryImagesInput.files[i];
+                const galleryBase64 = await fileToBase64(galleryFile);
+                const galleryFileName = `product_${Date.now()}_gallery_${i}.${galleryFile.name.split('.').pop()}`;
+                
+                await saveImageToGitHub(galleryFileName, galleryBase64);
+                productData.galleryImages.push(`assets/images/${galleryFileName}`);
+            }
+        } else if (!productId) {
+            productData.galleryImages = [];
+        }
+        
         if (productId) {
             // Update existing product
             const index = state.products.findIndex(p => p.id === parseInt(productId));
             if (index !== -1) {
+                // Keep existing images if no new ones uploaded
+                if (!productData.mainImage) {
+                    productData.mainImage = state.products[index].mainImage;
+                }
+                if (!productData.galleryImages) {
+                    productData.galleryImages = state.products[index].galleryImages || [];
+                }
                 state.products[index] = { ...state.products[index], ...productData };
             }
         } else {
             // Add new product
             productData.id = Date.now();
-            productData.mainImage = 'https://via.placeholder.com/400x300/8B4513/FFFFFF?text=Product';
-            productData.galleryImages = [];
             state.products.push(productData);
         }
         
@@ -899,21 +1017,38 @@
         document.getElementById('serviceModal').style.display = 'none';
     }
 
-    function saveService() {
+    async function saveService() {
         const form = document.getElementById('serviceForm');
         const serviceId = document.getElementById('serviceId').value;
         
         const serviceData = {
             title: document.getElementById('serviceTitle').value,
             description: document.getElementById('serviceDescription').value,
-            features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f),
-            image: 'https://via.placeholder.com/400x300/8B4513/FFFFFF?text=Service'
+            features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f)
         };
+
+        // Handle service image upload
+        const serviceImageInput = document.getElementById('serviceImageInput');
+        if (serviceImageInput.files.length > 0) {
+            const serviceImageFile = serviceImageInput.files[0];
+            const serviceImageBase64 = await fileToBase64(serviceImageFile);
+            const serviceImageFileName = `service_${Date.now()}.${serviceImageFile.name.split('.').pop()}`;
+            
+            await saveImageToGitHub(serviceImageFileName, serviceImageBase64);
+            serviceData.image = `assets/images/${serviceImageFileName}`;
+        } else if (!serviceId) {
+            // New service without image - use default
+            serviceData.image = 'assets/images/service_sofa_beds.jpg';
+        }
         
         if (serviceId) {
             // Update existing service
             const index = state.services.findIndex(s => s.id === parseInt(serviceId));
             if (index !== -1) {
+                // Keep existing image if no new one uploaded
+                if (!serviceData.image) {
+                    serviceData.image = state.services[index].image;
+                }
                 state.services[index] = { ...state.services[index], ...serviceData };
             }
         } else {
@@ -992,7 +1127,7 @@
         document.getElementById('heroModal').style.display = 'none';
     }
 
-    function saveHero() {
+    async function saveHero() {
         const form = document.getElementById('heroForm');
         const heroId = document.getElementById('heroId').value;
         
@@ -1000,14 +1135,31 @@
             title: document.getElementById('heroTitle').value,
             description: document.getElementById('heroDescription').value,
             order: parseInt(document.getElementById('heroOrder').value),
-            active: document.getElementById('heroActive').checked,
-            image: 'https://via.placeholder.com/1200x500/8B4513/FFFFFF?text=Hero+Slide'
+            active: document.getElementById('heroActive').checked
         };
+
+        // Handle hero image upload
+        const heroImageInput = document.getElementById('heroImageInput');
+        if (heroImageInput.files.length > 0) {
+            const heroImageFile = heroImageInput.files[0];
+            const heroImageBase64 = await fileToBase64(heroImageFile);
+            const heroImageFileName = `hero_${Date.now()}.${heroImageFile.name.split('.').pop()}`;
+            
+            await saveImageToGitHub(heroImageFileName, heroImageBase64);
+            heroData.image = `assets/images/${heroImageFileName}`;
+        } else if (!heroId) {
+            // New hero without image - use default
+            heroData.image = 'assets/images/hero_sofa.jpg';
+        }
         
         if (heroId) {
             // Update existing slide
             const index = state.heroSlides.findIndex(s => s.id === parseInt(heroId));
             if (index !== -1) {
+                // Keep existing image if no new one uploaded
+                if (!heroData.image) {
+                    heroData.image = state.heroSlides[index].image;
+                }
                 state.heroSlides[index] = { ...state.heroSlides[index], ...heroData };
             }
         } else {
