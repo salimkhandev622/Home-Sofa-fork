@@ -1099,6 +1099,25 @@ textarea {
     box-shadow: var(--shadow);
 }
 
+.map-placeholder {
+    background-color: var(--light-blue);
+    padding: 40px;
+    text-align: center;
+    border-radius: var(--border-radius);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.map-placeholder p {
+    font-size: 18px;
+    color: var(--dark-blue);
+    margin: 0;
+}
+
 /* Footer */
 .footer {
     background-color: var(--light-gray);

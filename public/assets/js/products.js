@@ -25,6 +25,10 @@ function initializeProductsPage() {
             handleURLParameters();
             
             hideLoading();
+        }).catch(error => {
+            console.error('Error in products loading:', error);
+            hideLoading();
+            showError('Failed to load products. Please refresh the page.');
         });
         
     } catch (error) {

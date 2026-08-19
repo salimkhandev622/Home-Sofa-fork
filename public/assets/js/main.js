@@ -563,15 +563,17 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Pause auto-slide on hover
-const heroSlider = document.getElementById('heroSlider');
-if (heroSlider) {
-    heroSlider.addEventListener('mouseenter', stopAutoSlide);
-    heroSlider.addEventListener('mouseleave', startAutoSlide);
-}
-
 // Initialize the app when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeApp);
+document.addEventListener('DOMContentLoaded', () => {
+    initializeApp();
+    
+    // Pause auto-slide on hover - only after DOM is ready
+    const heroSlider = document.getElementById('heroSlider');
+    if (heroSlider) {
+        heroSlider.addEventListener('mouseenter', stopAutoSlide);
+        heroSlider.addEventListener('mouseleave', startAutoSlide);
+    }
+});
 
 // Highlight/Testimonial Slider
 function initHighlightSlider() {
