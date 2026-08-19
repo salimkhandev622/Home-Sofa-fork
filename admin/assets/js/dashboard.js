@@ -570,12 +570,20 @@
 
     function renderProductsTable() {
         const tbody = document.getElementById('productsTable');
-        tbody.innerHTML = state.products.map(product => `
+        tbody.innerHTML = state.products.map(product => {
+            // Fix image path for admin dashboard - images are in public/assets/images/
+            const imagePath = product.mainImage.startsWith('http')
+                ? product.mainImage
+                : (product.mainImage.startsWith('../')
+                    ? product.mainImage
+                    : `../public/${product.mainImage}`);
+            
+            return `
             <tr>
-                <td><img src="${product.mainImage}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                <td><img src="${imagePath}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'"></td>
                 <td>${product.name}</td>
                 <td>AED ${product.price.toLocaleString()}</td>
-                <td>${product.category}</td>
+                <td>${product.category || 'N/A'}</td>
                 <td>
                     <span class="badge badge-${product.available ? 'success' : 'danger'}">${product.available ? 'Available' : 'Unavailable'}</span>
                 </td>
@@ -586,14 +594,23 @@
                     </div>
                 </td>
             </tr>
-        `).join('');
+        `;
+        }).join('');
     }
 
     function renderServicesTable() {
         const tbody = document.getElementById('servicesTable');
-        tbody.innerHTML = state.services.map(service => `
+        tbody.innerHTML = state.services.map(service => {
+            // Fix image path for admin dashboard
+            const imagePath = service.image.startsWith('http') 
+                ? service.image 
+                : (service.image.startsWith('../') 
+                    ? service.image 
+                    : `../public/${service.image}`);
+            
+            return `
             <tr>
-                <td><img src="${service.image}" alt="${service.title}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                <td><img src="${imagePath}" alt="${service.title}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'"></td>
                 <td>${service.title}</td>
                 <td>${service.description.substring(0, 50)}...</td>
                 <td>
@@ -603,7 +620,8 @@
                     </div>
                 </td>
             </tr>
-        `).join('');
+        `;
+        }).join('');
     }
 
     function renderReviewsTable() {
@@ -632,9 +650,17 @@
 
     function renderHeroTable() {
         const tbody = document.getElementById('heroTable');
-        tbody.innerHTML = state.heroSlides.map(slide => `
+        tbody.innerHTML = state.heroSlides.map(slide => {
+            // Fix image path for admin dashboard
+            const imagePath = slide.image.startsWith('http') 
+                ? slide.image 
+                : (slide.image.startsWith('../') 
+                    ? slide.image 
+                    : `../public/${slide.image}`);
+            
+            return `
             <tr>
-                <td><img src="${slide.image}" alt="${slide.title}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                <td><img src="${imagePath}" alt="${slide.title}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" onerror="this.src='https://via.placeholder.com/50x50?text=No+Image'"></td>
                 <td>${slide.title}</td>
                 <td>${slide.order}</td>
                 <td>
@@ -647,7 +673,8 @@
                     </div>
                 </td>
             </tr>
-        `).join('');
+        `;
+        }).join('');
     }
 
     function renderContactTable() {
@@ -737,12 +764,37 @@
                 document.getElementById('productFeatured').checked = product.featured;
                 document.getElementById('productBestSeller').checked = product.bestSeller;
                 document.getElementById('productAvailable').checked = product.available;
+
+                // Show main image preview
+                const mainImagePreview = document.getElementById('mainImagePreview');
+                const imagePath = product.mainImage.startsWith('http')
+                    ? product.mainImage
+                    : `../public/${product.mainImage}`;
+                mainImagePreview.innerHTML = `<img src="${imagePath}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;">`;
+
+                // Show gallery images preview
+                const galleryImagesPreview = document.getElementById('galleryImagesPreview');
+                galleryImagesPreview.innerHTML = '';
+                if (product.galleryImages && product.galleryImages.length > 0) {
+                    product.galleryImages.forEach((imgSrc, index) => {
+                        const imgPath = imgSrc.startsWith('http') ? imgSrc : `../public/${imgSrc}`;
+                        const div = document.createElement('div');
+                        div.className = 'image-preview-item';
+                        div.innerHTML = `
+                            <img src="${imgPath}">
+                            <button type="button" class="image-preview-remove" onclick="this.parentElement.remove()">×</button>
+                        `;
+                        galleryImagesPreview.appendChild(div);
+                    });
+                }
             }
         } else {
             title.textContent = 'Add Product';
             form.reset();
             document.getElementById('productId').value = '';
             document.getElementById('productAvailable').checked = true;
+            document.getElementById('mainImagePreview').innerHTML = '';
+            document.getElementById('galleryImagesPreview').innerHTML = '';
         }
         
         modal.style.display = 'block';
