@@ -33,95 +33,34 @@ function initializeProductsPage() {
     }
 }
 
-// Fetch Products (placeholder - replace with Contentful API call)
+// Fetch Products (load from JSON data file)
 async function fetchProducts() {
-    // Placeholder data - in production, fetch from Contentful
-    return [
-        {
-            id: 1,
-            name: 'Nebraska U-Shape',
-            price: 4200,
-            shortDescription: 'Custom-made U-shaped sofa with premium fabric',
-            fullDescription: 'Elegant U-shaped sofa perfect for large living rooms. Features high-density foam cushions and durable upholstery. Customizable in various colors and fabrics to match your interior design.',
-            category: 'sectional',
-            mainImage: 'assets/images/product1.jpg',
-            galleryImages: ['assets/images/product1-1.jpg', 'assets/images/product1-2.jpg', 'assets/images/product1-3.jpg'],
-            featured: true,
-            bestSeller: true,
-            available: true,
-            displayOrder: 1
-        },
-        {
-            id: 2,
-            name: 'L-Shaped Modern',
-            price: 3500,
-            shortDescription: 'Contemporary L-shaped sofa with sleek design',
-            fullDescription: 'Modern L-shaped sofa with clean lines and comfortable seating. Perfect for contemporary homes. Features premium fabric upholstery and sturdy wooden frame.',
-            category: 'sectional',
-            mainImage: 'assets/images/product2.jpg',
-            galleryImages: ['assets/images/product2-1.jpg', 'assets/images/product2-2.jpg'],
-            featured: true,
-            bestSeller: false,
-            available: true,
-            displayOrder: 2
-        },
-        {
-            id: 3,
-            name: 'Chesterfield Classic',
-            price: 5500,
-            shortDescription: 'Timeless Chesterfield design with tufted upholstery',
-            fullDescription: 'Classic Chesterfield sofa with button-tufted detailing and premium leather upholstery. A timeless piece that adds elegance to any room.',
-            category: 'sofa',
-            mainImage: 'assets/images/product3.jpg',
-            galleryImages: ['assets/images/product3-1.jpg', 'assets/images/product3-2.jpg'],
-            featured: false,
-            bestSeller: true,
-            available: true,
-            displayOrder: 3
-        },
-        {
-            id: 4,
-            name: 'Premium Sofa Bed',
-            price: 4800,
-            shortDescription: 'Luxurious sofa bed with easy conversion mechanism',
-            fullDescription: 'Premium sofa bed that easily converts from comfortable seating to a cozy bed. Features high-quality mechanism and premium mattress for optimal comfort.',
-            category: 'sofa-bed',
-            mainImage: 'assets/images/product4.jpg',
-            galleryImages: ['assets/images/product4-1.jpg', 'assets/images/product4-2.jpg'],
-            featured: true,
-            bestSeller: false,
-            available: true,
-            displayOrder: 4
-        },
-        {
-            id: 5,
-            name: 'Recliner Comfort',
-            price: 2800,
-            shortDescription: 'Plush recliner with multiple positioning options',
-            fullDescription: 'Luxurious recliner with smooth reclining mechanism and multiple positioning options. Features premium leather upholstery and padded armrests for maximum comfort.',
-            category: 'recliner',
-            mainImage: 'assets/images/product5.jpg',
-            galleryImages: ['assets/images/product5-1.jpg'],
-            featured: false,
-            bestSeller: false,
-            available: true,
-            displayOrder: 5
-        },
-        {
-            id: 6,
-            name: 'Three-Seater Classic',
-            price: 3200,
-            shortDescription: 'Elegant three-seater sofa with timeless design',
-            fullDescription: 'Classic three-seater sofa with elegant design and comfortable seating. Features premium fabric upholstery and sturdy construction.',
-            category: 'sofa',
-            mainImage: 'assets/images/product6.jpg',
-            galleryImages: ['assets/images/product6-1.jpg', 'assets/images/product6-2.jpg'],
-            featured: false,
-            bestSeller: true,
-            available: true,
-            displayOrder: 6
+    try {
+        const response = await fetch('data/products.json');
+        if (!response.ok) {
+            throw new Error('Failed to load products');
         }
-    ];
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading products:', error);
+        // Fallback to placeholder data
+        return [
+            {
+                id: 1,
+                name: 'Nebraska U-Shape',
+                price: 4200,
+                shortDescription: 'Custom-made U-shaped sofa with premium fabric',
+                fullDescription: 'Elegant U-shaped sofa perfect for large living rooms. Features high-density foam cushions and durable upholstery. Customizable in various colors and fabrics to match your interior design.',
+                category: 'sectional',
+                mainImage: 'assets/images/product1.jpg',
+                galleryImages: ['assets/images/product1-1.jpg', 'assets/images/product1-2.jpg', 'assets/images/product1-3.jpg'],
+                featured: true,
+                bestSeller: true,
+                available: true,
+                displayOrder: 1
+            }
+        ];
+    }
 }
 
 // Render Products

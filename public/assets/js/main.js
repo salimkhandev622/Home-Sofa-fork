@@ -59,156 +59,128 @@ async function fetchAllContent() {
 }
 
 async function fetchHeroSlides() {
-    // Placeholder data - replace with Contentful API call
-    return [
-        {
-            id: 1,
-            image: 'assets/images/hero1.jpg',
-            badge: 'Premium Quality',
-            title: 'Custom Sofa Beds & Upholstery Solutions',
-            description: 'Transform your living space with our custom-made sofa beds and premium upholstery services in Dubai.',
-            primaryButtonText: 'WhatsApp Us',
-            primaryButtonLink: 'https://wa.me/971500000000',
-            secondaryButtonText: 'Call Now',
-            secondaryButtonLink: 'tel:+971500000000',
-            order: 1,
-            active: true
-        },
-        {
-            id: 2,
-            image: 'assets/images/hero2.jpg',
-            badge: 'Best Prices',
-            title: 'Luxury Sofas at Affordable Prices',
-            description: 'Discover our collection of premium sofas with competitive pricing and exceptional quality.',
-            primaryButtonText: 'View Collection',
-            primaryButtonLink: '/products',
-            secondaryButtonText: 'Get Quote',
-            secondaryButtonLink: '/#contact',
-            order: 2,
-            active: true
+    try {
+        const response = await fetch('data/hero-slides.json');
+        if (!response.ok) {
+            throw new Error('Failed to load hero slides');
         }
-    ];
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading hero slides:', error);
+        // Fallback to placeholder data
+        return [
+            {
+                id: 1,
+                image: 'assets/images/hero1.jpg',
+                badge: 'Premium Quality',
+                title: 'Custom Sofa Beds & Upholstery Solutions',
+                description: 'Transform your living space with our custom-made sofa beds and premium upholstery services in Dubai.',
+                primaryButtonText: 'WhatsApp Us',
+                primaryButtonLink: 'https://wa.me/971500000000',
+                secondaryButtonText: 'Call Now',
+                secondaryButtonLink: 'tel:+971500000000',
+                order: 1,
+                active: true
+            }
+        ];
+    }
 }
 
 async function fetchProducts() {
-    // Placeholder data - replace with Contentful API call
-    return [
-        {
-            id: 1,
-            name: 'Nebraska U-Shape',
-            price: 4200,
-            shortDescription: 'Custom-made U-shaped sofa with premium fabric',
-            fullDescription: 'Elegant U-shaped sofa perfect for large living rooms. Features high-density foam cushions and durable upholstery.',
-            category: 'Sofa',
-            mainImage: 'assets/images/product1.jpg',
-            galleryImages: ['assets/images/product1-1.jpg', 'assets/images/product1-2.jpg'],
-            featured: true,
-            bestSeller: true,
-            available: true,
-            displayOrder: 1
-        },
-        {
-            id: 2,
-            name: 'L-Shaped Modern',
-            price: 3500,
-            shortDescription: 'Contemporary L-shaped sofa with sleek design',
-            fullDescription: 'Modern L-shaped sofa with clean lines and comfortable seating. Perfect for contemporary homes.',
-            category: 'Sofa',
-            mainImage: 'assets/images/product2.jpg',
-            galleryImages: ['assets/images/product2-1.jpg', 'assets/images/product2-2.jpg'],
-            featured: true,
-            bestSeller: false,
-            available: true,
-            displayOrder: 2
-        },
-        {
-            id: 3,
-            name: 'Chesterfield Classic',
-            price: 5500,
-            shortDescription: 'Timeless Chesterfield design with tufted upholstery',
-            fullDescription: 'Classic Chesterfield sofa with button-tufted detailing and premium leather upholstery.',
-            category: 'Sofa',
-            mainImage: 'assets/images/product3.jpg',
-            galleryImages: ['assets/images/product3-1.jpg', 'assets/images/product3-2.jpg'],
-            featured: false,
-            bestSeller: true,
-            available: true,
-            displayOrder: 3
+    try {
+        const response = await fetch('data/products.json');
+        if (!response.ok) {
+            throw new Error('Failed to load products');
         }
-    ];
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading products:', error);
+        // Fallback to placeholder data
+        return [
+            {
+                id: 1,
+                name: 'Nebraska U-Shape',
+                price: 4200,
+                shortDescription: 'Custom-made U-shaped sofa with premium fabric',
+                fullDescription: 'Elegant U-shaped sofa perfect for large living rooms. Features high-density foam cushions and durable upholstery.',
+                category: 'Sofa',
+                mainImage: 'assets/images/product1.jpg',
+                galleryImages: ['assets/images/product1-1.jpg', 'assets/images/product1-2.jpg'],
+                featured: true,
+                bestSeller: true,
+                available: true,
+                displayOrder: 1
+            }
+        ];
+    }
 }
 
 async function fetchServices() {
-    // Placeholder data - replace with Contentful API call
-    return [
-        {
-            id: 1,
-            title: 'Premium Sofa Beds',
-            description: 'Professional sofa bed solutions with custom sizes and premium materials',
-            image: 'assets/images/service1.jpg',
-            features: ['Custom sizes', 'Premium materials', 'Multiple designs'],
-            buttonText: 'Learn More',
-            buttonLink: '/#contact'
-        },
-        {
-            id: 2,
-            title: 'Upholstery Services',
-            description: 'Expert upholstery services to restore and transform your furniture',
-            image: 'assets/images/service2.jpg',
-            features: ['Fabric replacement', 'Foam replacement', 'Frame repair'],
-            buttonText: 'Get Quote',
-            buttonLink: '/#contact'
-        },
-        {
-            id: 3,
-            title: 'Custom Sofas',
-            description: 'Design your perfect sofa with our custom manufacturing service',
-            image: 'assets/images/service3.jpg',
-            features: ['Bespoke design', 'Material selection', 'Size customization'],
-            buttonText: 'Start Design',
-            buttonLink: '/#contact'
+    try {
+        const response = await fetch('data/services.json');
+        if (!response.ok) {
+            throw new Error('Failed to load services');
         }
-    ];
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading services:', error);
+        // Fallback to placeholder data
+        return [
+            {
+                id: 1,
+                title: 'Premium Sofa Beds',
+                description: 'Professional sofa bed solutions with custom sizes and premium materials',
+                image: 'assets/images/service1.jpg',
+                features: ['Custom sizes', 'Premium materials', 'Multiple designs'],
+                buttonText: 'Learn More',
+                buttonLink: '/#contact'
+            }
+        ];
+    }
 }
 
 async function fetchReviews() {
-    // Placeholder data - replace with Contentful API call
-    return [
-        {
-            id: 1,
-            name: 'Sarah Johnson',
-            rating: 5,
-            reviewText: 'Amazing quality and service! The custom sofa bed fits perfectly in our apartment.',
-            profilePicture: 'assets/images/reviewer1.jpg'
-        },
-        {
-            id: 2,
-            name: 'Mohammed Ali',
-            rating: 5,
-            reviewText: 'Best sofa shop in Dubai. Great prices and excellent craftsmanship.',
-            profilePicture: 'assets/images/reviewer2.jpg'
-        },
-        {
-            id: 3,
-            name: 'Emily Chen',
-            rating: 4,
-            reviewText: 'Very happy with our new sofa. The delivery was quick and professional.',
-            profilePicture: 'assets/images/reviewer3.jpg'
+    try {
+        const response = await fetch('data/reviews.json');
+        if (!response.ok) {
+            throw new Error('Failed to load reviews');
         }
-    ];
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading reviews:', error);
+        // Fallback to placeholder data
+        return [
+            {
+                id: 1,
+                name: 'Sarah Johnson',
+                rating: 5,
+                reviewText: 'Amazing quality and service! The custom sofa bed fits perfectly in our apartment.',
+                profilePicture: 'assets/images/reviewer1.jpg'
+            }
+        ];
+    }
 }
 
 async function fetchBusinessInfo() {
-    // Placeholder data - replace with Contentful API call
-    return {
-        shopName: 'Home Sofa',
-        phone: '+971 50 000 0000',
-        whatsapp: '+971 50 000 0000',
-        email: 'info@homesofa.ae',
-        address: 'Dubai, United Arab Emirates',
-        openingHours: '9:00 AM - 10:00 PM',
-        logo: 'assets/images/logo.png'
-    };
+    try {
+        const response = await fetch('data/business-info.json');
+        if (!response.ok) {
+            throw new Error('Failed to load business info');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading business info:', error);
+        // Fallback to placeholder data
+        return {
+            shopName: 'Home Sofa',
+            phone: '+971 50 000 0000',
+            whatsapp: '+971 50 000 0000',
+            email: 'info@homesofa.ae',
+            address: 'Dubai, United Arab Emirates',
+            openingHours: '9:00 AM - 10:00 PM',
+            logo: 'assets/images/logo.png'
+        };
+    }
 }
 
 // Render Functions
