@@ -36,7 +36,7 @@ function initializeProductsPage() {
 // Fetch Products (load from JSON data file)
 async function fetchProducts() {
     try {
-        const response = await fetch('data/products.json');
+        const response = await fetch('public/data/products.json');
         if (!response.ok) {
             throw new Error('Failed to load products');
         }
