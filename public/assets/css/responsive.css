@@ -1,0 +1,373 @@
+/* Responsive Design */
+
+/* Tablet Devices */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    /* Top Bar */
+    .top-bar-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Header */
+    .header-content {
+        flex-wrap: wrap;
+    }
+
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--white);
+        box-shadow: var(--shadow-lg);
+        padding: 20px;
+    }
+
+    .nav-menu.active {
+        display: block;
+    }
+
+    .nav-menu ul {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+    }
+
+    /* Hero Section */
+    .hero {
+        height: 500px;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .hero-description {
+        font-size: 16px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    /* About Section */
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+
+    .about-image {
+        order: -1;
+    }
+
+    /* Gallery */
+    .gallery-item {
+        flex: 0 0 250px;
+    }
+
+    /* Forms */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* Footer */
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile Devices */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    /* Section Padding */
+    section {
+        padding: 50px 0;
+    }
+
+    /* Section Title */
+    .section-title {
+        font-size: 28px;
+    }
+
+    /* Hero Section */
+    .hero {
+        height: 400px;
+    }
+
+    .hero-title {
+        font-size: 24px;
+    }
+
+    .hero-description {
+        font-size: 14px;
+    }
+
+    .hero-badge {
+        font-size: 12px;
+        padding: 6px 15px;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    /* Trust Indicators */
+    .trust-indicators {
+        grid-template-columns: 1fr;
+    }
+
+    /* Reviews Grid */
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Services Grid */
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Features Grid */
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Products Grid */
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Product Features */
+    .product-features {
+        grid-template-columns: 1fr;
+    }
+
+    /* Process Steps */
+    .process-steps {
+        grid-template-columns: 1fr;
+    }
+
+    /* Contact Info */
+    .contact-info {
+        grid-template-columns: 1fr;
+    }
+
+    /* About Stats */
+    .about-stats {
+        grid-template-columns: 1fr;
+    }
+
+    /* Review Form */
+    .review-submission {
+        padding: 20px;
+    }
+
+    /* Consultation Form */
+    .consultation-form {
+        padding: 0 10px;
+    }
+
+    /* Gallery Carousel */
+    .gallery-item {
+        flex: 0 0 200px;
+    }
+
+    /* Header Actions */
+    .header-actions {
+        gap: 10px;
+    }
+
+    .whatsapp-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    /* Logo */
+    .logo {
+        height: 40px;
+    }
+
+    .shop-name {
+        font-size: 20px;
+    }
+
+    /* Trust Items */
+    .trust-item {
+        padding: 20px;
+    }
+
+    /* Service Cards */
+    .service-content {
+        padding: 20px;
+    }
+
+    /* Feature Cards */
+    .feature-item,
+    .feature-card {
+        padding: 20px;
+    }
+
+    /* Process Step */
+    .process-step {
+        padding: 20px;
+    }
+
+    /* Contact Item */
+    .contact-item {
+        padding: 20px;
+    }
+
+    /* Product Card */
+    .product-content {
+        padding: 15px;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 40px 0 20px;
+    }
+
+    .footer-section {
+        margin-bottom: 30px;
+    }
+}
+
+/* Large Desktop Devices */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1400px;
+    }
+
+    .hero-title {
+        font-size: 56px;
+    }
+
+    .hero-description {
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-size: 42px;
+    }
+}
+
+/* Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+    .hero-arrow {
+        display: none;
+    }
+
+    .gallery-carousel {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .gallery-item {
+        scroll-snap-align: center;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .top-bar,
+    .header,
+    .hero,
+    .consultation-section,
+    .review-submission,
+    .footer {
+        display: none;
+    }
+
+    section {
+        page-break-inside: avoid;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo,
+    .product-image img,
+    .service-image,
+    .gallery-item img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --white: #1a1a1a;
+        --light-gray: #2a2a2a;
+        --medium-gray: #3a3a3a;
+        --text-color: #e0e0e0;
+        --text-light: #b0b0b0;
+        --light-blue: #1a3a5c;
+    }
+
+    .header {
+        background-color: #2a2a2a;
+    }
+
+    .nav-menu a {
+        color: var(--text-color);
+    }
+
+    .review-card,
+    .service-card,
+    .product-card,
+    .feature-item,
+    .contact-item {
+        background-color: #2a2a2a;
+    }
+
+    input, select, textarea {
+        background-color: #2a2a2a;
+        color: var(--text-color);
+        border-color: var(--medium-gray);
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Landscape Orientation for Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        height: 350px;
+    }
+
+    .hero-title {
+        font-size: 24px;
+    }
+
+    section {
+        padding: 40px 0;
+    }
+}
