@@ -54,29 +54,38 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="home" style="background-image: url('assets/images/hero_sofa.jpg'); background-size: cover; background-position: center;">
+    <section class="hero" id="home">
         <div class="hero-slider" id="heroSlider">
             <!-- Hero slides will be loaded from CMS -->
         </div>
         <!-- Thumbnail bar overlay on hero bottom left -->
         <div class="hero-thumbnails-container" id="heroThumbnails">
             <div class="hero-thumbnail-item active" onclick="changeHeroBg('assets/images/hero_sofa.jpg', this)">
-                <img src="assets/images/hero_sofa.jpg" alt="Hero Sofa">
+                <img src="assets/images/hero_sofa.jpg" alt="Hero Sofa" data-caption="Hero Sofa Collection">
             </div>
             <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa1.jpg', this)">
-                <img src="assets/images/thumb_sofa1.jpg" alt="Sofa 1">
+                <img src="assets/images/thumb_sofa1.jpg" alt="Nebraska L-Shape Sofa" data-caption="Nebraska L-Shape Sofa">
             </div>
             <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa2.jpg', this)">
-                <img src="assets/images/thumb_sofa2.jpg" alt="Sofa 2">
+                <img src="assets/images/thumb_sofa2.jpg" alt="Nebraska U-Shape Sofa" data-caption="Nebraska U-Shape Sofa">
             </div>
             <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa3.jpg', this)">
-                <img src="assets/images/thumb_sofa3.jpg" alt="Sofa 3">
+                <img src="assets/images/thumb_sofa3.jpg" alt="Corner Sofa Bed" data-caption="Corner Sofa Bed">
             </div>
             <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa4.jpg', this)">
-                <img src="assets/images/thumb_sofa4.jpg" alt="Sofa 4">
+                <img src="assets/images/thumb_sofa4.jpg" alt="Custom 3-Seater Sofa" data-caption="Custom 3-Seater Sofa">
             </div>
         </div>
     </section>
+
+    <!-- Image Lightbox Modal -->
+    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content">
+            <img class="lightbox-image" id="lightboxImage" src="" alt="Full size image">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
 
     <!-- 5 Category Circular Icons Section -->
     <section class="category-bar-section">

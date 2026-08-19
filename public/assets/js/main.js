@@ -165,7 +165,7 @@ function renderHeroSlider() {
         const secondaryLink = slide.secondaryButtonLink === 'phone' ? phoneLink : slide.secondaryButtonLink;
         
         return `
-        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}');">
+        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}');" onclick="openLightbox('${slide.image}', '${slide.title}')">
             <div class="hero-content">
                 <span class="hero-badge">${slide.badge}</span>
                 <h2 class="hero-title">${slide.title}</h2>
@@ -723,3 +723,47 @@ window.changeHeroBg = function(imageUrl, element) {
     document.querySelectorAll('.hero-thumbnail-item').forEach(t => t.classList.remove('active'));
     element.classList.add('active');
 };
+
+// Lightbox functionality
+window.openLightbox = function(imageUrl, caption) {
+    const lightbox = document.getElementById('lightboxModal');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    
+    lightboxImage.src = imageUrl;
+    lightboxCaption.textContent = caption || '';
+    lightbox.style.display = 'block';
+};
+
+window.closeLightbox = function() {
+    const lightbox = document.getElementById('lightboxModal');
+    lightbox.style.display = 'none';
+};
+
+// Add click handlers to hero slides for lightbox
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click functionality to hero slides
+    const heroSlider = document.getElementById('heroSlider');
+    if (heroSlider) {
+        heroSlider.addEventListener('click', function(e) {
+            const activeSlide = document.querySelector('.hero-slide.active');
+            if (activeSlide) {
+                const bgImage = activeSlide.style.backgroundImage;
+                const imageUrl = bgImage.replace(/url\(['"]?([^'"]+)['"]?\)/, '$1');
+                const title = activeSlide.querySelector('.hero-title')?.textContent || 'Home Sofa Collection';
+                openLightbox(imageUrl, title);
+            }
+        });
+    }
+    
+    // Add click functionality to thumbnails
+    const thumbnails = document.querySelectorAll('.hero-thumbnail-item img');
+    thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const imageUrl = this.src;
+            const caption = this.getAttribute('data-caption') || this.alt || 'Home Sofa';
+            openLightbox(imageUrl, caption);
+        });
+    });
+});
