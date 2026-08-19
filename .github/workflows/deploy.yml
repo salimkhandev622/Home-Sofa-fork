@@ -1,37 +1,24 @@
-# This workflow is disabled - using static.yml instead
-# name: Deploy to GitHub Pages
-# 
-# on:
-#   push:
-#     branches: [ main ]
-#   workflow_dispatch:
-# 
-# permissions:
-#   contents: write
-#   pages: write
-#   id-token: write
-# 
-# concurrency:
-#   group: "pages"
-#   cancel-in-progress: false
-# 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-# 
-#       - name: Setup Pages
-#         uses: actions/configure-pages@v4
-#         with:
-#           enablement: true
-# 
-#       - name: Upload artifact
-#         uses: actions/upload-pages-artifact@v3
-#         with:
-#           path: '.'
-# 
-#       - name: Deploy to GitHub Pages
-#         id: deployment
-#         uses: actions/deploy-pages@v4
+name: Deploy from Admin Dashboard
+
+on:
+  repository_dispatch:
+    types: [trigger-deployment]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Commit and deploy
+        run: |
+          git config user.name "Admin Dashboard"
+          git config user.email "admin@dashboard.com"
+          git add .
+          git commit -m "Update from admin dashboard" || echo "No changes to commit"
+          git push

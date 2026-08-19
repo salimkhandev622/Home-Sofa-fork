@@ -39,10 +39,10 @@ async function saveDataToFile(filename, data) {
 // GitHub API Functions
 function getGitHubConfig() {
     return {
-        githubOwner: localStorage.getItem('githubOwner') || '',
-        githubRepo: localStorage.getItem('githubRepo') || '',
+        githubOwner: 'salimkhandev622',
+        githubRepo: 'Home-Sofa-fork',
         githubToken: localStorage.getItem('githubToken') || '',
-        githubBranch: localStorage.getItem('githubBranch') || 'main'
+        githubBranch: 'main'
     };
 }
 
@@ -185,16 +185,22 @@ async function manualDeploy() {
         deployBtn.innerHTML = '🔄 Deploying...';
         deployBtn.disabled = true;
         
-        const githubConfig = getGitHubConfig();
+        let githubConfig = getGitHubConfig();
+        
+        // Prompt for token if not stored (more secure approach)
         if (!githubConfig.githubToken) {
-            alert('⚠️ GitHub API not configured. Please configure GitHub credentials in settings.');
-            deployBtn.innerHTML = originalText;
-            deployBtn.disabled = false;
-            return;
+            const token = prompt('Enter your GitHub Personal Access Token for deployment:');
+            if (!token) {
+                alert('Deployment cancelled. Token is required for deployment.');
+                deployBtn.innerHTML = originalText;
+                deployBtn.disabled = false;
+                return;
+            }
+            githubConfig.githubToken = token;
         }
         
-        if (!githubConfig.githubOwner || !githubConfig.githubRepo) {
-            alert('⚠️ GitHub repository not configured. Please configure repository details in settings.');
+        if (!githubConfig.githubToken) {
+            alert('⚠️ GitHub token not configured. Please configure GitHub token in settings.');
             deployBtn.innerHTML = originalText;
             deployBtn.disabled = false;
             return;
@@ -273,12 +279,7 @@ async function checkDeploymentStatus() {
     const statusDiv = document.getElementById('deploymentStatus');
     
     if (!config.githubToken) {
-        statusDiv.innerHTML = '<p class="status-warning">⚠️ GitHub API not configured. Please configure GitHub credentials in settings.</p>';
-        return;
-    }
-    
-    if (!config.githubOwner || !config.githubRepo) {
-        statusDiv.innerHTML = '<p class="status-warning">⚠️ GitHub repository not configured. Please configure repository details in settings.</p>';
+        statusDiv.innerHTML = '<p class="status-warning">⚠️ GitHub token not configured. Please configure GitHub token in settings.</p>';
         return;
     }
     
@@ -356,19 +357,13 @@ function initializeGitHubConfigForm() {
     const form = document.getElementById('apiConfigForm');
     if (form) {
         // Load saved config
-        document.getElementById('githubOwner').value = localStorage.getItem('githubOwner') || '';
-        document.getElementById('githubRepo').value = localStorage.getItem('githubRepo') || '';
         document.getElementById('githubToken').value = localStorage.getItem('githubToken') || '';
-        document.getElementById('githubBranch').value = localStorage.getItem('githubBranch') || 'main';
         
         // Handle form submission
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            localStorage.setItem('githubOwner', document.getElementById('githubOwner').value);
-            localStorage.setItem('githubRepo', document.getElementById('githubRepo').value);
             localStorage.setItem('githubToken', document.getElementById('githubToken').value);
-            localStorage.setItem('githubBranch', document.getElementById('githubBranch').value);
             
             alert('GitHub API configuration saved successfully!');
         });
@@ -727,7 +722,7 @@ function saveProduct() {
     
     // Check if GitHub is configured
     const githubConfig = getGitHubConfig();
-    const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
+    const hasGitHubConfig = githubConfig.githubToken;
     
     // Save to file system
     saveDataToFile('products.json', state.products).then(success => {
@@ -738,7 +733,7 @@ function saveProduct() {
         if (hasGitHubConfig) {
             alert('Product saved! Changes have been committed to GitHub and will trigger automatic deployment. Your website will be updated in a few minutes.');
         } else {
-            alert('Product saved! Changes saved to browser storage. To make permanent changes with automatic deployment, configure GitHub API in Settings.');
+            alert('Product saved! Changes saved to browser storage. To make permanent changes with automatic deployment, configure GitHub token in Settings.');
         }
     });
 }
@@ -843,14 +838,14 @@ function saveBusinessInfo() {
     
     // Check if GitHub is configured
     const githubConfig = getGitHubConfig();
-    const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
+    const hasGitHubConfig = githubConfig.githubToken;
     
     // Save to file system
     saveDataToFile('business-info.json', state.businessInfo).then(success => {
         if (hasGitHubConfig) {
             alert('Business information saved! Changes have been committed to GitHub and will trigger automatic deployment. Your website will be updated in a few minutes.');
         } else {
-            alert('Business information saved! Changes saved to browser storage. To make permanent changes with automatic deployment, configure GitHub API in Settings.');
+            alert('Business information saved! Changes saved to browser storage. To make permanent changes with automatic deployment, configure GitHub token in Settings.');
         }
     });
 }
@@ -966,7 +961,7 @@ function saveService() {
     
     // Check if GitHub is configured
     const githubConfig = getGitHubConfig();
-    const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
+    const hasGitHubConfig = githubConfig.githubToken;
     
     // Save to file system
     saveDataToFile('services.json', state.services).then(success => {
@@ -976,7 +971,7 @@ function saveService() {
         if (hasGitHubConfig) {
             alert('Service saved! Changes have been committed to GitHub and will trigger automatic deployment. Your website will be updated in a few minutes.');
         } else {
-            alert('Service saved! Changes saved to browser storage. To make permanent changes with automatic deployment, configure GitHub API in Settings.');
+            alert('Service saved! Changes saved to browser storage. To make permanent changes with automatic deployment, configure GitHub token in Settings.');
         }
     });
 }
@@ -1060,7 +1055,7 @@ function saveHero() {
     
     // Check if GitHub is configured
     const githubConfig = getGitHubConfig();
-    const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
+    const hasGitHubConfig = githubConfig.githubToken;
     
     // Save to file system
     saveDataToFile('hero-slides.json', state.heroSlides).then(success => {
@@ -1070,7 +1065,7 @@ function saveHero() {
         if (hasGitHubConfig) {
             alert('Hero slide saved! Changes have been committed to GitHub and will trigger automatic deployment. Your website will be updated in a few minutes.');
         } else {
-            alert('Hero slide saved! Changes saved to browser storage. To make permanent changes with automatic deployment, configure GitHub API in Settings.');
+            alert('Hero slide saved! Changes saved to browser storage. To make permanent changes with automatic deployment, configure GitHub token in Settings.');
         }
     });
 }
