@@ -12,7 +12,8 @@
     // Data Management Functions
     async function loadDataFromFile(filename) {
         try {
-            const response = await fetch(`../public/data/${filename}`);
+            const timestamp = new Date().getTime();
+            const response = await fetch(`../public/data/${filename}?t=${timestamp}`);
             if (!response.ok) {
                 throw new Error(`Failed to load ${filename}`);
             }

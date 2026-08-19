@@ -605,6 +605,23 @@ const Router = {
                 </div>
             </section>
 
+            <!-- Customer Reviews Section -->
+            <section class="reviews-section" id="reviews">
+                <div class="container">
+                    <h2 class="section-title">What Our Customers Say</h2>
+                    <div class="reviews-carousel">
+                        <button class="review-arrow prev" onclick="prevReview()">❮</button>
+                        <div class="reviews-slider" id="reviewsSlider">
+                            <!-- Reviews will be loaded from JSON -->
+                        </div>
+                        <button class="review-arrow next" onclick="nextReview()">❯</button>
+                    </div>
+                    <div class="reviews-nav" id="reviewsNav">
+                        <!-- Review navigation dots will be added here -->
+                    </div>
+                </div>
+            </section>
+
             <!-- Serving Areas Tag Cloud -->
             <section class="serving-locations-section">
                 <div class="container">

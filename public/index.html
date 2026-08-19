@@ -27,7 +27,7 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo-section">
-                    <img src="https://via.placeholder.com/200x50/8B4513/FFFFFF?text=Home+Sofa" alt="Home Sofa Logo" class="logo" id="logo">
+                    <img src="assets/images/logo.png" alt="Home Sofa Logo" class="logo" id="logo" onerror="this.src='https://via.placeholder.com/200x50/8B4513/FFFFFF?text=Home+Sofa'">
                     <h1 class="shop-name" id="shopName">Home Sofa</h1>
                 </div>
                 <nav class="nav-menu" id="navMenu">
@@ -352,6 +352,23 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Reviews Section -->
+    <section class="reviews-section" id="reviews">
+        <div class="container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="reviews-carousel">
+                <button class="review-arrow prev" onclick="prevReview()">❮</button>
+                <div class="reviews-slider" id="reviewsSlider">
+                    <!-- Reviews will be loaded from JSON -->
+                </div>
+                <button class="review-arrow next" onclick="nextReview()">❯</button>
+            </div>
+            <div class="reviews-nav" id="reviewsNav">
+                <!-- Review navigation dots will be added here -->
             </div>
         </div>
     </section>

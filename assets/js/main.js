@@ -12,7 +12,9 @@ const state = {
     reviews: [],
     businessInfo: {},
     currentSlide: 0,
-    autoSlideInterval: null
+    currentReview: 0,
+    autoSlideInterval: null,
+    reviewAutoSlideInterval: null
 };
 
 // Initialize App
@@ -56,7 +58,8 @@ async function fetchAllContent() {
 
 async function fetchHeroSlides() {
     try {
-        const r = await fetch('public/data/hero-slides.json');
+        const timestamp = new Date().getTime();
+        const r = await fetch(`public/data/hero-slides.json?t=${timestamp}`);
         if (!r.ok) throw new Error();
         return await r.json();
     } catch {
@@ -78,7 +81,8 @@ async function fetchHeroSlides() {
 
 async function fetchProducts() {
     try {
-        const r = await fetch('public/data/products.json');
+        const timestamp = new Date().getTime();
+        const r = await fetch(`public/data/products.json?t=${timestamp}`);
         if (!r.ok) throw new Error();
         return await r.json();
     } catch {
@@ -88,7 +92,8 @@ async function fetchProducts() {
 
 async function fetchServices() {
     try {
-        const r = await fetch('public/data/services.json');
+        const timestamp = new Date().getTime();
+        const r = await fetch(`public/data/services.json?t=${timestamp}`);
         if (!r.ok) throw new Error();
         return await r.json();
     } catch {
@@ -98,7 +103,8 @@ async function fetchServices() {
 
 async function fetchReviews() {
     try {
-        const r = await fetch('public/data/reviews.json');
+        const timestamp = new Date().getTime();
+        const r = await fetch(`public/data/reviews.json?t=${timestamp}`);
         if (!r.ok) throw new Error();
         return await r.json();
     } catch {
@@ -108,7 +114,8 @@ async function fetchReviews() {
 
 async function fetchBusinessInfo() {
     try {
-        const r = await fetch('public/data/business-info.json');
+        const timestamp = new Date().getTime();
+        const r = await fetch(`public/data/business-info.json?t=${timestamp}`);
         if (!r.ok) throw new Error();
         return await r.json();
     } catch {
@@ -130,7 +137,13 @@ function renderHeroSlider() {
     
     const activeSlides = state.heroSlides.filter(slide => slide.active).sort((a, b) => a.order - b.order);
     
-    heroSlider.innerHTML = activeSlides.map((slide, index) => `
+    // Fix image paths to use correct relative path
+    const slidesWithFixedPaths = activeSlides.map(slide => ({
+        ...slide,
+        image: slide.image.startsWith('http') ? slide.image : `assets/images/${slide.image.split('/').pop()}`
+    }));
+    
+    heroSlider.innerHTML = slidesWithFixedPaths.map((slide, index) => `
         <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}')">
             <div class="hero-content">
                 <span class="hero-badge">${slide.badge}</span>
@@ -146,7 +159,7 @@ function renderHeroSlider() {
         <button class="hero-arrow prev" onclick="prevSlide()">❮</button>
         <button class="hero-arrow next" onclick="nextSlide()">❯</button>
         <div class="hero-nav">
-            ${activeSlides.map((_, index) => `
+            ${slidesWithFixedPaths.map((_, index) => `
                 <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>
             `).join('')}
         </div>
@@ -165,21 +178,41 @@ function renderGallery() {
 }
 
 function renderReviews() {
-    const reviewsGrid = document.getElementById('reviewsGrid');
-    if (!reviewsGrid || state.reviews.length === 0) return;
+    const reviewsSlider = document.getElementById('reviewsSlider');
+    const reviewsNav = document.getElementById('reviewsNav');
     
-    reviewsGrid.innerHTML = state.reviews.map(review => `
-        <div class="review-card">
-            <div class="review-header">
-                <img src="${review.profilePicture}" alt="${review.name}" class="review-avatar">
-                <div>
-                    <div class="review-name">${review.name}</div>
-                    <div class="review-rating">${'⭐'.repeat(review.rating)}</div>
+    if (!reviewsSlider || state.reviews.length === 0) return;
+    
+    // Filter only approved reviews
+    const approvedReviews = state.reviews.filter(review => review.status === 'approved');
+    
+    if (approvedReviews.length === 0) return;
+    
+    // Render reviews in slider
+    reviewsSlider.innerHTML = approvedReviews.map((review, index) => `
+        <div class="review-slide ${index === 0 ? 'active' : ''}" data-review="${index}">
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="${review.profilePicture}" alt="${review.name}" class="review-avatar" onerror="this.src='https://via.placeholder.com/60x60/3a68b8/FFFFFF?text=${review.name.charAt(0)}'">
+                    <div>
+                        <div class="review-name">${review.name}</div>
+                        <div class="review-rating">${'⭐'.repeat(review.rating)}</div>
+                    </div>
                 </div>
+                <p class="review-text">${review.reviewText}</p>
             </div>
-            <p class="review-text">${review.reviewText}</p>
         </div>
     `).join('');
+    
+    // Render navigation dots
+    reviewsNav.innerHTML = approvedReviews.map((_, index) => `
+        <div class="review-nav-dot ${index === 0 ? 'active' : ''}" onclick="goToReview(${index})"></div>
+    `).join('');
+    
+    // Start auto-slide for reviews if there are multiple reviews
+    if (approvedReviews.length > 1) {
+        startReviewAutoSlide();
+    }
 }
 
 function renderServices() {
@@ -260,6 +293,68 @@ function initializeHeroSlider() {
     if (state.heroSlides.length < 2) return;
     
     startAutoSlide();
+}
+
+// Review Slider Functions
+function startReviewAutoSlide() {
+    stopReviewAutoSlide();
+    state.reviewAutoSlideInterval = setInterval(() => {
+        nextReview();
+    }, 5000);
+}
+
+function stopReviewAutoSlide() {
+    if (state.reviewAutoSlideInterval) {
+        clearInterval(state.reviewAutoSlideInterval);
+        state.reviewAutoSlideInterval = null;
+    }
+}
+
+function nextReview() {
+    const reviews = document.querySelectorAll('.review-slide');
+    const dots = document.querySelectorAll('.review-nav-dot');
+    
+    if (reviews.length === 0) return;
+    
+    reviews[state.currentReview].classList.remove('active');
+    dots[state.currentReview].classList.remove('active');
+    
+    state.currentReview = (state.currentReview + 1) % reviews.length;
+    
+    reviews[state.currentReview].classList.add('active');
+    dots[state.currentReview].classList.add('active');
+}
+
+function prevReview() {
+    const reviews = document.querySelectorAll('.review-slide');
+    const dots = document.querySelectorAll('.review-nav-dot');
+    
+    if (reviews.length === 0) return;
+    
+    reviews[state.currentReview].classList.remove('active');
+    dots[state.currentReview].classList.remove('active');
+    
+    state.currentReview = (state.currentReview - 1 + reviews.length) % reviews.length;
+    
+    reviews[state.currentReview].classList.add('active');
+    dots[state.currentReview].classList.add('active');
+}
+
+function goToReview(index) {
+    const reviews = document.querySelectorAll('.review-slide');
+    const dots = document.querySelectorAll('.review-nav-dot');
+    
+    if (reviews.length === 0 || index < 0 || index >= reviews.length) return;
+    
+    reviews[state.currentReview].classList.remove('active');
+    dots[state.currentReview].classList.remove('active');
+    
+    state.currentReview = index;
+    
+    reviews[state.currentReview].classList.add('active');
+    dots[state.currentReview].classList.add('active');
+    
+    startReviewAutoSlide();
 }
 
 function startAutoSlide() {
