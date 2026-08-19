@@ -773,7 +773,12 @@
             whatsapp: document.getElementById('whatsapp').value,
             email: document.getElementById('email').value,
             address: document.getElementById('address').value,
-            openingHours: document.getElementById('openingHours').value
+            openingHours: document.getElementById('openingHours').value,
+            socialLinks: {
+                facebook: document.getElementById('facebook')?.value || '#',
+                instagram: document.getElementById('instagram')?.value || '#',
+                twitter: document.getElementById('twitter')?.value || '#'
+            }
         };
         
         // Check if GitHub is configured
@@ -797,6 +802,18 @@
         document.getElementById('email').value = state.businessInfo.email || '';
         document.getElementById('address').value = state.businessInfo.address || '';
         document.getElementById('openingHours').value = state.businessInfo.openingHours || '';
+        
+        if (state.businessInfo.socialLinks) {
+            if (document.getElementById('facebook')) {
+                document.getElementById('facebook').value = state.businessInfo.socialLinks.facebook || '';
+            }
+            if (document.getElementById('instagram')) {
+                document.getElementById('instagram').value = state.businessInfo.socialLinks.instagram || '';
+            }
+            if (document.getElementById('twitter')) {
+                document.getElementById('twitter').value = state.businessInfo.socialLinks.twitter || '';
+            }
+        }
     }
 
     // Contact Request Management

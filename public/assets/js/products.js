@@ -3,16 +3,18 @@ let allProducts = [];
 let filteredProducts = [];
 let currentPage = 1;
 const productsPerPage = 9;
+let businessInfo = {};
 
 // Initialize Products Page
 function initializeProductsPage() {
     try {
         showLoading();
         
-        // Fetch products
-        fetchProducts().then(products => {
+        // Fetch both products and business info
+        Promise.all([fetchProducts(), fetchBusinessInfo()]).then(([products, bizInfo]) => {
             allProducts = products;
             filteredProducts = [...allProducts];
+            businessInfo = bizInfo;
             
             // Render products
             renderProducts();
@@ -23,6 +25,9 @@ function initializeProductsPage() {
             
             // Initialize URL parameters
             handleURLParameters();
+            
+            // Update business info elements
+            updateBusinessInfoElements();
             
             hideLoading();
         }).catch(error => {
@@ -66,6 +71,77 @@ async function fetchProducts() {
             }
         ];
     }
+}
+
+// Fetch Business Info
+async function fetchBusinessInfo() {
+    try {
+        const timestamp = new Date().getTime();
+        const response = await fetch(`data/business-info.json?t=${timestamp}`);
+        if (!response.ok) {
+            throw new Error('Failed to load business info');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading business info:', error);
+        return {
+            shopName: 'Home Sofa',
+            phone: '+971 50 000 0000',
+            whatsapp: '+971 50 000 0000',
+            email: 'info@homesofa.ae',
+            address: 'Dubai, United Arab Emirates',
+            openingHours: '9:00 AM - 10:00 PM'
+        };
+    }
+}
+
+// Update Business Info Elements
+function updateBusinessInfoElements() {
+    if (!businessInfo) return;
+    
+    const whatsappLink = businessInfo.whatsapp ? `https://wa.me/${businessInfo.whatsapp.replace(/\D/g, '')}` : '#';
+    const phoneLink = businessInfo.phone ? `tel:${businessInfo.phone.replace(/\D/g, '')}` : '#';
+    const emailLink = businessInfo.email ? `mailto:${businessInfo.email}` : '#';
+    
+    // Update header elements
+    const topBarHours = document.getElementById('topBarHours');
+    const topBarWhatsapp = document.getElementById('topBarWhatsapp');
+    const headerWhatsapp = document.getElementById('headerWhatsapp');
+    
+    if (topBarHours) topBarHours.textContent = `Open Today ${businessInfo.openingHours}`;
+    if (topBarWhatsapp) topBarWhatsapp.href = whatsappLink;
+    if (headerWhatsapp) headerWhatsapp.href = whatsappLink;
+    
+    // Update modal elements
+    const modalWhatsapp = document.getElementById('modalWhatsapp');
+    const modalPhone = document.getElementById('modalPhone');
+    
+    if (modalWhatsapp) modalWhatsapp.href = whatsappLink;
+    if (modalPhone) modalPhone.href = phoneLink;
+    
+    // Handle plain text email elements (span tags)
+    const emailTextElements = document.querySelectorAll('#email');
+    emailTextElements.forEach(el => {
+        if (el.tagName === 'SPAN') {
+            el.textContent = businessInfo.email;
+        }
+    });
+    
+    // Handle plain text address elements (span tags)
+    const addressTextElements = document.querySelectorAll('#address');
+    addressTextElements.forEach(el => {
+        if (el.tagName === 'SPAN') {
+            el.textContent = businessInfo.address;
+        }
+    });
+    
+    // Handle plain text phone elements (span tags)
+    const phoneTextElements = document.querySelectorAll('#phone');
+    phoneTextElements.forEach(el => {
+        if (el.tagName === 'SPAN') {
+            el.textContent = businessInfo.phone;
+        }
+    });
 }
 
 // Render Products
@@ -256,7 +332,15 @@ function openProductModal(productId) {
     
     // Update WhatsApp link
     if (modalWhatsapp) {
-        modalWhatsapp.href = `https://wa.me/971500000000?text=I'm interested in ${encodeURIComponent(product.name)} - AED ${product.price.toLocaleString()}`;
+        const whatsappLink = businessInfo.whatsapp ? `https://wa.me/${businessInfo.whatsapp.replace(/\D/g, '')}` : '#';
+        modalWhatsapp.href = `${whatsappLink}?text=I'm interested in ${encodeURIComponent(product.name)} - AED ${product.price.toLocaleString()}`;
+    }
+    
+    // Update Phone link
+    const modalPhone = document.getElementById('modalPhone');
+    if (modalPhone) {
+        const phoneLink = businessInfo.phone ? `tel:${businessInfo.phone.replace(/\D/g, '')}` : '#';
+        modalPhone.href = phoneLink;
     }
     
     // Render badges

@@ -3,7 +3,16 @@
   "phone": "921022111111",
   "whatsapp": "921022111111",
   "email": "salimkhandev@gmail.com",
-  "address": "salimkhandev@gmail.com",
+  "address": "Pakistan",
   "openingHours": "9:00 AM - 10:00 PM",
-  "logo": "assets/images/svg/hero_sofa.svg"
+  "logo": "assets/images/svg/hero_sofa.svg",
+  "socialLinks": {
+    "facebook": "#",
+    "instagram": "#",
+    "twitter": "#"
+  },
+  "mapCoordinates": {
+    "lat": 25.12345678901234,
+    "lng": 55.12345678901234
+  }
 }

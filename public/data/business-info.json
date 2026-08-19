@@ -4,5 +4,14 @@
   "whatsapp": "+971 50 000 0000",
   "email": "info@homesofa.ae",
   "address": "Dubai, United Arab Emirates",
-  "openingHours": "9:00 AM - 10:00 PM"
+  "openingHours": "9:00 AM - 10:00 PM",
+  "socialLinks": {
+    "facebook": "#",
+    "instagram": "#",
+    "twitter": "#"
+  },
+  "mapCoordinates": {
+    "lat": 25.12345678901234,
+    "lng": 55.12345678901234
+  }
 }

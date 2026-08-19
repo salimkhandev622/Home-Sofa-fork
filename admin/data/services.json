@@ -6,7 +6,7 @@
     "image": "assets/images/service_sofa_beds.jpg",
     "features": ["Custom Sizes Available", "Premium Foldable Mechanisms", "Sturdy Metal & Wood Frames"],
     "buttonText": "Request Free Consultation",
-    "buttonLink": "#contact"
+    "buttonLink": "whatsapp"
   },
   {
     "id": 2,
@@ -15,7 +15,7 @@
     "image": "assets/images/service_upholstery.jpg",
     "features": ["L & U Shape Configuration", "Premium Fabric Selection", "High Density Foam Replacement"],
     "buttonText": "Request Free Consultation",
-    "buttonLink": "#contact"
+    "buttonLink": "whatsapp"
   },
   {
     "id": 3,
@@ -24,6 +24,6 @@
     "image": "assets/images/thumb_sofa1.jpg",
     "features": ["Frame and Spring Repair", "Cushion Refilling", "Polishing & Cleaning Services"],
     "buttonText": "Request Free Consultation",
-    "buttonLink": "#contact"
+    "buttonLink": "whatsapp"
   }
 ]

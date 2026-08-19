@@ -194,8 +194,8 @@ const Router = {
                 <div class="container">
                     <div class="top-bar-content">
                         <span class="location">Serving Dubai</span>
-                        <span class="hours">Open Today 9:00 AM - 10:00 PM</span>
-                        <a href="https://wa.me/971500000000" class="whatsapp-link" target="_blank">
+                        <span class="hours" id="topBarHours">Open Today 9:00 AM - 10:00 PM</span>
+                        <a href="#" class="whatsapp-link" id="topBarWhatsapp" target="_blank">
                             <span class="whatsapp-icon">📱</span> WhatsApp
                         </a>
                     </div>
@@ -221,7 +221,7 @@ const Router = {
                             </ul>
                         </nav>
                         <div class="header-actions">
-                            <a href="https://wa.me/971500000000" class="btn btn-primary whatsapp-btn" target="_blank">
+                            <a href="#" class="btn btn-primary whatsapp-btn" id="headerWhatsapp" target="_blank">
                                 WhatsApp Us
                             </a>
                             <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -273,9 +273,9 @@ const Router = {
                         </div>
                         <div class="footer-section">
                             <h3>Contact</h3>
-                            <p>📍 Dubai, UAE</p>
-                            <p>📞 +971 50 000 0000</p>
-                            <p>✉️ info@homesofa.ae</p>
+                            <p>📍 <span id="address">Dubai, UAE</span></p>
+                            <p>📞 <span id="phone">+971 50 000 0000</span></p>
+                            <p>✉️ <span id="email">info@homesofa.ae</span></p>
                         </div>
                     </div>
                     <div class="footer-bottom">
@@ -410,8 +410,8 @@ const Router = {
                                 <div class="why-checklist-item"><span class="chk-icon">✓</span> Customer Satisfaction</div>
                             </div>
                             <div class="why-buttons">
-                                <a href="https://wa.me/971500000000" class="btn btn-primary" target="_blank">📱 WhatsApp Sofa Factory</a>
-                                <a href="tel:+971500000000" class="btn btn-secondary">📞 Call Sofa Expert</a>
+                                <a href="#" class="btn btn-primary" id="whyWhatsapp" target="_blank">📱 WhatsApp Sofa Factory</a>
+                                <a href="#" class="btn btn-secondary" id="whyPhone">📞 Call Sofa Expert</a>
                             </div>
                         </div>
                         <div class="why-right">
@@ -583,21 +583,21 @@ const Router = {
                                 <div class="contact-card-icon">📞</div>
                                 <div class="contact-card-text">
                                     <h4>Call Us</h4>
-                                    <p><a href="tel:+971500000000" id="phone">+971 50 000 0000</a></p>
+                                    <p><a href="#" id="phone">+971 50 000 0000</a></p>
                                 </div>
                             </div>
                             <div class="contact-card-item" style="background-color: #25D366;">
                                 <div class="contact-card-icon">📱</div>
                                 <div class="contact-card-text">
                                     <h4>WhatsApp Us</h4>
-                                    <p><a href="https://wa.me/971500000000" id="whatsapp" target="_blank">+971 50 000 0000</a></p>
+                                    <p><a href="#" id="whatsapp" target="_blank">+971 50 000 0000</a></p>
                                 </div>
                             </div>
                             <div class="contact-card-item">
                                 <div class="contact-card-icon">✉️</div>
                                 <div class="contact-card-text">
                                     <h4>Email Us</h4>
-                                    <p><a href="mailto:info@homesofa.ae" id="email">info@homesofa.ae</a></p>
+                                    <p><a href="#" id="email">info@homesofa.ae</a></p>
                                 </div>
                             </div>
                         </div>
@@ -775,10 +775,10 @@ const Router = {
                                 </div>
                             </div>
                             <div class="modal-actions">
-                                <a href="https://wa.me/971500000000" class="btn btn-primary" id="modalWhatsapp" target="_blank">
+                                <a href="#" class="btn btn-primary" id="modalWhatsapp" target="_blank">
                                     WhatsApp Us
                                 </a>
-                                <a href="tel:+971500000000" class="btn btn-secondary">
+                                <a href="#" class="btn btn-secondary" id="modalPhone">
                                     Call Now
                                 </a>
                             </div>
@@ -1271,6 +1271,18 @@ const Router = {
                                 <label>Opening Hours</label>
                                 <input type="text" name="openingHours" id="openingHours" required>
                             </div>
+                            <div class="form-group">
+                                <label>Facebook URL</label>
+                                <input type="url" name="facebook" id="facebook" placeholder="https://facebook.com/yourpage">
+                            </div>
+                            <div class="form-group">
+                                <label>Instagram URL</label>
+                                <input type="url" name="instagram" id="instagram" placeholder="https://instagram.com/yourpage">
+                            </div>
+                            <div class="form-group">
+                                <label>Twitter URL</label>
+                                <input type="url" name="twitter" id="twitter" placeholder="https://twitter.com/yourpage">
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -1341,18 +1353,46 @@ const Router = {
         `;
     },
 
-    formatSectionName(section) {
-        const names = {
-            'dashboard': 'Dashboard',
-            'admin-products': 'Products',
-            'admin-services': 'Services',
-            'admin-reviews': 'Reviews',
-            'admin-hero': 'Hero Slider',
-            'admin-business': 'Business Info',
-            'admin-contact': 'Contact Requests',
-            'admin-settings': 'Settings'
+    // Admin helper functions
+    saveBusinessInfo() {
+        const businessInfo = {
+            shopName: document.getElementById('shopName').value,
+            phone: document.getElementById('phone').value,
+            whatsapp: document.getElementById('whatsapp').value,
+            email: document.getElementById('email').value,
+            address: document.getElementById('address').value,
+            openingHours: document.getElementById('openingHours').value,
+            socialLinks: {
+                facebook: document.getElementById('facebook')?.value || '#',
+                instagram: document.getElementById('instagram')?.value || '#',
+                twitter: document.getElementById('twitter')?.value || '#'
+            }
         };
-        return names[section] || 'Dashboard';
+        
+        // In a real implementation, this would save to a backend
+        console.log('Saving business info:', businessInfo);
+        alert('Business information saved! (Note: This is a demo - actual saving requires backend implementation)');
+    },
+
+    // Admin helper functions
+    saveBusinessInfo() {
+        const businessInfo = {
+            shopName: document.getElementById('shopName').value,
+            phone: document.getElementById('phone').value,
+            whatsapp: document.getElementById('whatsapp').value,
+            email: document.getElementById('email').value,
+            address: document.getElementById('address').value,
+            openingHours: document.getElementById('openingHours').value,
+            socialLinks: {
+                facebook: document.getElementById('facebook')?.value || '#',
+                instagram: document.getElementById('instagram')?.value || '#',
+                twitter: document.getElementById('twitter')?.value || '#'
+            }
+        };
+        
+        // In a real implementation, this would save to a backend
+        console.log('Saving business info:', businessInfo);
+        alert('Business information saved! (Note: This is a demo - actual saving requires backend implementation)');
     },
 
     initializeMobileMenu() {

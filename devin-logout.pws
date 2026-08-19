@@ -1,0 +1,108 @@
+<#
+.SYNOPSIS
+    Thorough logout/credential reset for Devin Desktop on Windows.
+    Devin Desktop is the rebranded Windsurf (VS Code-based) editor, so its
+    session data can live in several places: its own %APPDATA%\Devin folder,
+    legacy %APPDATA%\Windsurf folders it still reads from, the shared
+    %USERPROFILE%\.codeium folder, and Windows Credential Manager (Electron
+    "safe storage").
+
+.NOTES
+    Run in a normal PowerShell window. Close Devin Desktop first if possible;
+    the script will also force-close it.
+#>
+
+Write-Host "=== Devin Desktop deep logout / credential reset ===" -ForegroundColor Cyan
+
+# 1. CLI logout, if devin CLI is present
+Write-Host "`n[1/6] devin auth logout (if CLI installed)..."
+if (Get-Command devin -ErrorAction SilentlyContinue) {
+    devin auth logout
+} else {
+    Write-Host "  CLI not found, skipping." -ForegroundColor Yellow
+}
+
+# 2. Force close every related process
+Write-Host "`n[2/6] Closing Devin Desktop / Windsurf processes..."
+Get-Process | Where-Object { $_.ProcessName -match "Devin|Windsurf|Cascade" } |
+    ForEach-Object {
+        Write-Host "  Stopping $($_.ProcessName) (PID $($_.Id))"
+        Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue
+    }
+Start-Sleep -Seconds 2
+
+# 3. Remove CLI credential file
+Write-Host "`n[3/6] Removing CLI credentials.toml..."
+$credFile = Join-Path $env:APPDATA "devin\credentials.toml"
+if (Test-Path $credFile) {
+    Remove-Item $credFile -Force
+    Write-Host "  Removed $credFile" -ForegroundColor Green
+}
+
+# 4. Remove app-level state (globalStorage / workspaceStorage / local storage)
+#    across every folder name the app has used, without touching your actual
+#    editor settings files (settings.json, keybindings.json are left alone).
+Write-Host "`n[4/6] Clearing Devin Desktop / Windsurf session & storage data..."
+$roots = @(
+    (Join-Path $env:APPDATA "Devin"),
+    (Join-Path $env:APPDATA "Windsurf"),
+    (Join-Path $env:LOCALAPPDATA "Devin"),
+    (Join-Path $env:LOCALAPPDATA "Windsurf")
+)
+$subPathsToRemove = @(
+    "User\globalStorage\state.vscdb",
+    "User\globalStorage\state.vscdb.backup",
+    "Local Storage",
+    "Session Storage",
+    "IndexedDB",
+    "Network Persistent State",
+    "Cookies"
+)
+foreach ($root in $roots) {
+    if (Test-Path $root) {
+        foreach ($sub in $subPathsToRemove) {
+            $target = Join-Path $root $sub
+            if (Test-Path $target) {
+                Write-Host "  Removing $target"
+                Remove-Item $target -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+}
+
+# 5. Clear the shared .codeium folder (MCP config, cascade chat/session state)
+Write-Host "`n[5/6] Clearing ~/.codeium/windsurf/cascade session data..."
+$cascadeDir = Join-Path $env:USERPROFILE ".codeium\windsurf\cascade"
+if (Test-Path $cascadeDir) {
+    Remove-Item $cascadeDir -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "  Removed $cascadeDir" -ForegroundColor Green
+}
+
+# 6. Remove Electron "safe storage" secret from Windows Credential Manager.
+#    Electron apps typically register this as "<AppName> Safe Storage" or
+#    "<AppName>SafeStorage" — try every plausible name for Devin/Windsurf.
+Write-Host "`n[6/6] Removing Electron safe-storage secret from Credential Manager..."
+$candidates = @(
+    "Devin Safe Storage", "Devin", "DevinSafeStorage",
+    "Windsurf Safe Storage", "Windsurf", "WindsurfSafeStorage",
+    "Cognition Safe Storage", "Cognition"
+)
+$existing = cmdkey /list
+foreach ($name in $candidates) {
+    if ($existing -match [regex]::Escape($name)) {
+        Write-Host "  Deleting credential target: $name"
+        cmdkey /delete:$name | Out-Null
+    }
+}
+# Also sweep for any generic entry containing devin/windsurf/cognition, in case
+# the exact target name differs from the guesses above.
+($existing | Select-String -Pattern "Target:\s*(.*(devin|windsurf|cognition).*)" ) |
+    ForEach-Object {
+        if ($_.Matches[0].Groups[1].Value) {
+            $t = $_.Matches[0].Groups[1].Value.Trim()
+            Write-Host "  Deleting matched credential target: $t"
+            cmdkey /delete:$t | Out-Null
+        }
+    }
+
+Write-Host "`n=== Done. Restart your PC once (recommended, to fully clear Electron's in-memory secure-storage cache), then relaunch Devin Desktop. ===" -ForegroundColor Cyan

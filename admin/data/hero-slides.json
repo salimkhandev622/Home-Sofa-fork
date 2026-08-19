@@ -8,7 +8,7 @@
     "primaryButtonText": "Get Free Consultation",
     "primaryButtonLink": "#contact",
     "secondaryButtonText": "Call Us",
-    "secondaryButtonLink": "tel:+971500000000",
+    "secondaryButtonLink": "phone",
     "order": 1,
     "active": true
   }

@@ -77,9 +77,9 @@ async function fetchHeroSlides() {
                 title: 'Custom Sofa Beds & Upholstery Solutions in Dubai',
                 description: 'Transform your living space with our custom-made sofa beds and premium upholstery services.',
                 primaryButtonText: 'WhatsApp Us',
-                primaryButtonLink: 'https://wa.me/971500000000',
+                primaryButtonLink: 'whatsapp',
                 secondaryButtonText: 'Call Now',
-                secondaryButtonLink: 'tel:+971500000000',
+                secondaryButtonLink: 'phone',
                 order: 1,
                 active: true
             }
@@ -155,19 +155,29 @@ function renderHeroSlider() {
         image: slide.image.startsWith('http') ? slide.image : slide.image
     }));
     
-    heroSlider.innerHTML = slidesWithFixedPaths.map((slide, index) => `
+    // Get business info for dynamic links
+    const whatsappLink = state.businessInfo.whatsapp ? `https://wa.me/${state.businessInfo.whatsapp.replace(/\D/g, '')}` : '#';
+    const phoneLink = state.businessInfo.phone ? `tel:${state.businessInfo.phone.replace(/\D/g, '')}` : '#';
+    
+    heroSlider.innerHTML = slidesWithFixedPaths.map((slide, index) => {
+        // Replace dynamic links
+        const primaryLink = slide.primaryButtonLink === 'whatsapp' ? whatsappLink : slide.primaryButtonLink;
+        const secondaryLink = slide.secondaryButtonLink === 'phone' ? phoneLink : slide.secondaryButtonLink;
+        
+        return `
         <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}')">
             <div class="hero-content">
                 <span class="hero-badge">${slide.badge}</span>
                 <h2 class="hero-title">${slide.title}</h2>
                 <p class="hero-description">${slide.description}</p>
                 <div class="hero-buttons">
-                    <a href="${slide.primaryButtonLink}" class="btn btn-primary">${slide.primaryButtonText}</a>
-                    <a href="${slide.secondaryButtonLink}" class="btn btn-secondary">${slide.secondaryButtonText}</a>
+                    <a href="${primaryLink}" class="btn btn-primary">${slide.primaryButtonText}</a>
+                    <a href="${secondaryLink}" class="btn btn-secondary">${slide.secondaryButtonText}</a>
                 </div>
             </div>
         </div>
-    `).join('') + `
+    `;
+    }).join('') + `
         <button class="hero-arrow prev" onclick="prevSlide()">❮</button>
         <button class="hero-arrow next" onclick="nextSlide()">❯</button>
         <div class="hero-nav">
@@ -231,7 +241,14 @@ function renderServices() {
     const servicesGrid = document.getElementById('servicesGrid');
     if (!servicesGrid || state.services.length === 0) return;
     
-    servicesGrid.innerHTML = state.services.map(service => `
+    // Get business info for dynamic links
+    const whatsappLink = state.businessInfo.whatsapp ? `https://wa.me/${state.businessInfo.whatsapp.replace(/\D/g, '')}` : '#';
+    
+    servicesGrid.innerHTML = state.services.map(service => {
+        // Replace dynamic links
+        const buttonLink = service.buttonLink === 'whatsapp' ? whatsappLink : service.buttonLink;
+        
+        return `
         <div class="specialty-card">
             <img src="${service.image}" alt="${service.title}" class="specialty-card-img" loading="lazy">
             <div class="specialty-card-body">
@@ -240,10 +257,11 @@ function renderServices() {
                 <ul class="specialty-card-features">
                     ${service.features.map(feature => `<li>${feature}</li>`).join('')}
                 </ul>
-                <a href="${service.buttonLink}" class="btn btn-primary">${service.buttonText}</a>
+                <a href="${buttonLink}" class="btn btn-primary">${service.buttonText}</a>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function renderBestsellers() {
@@ -251,6 +269,9 @@ function renderBestsellers() {
     if (!bestsellersGrid || state.products.length === 0) return;
     
     const bestsellers = state.products.filter(p => p.bestSeller).sort((a, b) => a.displayOrder - b.displayOrder);
+    
+    // Get business info for dynamic links
+    const whatsappLink = state.businessInfo.whatsapp ? `https://wa.me/${state.businessInfo.whatsapp.replace(/\D/g, '')}` : '#';
     
     bestsellersGrid.innerHTML = bestsellers.map(product => `
         <div class="product-card">
@@ -264,7 +285,7 @@ function renderBestsellers() {
                 <div class="product-price">AED ${product.price.toLocaleString()}</div>
                 <p class="product-description">${product.shortDescription}</p>
                 <div class="product-actions">
-                    <a href="https://wa.me/971500000000?text=I%20want%20to%20get%20a%20custom%20quote%20for%20${encodeURIComponent(product.name)}" class="btn btn-primary" target="_blank" style="width:100%;">Get Custom Quote</a>
+                    <a href="${whatsappLink}?text=I%20want%20to%20get%20a%20custom%20quote%20for%20${encodeURIComponent(product.name)}" class="btn btn-primary" target="_blank" style="width:100%;">Get Custom Quote</a>
                 </div>
             </div>
         </div>
@@ -279,23 +300,125 @@ function renderBusinessInfo() {
         address: document.getElementById('address'),
         phone: document.getElementById('phone'),
         whatsapp: document.getElementById('whatsapp'),
-        email: document.getElementById('email')
+        email: document.getElementById('email'),
+        topBarHours: document.getElementById('topBarHours'),
+        topBarWhatsapp: document.getElementById('topBarWhatsapp'),
+        headerWhatsapp: document.getElementById('headerWhatsapp'),
+        whyWhatsapp: document.getElementById('whyWhatsapp'),
+        whyPhone: document.getElementById('whyPhone'),
+        consultationPhone: document.getElementById('consultationPhone'),
+        consultationWhatsapp: document.getElementById('consultationWhatsapp'),
+        consultationEmail: document.getElementById('consultationEmail'),
+        contactPhone: document.getElementById('contactPhone'),
+        contactWhatsapp: document.getElementById('contactWhatsapp'),
+        contactEmail: document.getElementById('contactEmail')
     };
     
     if (elements.shopName) elements.shopName.textContent = state.businessInfo.shopName;
-    if (elements.address) elements.address.textContent = state.businessInfo.address;
+    if (elements.address) {
+        if (elements.address.tagName === 'A') {
+            elements.address.textContent = state.businessInfo.address;
+        }
+    }
+    if (elements.topBarHours) elements.topBarHours.textContent = `Open Today ${state.businessInfo.openingHours}`;
+    
+    // Update phone links
+    const phoneLink = `tel:${state.businessInfo.phone.replace(/\D/g, '')}`;
     if (elements.phone) {
-        elements.phone.textContent = state.businessInfo.phone;
-        elements.phone.href = `tel:${state.businessInfo.phone.replace(/\D/g, '')}`;
+        if (elements.phone.tagName === 'A') {
+            elements.phone.textContent = state.businessInfo.phone;
+            elements.phone.href = phoneLink;
+        }
     }
+    if (elements.whyPhone) {
+        elements.whyPhone.href = phoneLink;
+    }
+    if (elements.consultationPhone) {
+        elements.consultationPhone.textContent = state.businessInfo.phone;
+        elements.consultationPhone.href = phoneLink;
+    }
+    if (elements.contactPhone) {
+        elements.contactPhone.textContent = state.businessInfo.phone;
+        elements.contactPhone.href = phoneLink;
+    }
+    
+    // Update WhatsApp links
+    const whatsappLink = `https://wa.me/${state.businessInfo.whatsapp.replace(/\D/g, '')}`;
     if (elements.whatsapp) {
-        const whatsappNum = state.businessInfo.whatsapp || state.businessInfo.phone;
-        elements.whatsapp.textContent = whatsappNum;
-        elements.whatsapp.href = `https://wa.me/${whatsappNum.replace(/\D/g, '')}`;
+        if (elements.whatsapp.tagName === 'A') {
+            elements.whatsapp.textContent = state.businessInfo.whatsapp;
+            elements.whatsapp.href = whatsappLink;
+        }
     }
+    if (elements.topBarWhatsapp) elements.topBarWhatsapp.href = whatsappLink;
+    if (elements.headerWhatsapp) elements.headerWhatsapp.href = whatsappLink;
+    if (elements.whyWhatsapp) elements.whyWhatsapp.href = whatsappLink;
+    if (elements.consultationWhatsapp) {
+        elements.consultationWhatsapp.textContent = state.businessInfo.whatsapp;
+        elements.consultationWhatsapp.href = whatsappLink;
+    }
+    if (elements.contactWhatsapp) {
+        elements.contactWhatsapp.textContent = state.businessInfo.whatsapp;
+        elements.contactWhatsapp.href = whatsappLink;
+    }
+    
+    // Update email links
+    const emailLink = `mailto:${state.businessInfo.email}`;
     if (elements.email) {
-        elements.email.textContent = state.businessInfo.email;
-        elements.email.href = `mailto:${state.businessInfo.email}`;
+        if (elements.email.tagName === 'A') {
+            elements.email.textContent = state.businessInfo.email;
+            elements.email.href = emailLink;
+        }
+    }
+    if (elements.consultationEmail) {
+        if (elements.consultationEmail.tagName === 'A') {
+            elements.consultationEmail.textContent = state.businessInfo.email;
+            elements.consultationEmail.href = emailLink;
+        }
+    }
+    if (elements.contactEmail) {
+        if (elements.contactEmail.tagName === 'A') {
+            elements.contactEmail.textContent = state.businessInfo.email;
+            elements.contactEmail.href = emailLink;
+        }
+    }
+    
+    // Handle plain text email elements (span tags)
+    const emailTextElements = document.querySelectorAll('#email');
+    emailTextElements.forEach(el => {
+        if (el.tagName === 'SPAN') {
+            el.textContent = state.businessInfo.email;
+        }
+    });
+    
+    // Handle plain text address elements (span tags)
+    const addressTextElements = document.querySelectorAll('#address');
+    addressTextElements.forEach(el => {
+        if (el.tagName === 'SPAN') {
+            el.textContent = state.businessInfo.address;
+        }
+    });
+    
+    // Handle plain text phone elements (span tags)
+    const phoneTextElements = document.querySelectorAll('#phone');
+    phoneTextElements.forEach(el => {
+        if (el.tagName === 'SPAN') {
+            el.textContent = state.businessInfo.phone;
+        }
+    });
+    
+    // Update social links if they exist
+    if (state.businessInfo.socialLinks) {
+        const socialLinks = document.querySelectorAll('.social-link');
+        if (socialLinks.length > 0 && state.businessInfo.socialLinks.facebook) {
+            socialLinks[0].href = state.businessInfo.socialLinks.facebook;
+        }
+        if (socialLinks.length > 1 && state.businessInfo.socialLinks.instagram) {
+            socialLinks[1].href = state.businessInfo.socialLinks.instagram;
+        }
+        if (socialLinks.length > 2 && state.businessInfo.socialLinks.twitter) {
+            socialLinks[2].href = state.businessInfo.socialLinks.twitter;
+        }
     }
 }
 
