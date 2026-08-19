@@ -538,14 +538,7 @@
         `).join('');
     }
 
-    function populateBusinessInfo() {
-        document.getElementById('shopName').value = state.businessInfo.shopName || '';
-        document.getElementById('phone').value = state.businessInfo.phone || '';
-        document.getElementById('whatsapp').value = state.businessInfo.whatsapp || '';
-        document.getElementById('email').value = state.businessInfo.email || '';
-        document.getElementById('address').value = state.businessInfo.address || '';
-        document.getElementById('openingHours').value = state.businessInfo.openingHours || '';
-    }
+
 
     // Navigation
     function initializeNavigation() {
@@ -778,6 +771,10 @@
                 facebook: document.getElementById('facebook')?.value || '#',
                 instagram: document.getElementById('instagram')?.value || '#',
                 twitter: document.getElementById('twitter')?.value || '#'
+            },
+            mapCoordinates: {
+                lat: document.getElementById('mapLat')?.value || 25.12345678901234,
+                lng: document.getElementById('mapLng')?.value || 55.12345678901234
             }
         };
         
@@ -812,6 +809,15 @@
             }
             if (document.getElementById('twitter')) {
                 document.getElementById('twitter').value = state.businessInfo.socialLinks.twitter || '';
+            }
+        }
+        
+        if (state.businessInfo.mapCoordinates) {
+            if (document.getElementById('mapLat')) {
+                document.getElementById('mapLat').value = state.businessInfo.mapCoordinates.lat || '';
+            }
+            if (document.getElementById('mapLng')) {
+                document.getElementById('mapLng').value = state.businessInfo.mapCoordinates.lng || '';
             }
         }
     }
