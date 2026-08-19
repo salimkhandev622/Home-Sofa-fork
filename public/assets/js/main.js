@@ -302,16 +302,9 @@ function renderBusinessInfo() {
         whatsapp: document.getElementById('whatsapp'),
         email: document.getElementById('email'),
         topBarHours: document.getElementById('topBarHours'),
-        topBarWhatsapp: document.getElementById('topBarWhatsapp'),
-        headerWhatsapp: document.getElementById('headerWhatsapp'),
-        whyWhatsapp: document.getElementById('whyWhatsapp'),
-        whyPhone: document.getElementById('whyPhone'),
         consultationPhone: document.getElementById('consultationPhone'),
         consultationWhatsapp: document.getElementById('consultationWhatsapp'),
-        consultationEmail: document.getElementById('consultationEmail'),
-        contactPhone: document.getElementById('contactPhone'),
-        contactWhatsapp: document.getElementById('contactWhatsapp'),
-        contactEmail: document.getElementById('contactEmail')
+        consultationEmail: document.getElementById('consultationEmail')
     };
     
     if (elements.shopName) elements.shopName.textContent = state.businessInfo.shopName;
@@ -330,16 +323,9 @@ function renderBusinessInfo() {
             elements.phone.href = phoneLink;
         }
     }
-    if (elements.whyPhone) {
-        elements.whyPhone.href = phoneLink;
-    }
     if (elements.consultationPhone) {
         elements.consultationPhone.textContent = state.businessInfo.phone;
         elements.consultationPhone.href = phoneLink;
-    }
-    if (elements.contactPhone) {
-        elements.contactPhone.textContent = state.businessInfo.phone;
-        elements.contactPhone.href = phoneLink;
     }
     
     // Update WhatsApp links
@@ -350,16 +336,9 @@ function renderBusinessInfo() {
             elements.whatsapp.href = whatsappLink;
         }
     }
-    if (elements.topBarWhatsapp) elements.topBarWhatsapp.href = whatsappLink;
-    if (elements.headerWhatsapp) elements.headerWhatsapp.href = whatsappLink;
-    if (elements.whyWhatsapp) elements.whyWhatsapp.href = whatsappLink;
     if (elements.consultationWhatsapp) {
         elements.consultationWhatsapp.textContent = state.businessInfo.whatsapp;
         elements.consultationWhatsapp.href = whatsappLink;
-    }
-    if (elements.contactWhatsapp) {
-        elements.contactWhatsapp.textContent = state.businessInfo.whatsapp;
-        elements.contactWhatsapp.href = whatsappLink;
     }
     
     // Update email links
@@ -374,12 +353,6 @@ function renderBusinessInfo() {
         if (elements.consultationEmail.tagName === 'A') {
             elements.consultationEmail.textContent = state.businessInfo.email;
             elements.consultationEmail.href = emailLink;
-        }
-    }
-    if (elements.contactEmail) {
-        if (elements.contactEmail.tagName === 'A') {
-            elements.contactEmail.textContent = state.businessInfo.email;
-            elements.contactEmail.href = emailLink;
         }
     }
     
@@ -624,16 +597,58 @@ async function handleConsultationSubmit(e) {
     };
     
     try {
-        // In production, send to your API endpoint
-        console.log('Consultation requested:', consultationData);
+        // Get WhatsApp number from business info
+        const whatsappNumber = state.businessInfo.whatsapp ? state.businessInfo.whatsapp.replace(/\D/g, '') : '';
         
-        // Show success message
-        alert('Thank you for your inquiry! We will contact you shortly.');
-        e.target.reset();
+        if (!whatsappNumber) {
+            alert('WhatsApp number not configured. Please contact us directly.');
+            return;
+        }
+        
+        // Format the WhatsApp message
+        const serviceLabels = {
+            'sofa-bed': 'Sofa Bed',
+            'upholstery': 'Upholstery',
+            'custom-sofa': 'Custom Sofa',
+            'repair': 'Repair'
+        };
+        
+        const serviceLabel = serviceLabels[consultationData.service] || consultationData.service;
+        
+        const whatsappMessage = `*New Consultation Request*
+
+*Name:* ${consultationData.name}
+*Phone:* ${consultationData.phone}
+*Email:* ${consultationData.email}
+*Service:* ${serviceLabel}
+*Message:* ${consultationData.message}
+
+---
+Sent from Home Sofa Website`;
+        
+        // Encode the message for URL
+        const encodedMessage = encodeURIComponent(whatsappMessage);
+        
+        // Create WhatsApp URL
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        
+        // Show confirmation before redirecting
+        const confirmed = confirm(`Your consultation request will be sent to WhatsApp.\n\nName: ${consultationData.name}\nService: ${serviceLabel}\n\nClick OK to open WhatsApp or Cancel to edit.`);
+        
+        if (confirmed) {
+            // Open WhatsApp in new tab
+            window.open(whatsappUrl, '_blank');
+            
+            // Reset form after successful submission
+            e.target.reset();
+            
+            // Show success message
+            alert('Thank you for your interest! WhatsApp has been opened with your pre-filled message. Please click send to complete your request.');
+        }
         
     } catch (error) {
         console.error('Error submitting consultation:', error);
-        alert('Failed to submit inquiry. Please try again.');
+        alert('Failed to process your request. Please try again or contact us directly via WhatsApp.');
     }
 }
 

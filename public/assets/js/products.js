@@ -105,12 +105,8 @@ function updateBusinessInfoElements() {
     
     // Update header elements
     const topBarHours = document.getElementById('topBarHours');
-    const topBarWhatsapp = document.getElementById('topBarWhatsapp');
-    const headerWhatsapp = document.getElementById('headerWhatsapp');
     
     if (topBarHours) topBarHours.textContent = `Open Today ${businessInfo.openingHours}`;
-    if (topBarWhatsapp) topBarWhatsapp.href = whatsappLink;
-    if (headerWhatsapp) headerWhatsapp.href = whatsappLink;
     
     // Update modal elements
     const modalWhatsapp = document.getElementById('modalWhatsapp');
@@ -156,7 +152,6 @@ function renderProducts() {
     if (productsToShow.length === 0) {
         productsGrid.innerHTML = `
             <div class="no-results" style="grid-column: 1 / -1;">
-                <div class="no-results-icon">🔍</div>
                 <h3>No products found</h3>
                 <p>Try adjusting your filters or search criteria</p>
             </div>

@@ -13,5 +13,6 @@
   "mapCoordinates": {
     "lat": 25.12345678901234,
     "lng": 55.12345678901234
-  }
+  },
+  "location": "Dubai, UAE"
 }

@@ -1,136 +1,142 @@
-now u hve to find all the data and its all refernces ie the places where they used must be correclty acoocrding to these data , also all that whtsapp number , socaila links must be added here as well like the business-info.json , map all the other to the business-info.json as it currently works
 
-business-info.json
-+10
--1
-  "mapCoordinates": {
-    "lat": 25.12345678901234,
-    "lng": 55.12345678901234
-  }
-}
-
-hero-slides.json
-+2
--2
-    "primaryButtonLink": "{{whatsappLink}}",
-    "secondaryButtonText": "Call Now",
-    "secondaryButtonLink": "tel:+971500000000",
-    "secondaryButtonLink": "{{phoneLink}}",
-    "order": 1,
-
-hero-slides.json
-+2
--2
-    "primaryButtonLink": "whatsapp",
-    "secondaryButtonText": "Call Now",
-    "secondaryButtonLink": "{{phoneLink}}",
-    "secondaryButtonLink": "phone",
-    "order": 1,
-
-main.js
-+14
--4
-        </div>
-    `).join('') + `
-    `;
-    }).join('') + `
-        <button class="hero-arrow prev" onclick="prevSlide()">❮</button>
-
-services.json
-+6
--6
-11 hidden lines
-    "buttonText": "Get Quote",
-    "buttonLink": "https://wa.me/971500000000"
-    "buttonLink": "whatsapp"
-  }
-
-main.js
-+11
--3
-        </div>
-    `).join('');
-    `;
-    }).join('');
-}
-
-main.js
-+4
--1
-11 hidden lines
-                <div class="product-actions">
-                    <a href="https://wa.me/971500000000?text=I%20want%20to%20get%20a%20custom%20quote%20for%20${encodeURIComponent(product.name)}" class="btn btn-primary" target="_blank" style="width:100%;">Get Custom Quote</a>
-                    <a href="${whatsappLink}?text=I%20want%20to%20get%20a%20custom%20quote%20for%20${encodeURIComponent(product.name)}" class="btn btn-primary" target="_blank" style="width:100%;">Get Custom Quote</a>
-                </div>
-
-main.js
-+14
-        if (socialLinks.length > 2 && state.businessInfo.socialLinks.twitter) {
-            socialLinks[2].href = state.businessInfo.socialLinks.twitter;
-        }
+    .product-title {
+        font-size: 17px;
     }
-}
 
+Perfect! I've completely overhauled the responsive CSS to make the website fully responsive for both mobile and desktop. Here's a comprehensive summary of the improvements:
+
+📱 Enhanced Responsive Design:
+1. Breakpoint Coverage:
+Mobile: ≤480px (Ultra-responsive)
+Small Tablet: 481px-767px
+Tablet: 768px-1024px
+Medium Desktop: 992px-1199px
+Desktop: 1200px-1399px
+Large Desktop: 1400px-1599px
+Extra Large Desktop: 1600px-1919px
+Ultra-wide: ≥1920px
+2. Mobile Optimizations (≤480px):
+✅ Hero section height adjustment (400px)
+✅ Font scaling (titles 20px, text 14px)
+✅ Button sizing (full-width, minimum touch targets)
+✅ Thumbnail resizing (80px × 55px)
+✅ Category bar (2 columns)
+✅ Single-column grids for all content
+✅ Form layout adjustments
+✅ Contact info stacking
+✅ Lightbox optimization
+✅ Navigation menu improvements
+3. Tablet Optimizations (768px):
+✅ Hero section (500px height)
+✅ Category bar (3 columns)
+✅ Specialty services (2 columns)
+✅ Products grid (2 columns)
+✅ Why section stacking
+✅ Process section reordering
+✅ Consultation form single column
+✅ Footer (2 columns)
+4. Desktop Enhancements:
+✅ Large desktop: 4-column product grids
+✅ Extra large: 5-column product grids
+✅ Ultra-wide: 6-column product grids
+✅ Font scaling for larger screens
+✅ Container width optimization
+5. Touch Device Optimizations:
+✅ Minimum 44px touch targets for buttons
+✅ Larger thumbnail tap targets (88px minimum)
+✅ Smooth touch scrolling
+✅ Hide navigation arrows on touch
+✅ Optimized horizontal scrolling
+6. Orientation Support:
+✅ Landscape mobile: Compressed hero, 5-column categories
+✅ Portrait tablets: Optimized grid layouts
+✅ Dynamic height adjustments
+7. Section-Specific Responsiveness:
+✅ Hero: Dynamic height, font scaling, thumbnail sizing
+✅ Category Bar: 5→3→2 columns based on screen size
+✅ Specialty Services: 4→3→2→1 columns
+✅ Products: 6→5→4→3→2→1 columns
+✅ Features: 5→3→2→1 columns
+✅ Forms: Stacked on mobile, side-by-side on desktop
+✅ Consultation: Single column on mobile, split on desktop
+✅ Footer: 4→2→1 columns
+✅ Lightbox: Full-screen optimization on mobile
+8. Typography Scaling:
+✅ Section titles: 52px → 42px → 32px → 24px → 20px
+✅ Hero titles: 72px → 56px → 42px → 32px → 24px → 20px
+✅ Body text: Proportional scaling
+✅ Button text: Readable on all devices
+9. Performance Optimizations:
+✅ High-DPI display support
+✅ Image rendering optimization
+✅ Reduced motion support
+✅ Print-friendly styles
+10. User Experience:
+✅ Consistent spacing across devices
+✅ Proper touch targets
+✅ Readable font sizes
+✅ Optimized navigation
+✅ Smooth transitions
+✅ Accessible layouts
+The website now provides an optimal viewing experience across all devices - from smartphones to ultra-wide desktop monitors, with proper touch support, orientation handling, and performance optimizations.
+
+
+
+
+
+
+
+now find all the ux problem and remove the exxtrca text , icon button etc and make it clean and proesssional website
+
+
+I'll analyze the website to identify UX problems and clean up the design to make it more professional. Let me start by examining the current structure.
+
+Read
 index.html
-+2
--2
-                <span class="hours">Open Today 9:00 AM - 10:00 PM</span>
-                <a href="https://wa.me/971500000000" class="whatsapp-link" target="_blank">
+#L1-100
+Read
+index.html
+#L100-199
+Read
+index.html
+#L200-299
+Read
+index.html
+#L300-399
+Read
+index.html
+#L400-499
+index.html
+-3
                 <span class="hours" id="topBarHours">Open Today 9:00 AM - 10:00 PM</span>
                 <a href="#" class="whatsapp-link" id="topBarWhatsapp" target="_blank">
                     <span class="whatsapp-icon">📱</span> WhatsApp
+                </a>
+            </div>
+index.html
+-3
+                <div class="header-actions">
+                    <a href="#" class="btn btn-primary whatsapp-btn" id="headerWhatsapp" target="_blank">
+                        WhatsApp Us
+                    </a>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+index.html
++5
+-35
+                </div>
+            </div>
+        </div>
+    </section>
+ 
 
 index.html
 +1
--1
-                <div class="header-actions">
-                    <a href="https://wa.me/971500000000" class="btn btn-primary whatsapp-btn" target="_blank">
-                    <a href="#" class="btn btn-primary whatsapp-btn" id="headerWhatsapp" target="_blank">
-                        WhatsApp Us
-index.html
-+2
 -2
-                        <a href="https://wa.me/971500000000" class="btn btn-primary" target="_blank">📱 WhatsApp Sofa Factory</a>
-                        <a href="tel:+971500000000" class="btn btn-secondary">📞 Call Sofa Expert</a>
+                    <div class="why-buttons">
                         <a href="#" class="btn btn-primary" id="whyWhatsapp" target="_blank">📱 WhatsApp Sofa Factory</a>
                         <a href="#" class="btn btn-secondary" id="whyPhone">📞 Call Sofa Expert</a>
+                        <a href="#contact" class="btn btn-primary">Contact Us</a>
                     </div>
-
-index.html
-+3
--3
-4 hidden lines
-                            <h4>Email Us</h4>
-                            <p><a href="mailto:info@homesofa.ae" id="email">info@homesofa.ae</a></p>
-                            <p><a href="#" id="consultationEmail">info@homesofa.ae</a></p>
-                        </div>
-
-main.js
-+43
--8
-    }
-    if (elements.consultationEmail) {
-        elements.consultationEmail.textContent = state.businessInfo.email;
-        elements.consultationEmail.href = emailLink;
-    }
-
-index.html
-+3
--3
-2 hidden lines
-                    <h3>Email</h3>
-                    <p><a href="mailto:info@homesofa.ae" id="email">info@homesofa.ae</a></p>
-                    <p><a href="#" id="contactEmail">info@homesofa.ae</a></p>
-                </div>
-
-main.js
-+16
--1
-    if (elements.contactEmail) {
-        elements.contactEmail.textContent = state.businessInfo.email;
-        elements.contactEmail.href = emailLink;
-    }
- 
 
 
 
