@@ -758,20 +758,6 @@ window.closeLightbox = function() {
 
 // Add click handlers to hero slides for lightbox
 document.addEventListener('DOMContentLoaded', function() {
-    // Add click functionality to hero slides
-    const heroSlider = document.getElementById('heroSlider');
-    if (heroSlider) {
-        heroSlider.addEventListener('click', function(e) {
-            const activeSlide = document.querySelector('.hero-slide.active');
-            if (activeSlide) {
-                const bgImage = activeSlide.style.backgroundImage;
-                const imageUrl = bgImage.replace(/url\(['"]?([^'"]+)['"]?\)/, '$1');
-                const title = activeSlide.querySelector('.hero-title')?.textContent || 'Home Sofa Collection';
-                openLightbox(imageUrl, title);
-            }
-        });
-    }
-    
     // Add click functionality to thumbnails
     const thumbnails = document.querySelectorAll('.hero-thumbnail-item img');
     thumbnails.forEach(thumb => {
