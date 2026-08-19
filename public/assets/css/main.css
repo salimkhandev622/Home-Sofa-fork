@@ -227,7 +227,7 @@ body {
     position: relative;
     height: 700px;
     overflow: hidden;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: var(--light-gray);
 }
 
 .hero-slider {
@@ -1252,6 +1252,9 @@ form button {
     height: 700px;
     overflow: hidden;
     background-color: var(--light-gray);
+    background-image: url('assets/images/hero_sofa.jpg');
+    background-size: cover;
+    background-position: center;
 }
 
 .hero-slider {
