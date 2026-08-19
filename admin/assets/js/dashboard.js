@@ -102,7 +102,9 @@
             );
             
             if (!putResponse.ok) {
-                throw new Error(`GitHub API error: ${putResponse.status}`);
+                const errorText = await putResponse.text();
+                console.error('GitHub API error details:', errorText);
+                throw new Error(`GitHub API error: ${putResponse.status} - ${errorText}`);
             }
             
             const result = await putResponse.json();
@@ -172,7 +174,9 @@
             );
             
             if (!putResponse.ok) {
-                throw new Error(`GitHub API error for root file: ${putResponse.status}`);
+                const errorText = await putResponse.text();
+                console.error('GitHub API error details for root file:', errorText);
+                throw new Error(`GitHub API error for root file: ${putResponse.status} - ${errorText}`);
             }
             
             const result = await putResponse.json();
@@ -236,7 +240,9 @@
             );
             
             if (!putResponse.ok) {
-                throw new Error(`GitHub API error for public file: ${putResponse.status}`);
+                const errorText = await putResponse.text();
+                console.error('GitHub API error details for public file:', errorText);
+                throw new Error(`GitHub API error for public file: ${putResponse.status} - ${errorText}`);
             }
             
             const result = await putResponse.json();
@@ -285,6 +291,17 @@
             const reviews = JSON.parse(localStorage.getItem('reviews.json') || '[]');
             const heroSlides = JSON.parse(localStorage.getItem('hero-slides.json') || '[]');
             const businessInfo = JSON.parse(localStorage.getItem('business-info.json') || '{}');
+            
+            // Debug: Log what data is being deployed
+            console.log('=== DEPLOYMENT DATA DEBUG ===');
+            console.log('Products to deploy:', products.length, 'items');
+            console.log('Services to deploy:', services.length, 'items');
+            console.log('Reviews to deploy:', reviews.length, 'items');
+            console.log('Hero slides to deploy:', heroSlides.length, 'items');
+            console.log('Business info keys:', Object.keys(businessInfo));
+            console.log('GitHub config:', githubConfig.githubOwner, githubConfig.githubRepo);
+            console.log('Token present:', !!githubConfig.githubToken);
+            console.log('============================');
             
             // Deploy all data files to GitHub
             const deployResults = [];
@@ -504,21 +521,6 @@
         }
         // Fall back to file loading
         return await loadDataFromFile(filename) || defaultValue;
-        
-        // Check localStorage for any unsaved changes
-        const localStorageProducts = localStorage.getItem('products.json');
-        const localStorageServices = localStorage.getItem('services.json');
-        const localStorageReviews = localStorage.getItem('reviews.json');
-        const localStorageHeroSlides = localStorage.getItem('hero-slides.json');
-        const localStorageBusinessInfo = localStorage.getItem('business-info.json');
-        const localStorageContactRequests = localStorage.getItem('contact-requests.json');
-        
-        if (localStorageProducts) state.products = JSON.parse(localStorageProducts);
-        if (localStorageServices) state.services = JSON.parse(localStorageServices);
-        if (localStorageReviews) state.reviews = JSON.parse(localStorageReviews);
-        if (localStorageHeroSlides) state.heroSlides = JSON.parse(localStorageHeroSlides);
-        if (localStorageBusinessInfo) state.businessInfo = JSON.parse(localStorageBusinessInfo);
-        if (localStorageContactRequests) state.contactRequests = JSON.parse(localStorageContactRequests);
     }
 
 
