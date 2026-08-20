@@ -227,125 +227,88 @@
         const deployBtn = document.getElementById('deployBtn');
         const originalText = deployBtn.innerHTML;
         
+        let githubConfig = getGitHubConfig();
+        
+        if (!githubConfig.githubToken) {
+            const token = prompt('Enter your access token for deployment:');
+            if (!token) {
+                showWarning('Deployment cancelled. Token is required.');
+                return;
+            }
+            githubConfig.githubToken = token;
+            localStorage.setItem('githubToken', token);
+        }
+        
+        showLoading('Deploying all data to GitHub Pages...');
         try {
             deployBtn.innerHTML = '🔄 Deploying...';
             deployBtn.disabled = true;
             
-            let githubConfig = getGitHubConfig();
-            
-            // Prompt for token if not stored (more secure approach)
-            if (!githubConfig.githubToken) {
-                const token = prompt('Enter your access token for deployment:');
-                if (!token) {
-                    alert('Deployment cancelled. Token is required for deployment.');
-                    deployBtn.innerHTML = originalText;
-                    deployBtn.disabled = false;
-                    return;
-                }
-                githubConfig.githubToken = token;
-                localStorage.setItem('githubToken', token);
-            }
-            
-            if (!githubConfig.githubToken) {
-                alert('⚠️ GitHub token not configured. Please configure GitHub token in settings.');
-                deployBtn.innerHTML = originalText;
-                deployBtn.disabled = false;
-                return;
-            }
-            
-            // Load all current data from localStorage
             const products = JSON.parse(localStorage.getItem('products.json') || '[]');
             const services = JSON.parse(localStorage.getItem('services.json') || '[]');
             const reviews = JSON.parse(localStorage.getItem('reviews.json') || '[]');
             const heroSlides = JSON.parse(localStorage.getItem('hero-slides.json') || '[]');
             const businessInfo = JSON.parse(localStorage.getItem('business-info.json') || '{}');
             
-            // Debug: Log what data is being deployed
-            console.log('=== DEPLOYMENT DATA DEBUG ===');
-            console.log('Products to deploy:', products.length, 'items');
-            console.log('Services to deploy:', services.length, 'items');
-            console.log('Reviews to deploy:', reviews.length, 'items');
-            console.log('Hero slides to deploy:', heroSlides.length, 'items');
-            console.log('Business info keys:', Object.keys(businessInfo));
-            console.log('GitHub config:', githubConfig.githubOwner, githubConfig.githubRepo);
-            console.log('Token present:', !!githubConfig.githubToken);
-            
-            // Log image paths being deployed
-            console.log('=== IMAGES IN DEPLOYMENT ===');
-            heroSlides.forEach((slide, i) => console.log(`Hero slide ${i+1}: ${slide.image}`));
-            products.forEach((product, i) => console.log(`Product ${i+1}: ${product.mainImage}`));
-            services.forEach((service, i) => console.log(`Service ${i+1}: ${service.image}`));
-            console.log('============================');
-            
-            // Deploy all data files to GitHub
             const deployResults = [];
             
-            // Deploy products to both locations
             try {
                 await saveToGitHub('public/data/products.json', products, githubConfig);
                 await saveToGitHub('admin/data/products.json', products, githubConfig);
-                deployResults.push('✅ Products deployed to both locations');
+                deployResults.push('Products deployed');
             } catch (error) {
-                deployResults.push(`❌ Products failed: ${error.message}`);
+                deployResults.push(`Products failed: ${error.message}`);
             }
             
-            // Deploy services to both locations
             try {
                 await saveToGitHub('public/data/services.json', services, githubConfig);
                 await saveToGitHub('admin/data/services.json', services, githubConfig);
-                deployResults.push('✅ Services deployed to both locations');
+                deployResults.push('Services deployed');
             } catch (error) {
-                deployResults.push(`❌ Services failed: ${error.message}`);
+                deployResults.push(`Services failed: ${error.message}`);
             }
             
-            // Deploy reviews to both locations
             try {
                 await saveToGitHub('public/data/reviews.json', reviews, githubConfig);
                 await saveToGitHub('admin/data/reviews.json', reviews, githubConfig);
-                deployResults.push('✅ Reviews deployed to both locations');
+                deployResults.push('Reviews deployed');
             } catch (error) {
-                deployResults.push(`❌ Reviews failed: ${error.message}`);
+                deployResults.push(`Reviews failed: ${error.message}`);
             }
             
-            // Deploy hero slides to both locations
             try {
                 await saveToGitHub('public/data/hero-slides.json', heroSlides, githubConfig);
                 await saveToGitHub('admin/data/hero-slides.json', heroSlides, githubConfig);
-                deployResults.push('✅ Hero slides deployed to both locations');
+                deployResults.push('Hero slides deployed');
             } catch (error) {
-                deployResults.push(`❌ Hero slides failed: ${error.message}`);
+                deployResults.push(`Hero slides failed: ${error.message}`);
             }
             
-            // Deploy business info to both locations
             try {
                 await saveToGitHub('public/data/business-info.json', businessInfo, githubConfig);
                 await saveToGitHub('admin/data/business-info.json', businessInfo, githubConfig);
-                deployResults.push('✅ Business info deployed to both locations');
+                deployResults.push('Business info deployed');
             } catch (error) {
-                deployResults.push(`❌ Business info failed: ${error.message}`);
+                deployResults.push(`Business info failed: ${error.message}`);
             }
             
-            // Show deployment results
-            const successCount = deployResults.filter(r => r.startsWith('✅')).length;
-            const totalCount = deployResults.length;
-            
-            alert(`Deployment Complete!\n\n${deployResults.join('\n')}\n\n${successCount}/${totalCount} files deployed successfully.\n\nNote: GitHub Pages will automatically rebuild and your changes will be live within 1-2 minutes.`);
-            
-            // Refresh deployment status
+            showSuccess('Deployment complete! Changes will be live on GitHub Pages in 1-2 minutes.');
             checkDeploymentStatus();
             
         } catch (error) {
             console.error('Deployment error:', error);
-            alert(`❌ Deployment failed: ${error.message}`);
+            showError('Deployment failed: ' + error.message);
         } finally {
             deployBtn.innerHTML = originalText;
             deployBtn.disabled = false;
+            hideLoading();
         }
     }
 
     async function checkDeploymentStatus() {
         const config = getGitHubConfig();
         const statusDiv = document.getElementById('deploymentStatus');
+        if (!statusDiv) return;
         
         if (!config.githubToken) {
             statusDiv.innerHTML = '<p class="status-warning">⚠️ GitHub token not configured. Please configure GitHub token in settings.</p>';
@@ -355,7 +318,6 @@
         try {
             statusDiv.innerHTML = '<p class="status-loading">🔄 Checking deployment status...</p>';
             
-            // Simple repository check for GitHub Pages
             const response = await fetch(
                 `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}`,
                 {
@@ -413,16 +375,12 @@
     function initializeGitHubConfigForm() {
         const form = document.getElementById('apiConfigForm');
         if (form) {
-            // Load saved config
             document.getElementById('githubToken').value = localStorage.getItem('githubToken') || '';
             
-            // Handle form submission
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                
                 localStorage.setItem('githubToken', document.getElementById('githubToken').value);
-                
-                alert('GitHub API configuration saved successfully!');
+                showSuccess('GitHub API configuration saved successfully!');
             });
         }
     }
@@ -451,11 +409,7 @@
     }
 
     async function initializeDashboard() {
-        // Show loading overlay
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-            loadingOverlay.classList.remove('hidden');
-        }
+        showLoading('Loading dashboard data...');
 
         try {
             // Load all data
@@ -474,10 +428,7 @@
             console.error('Error initializing dashboard:', error);
             showError('Failed to load dashboard data');
         } finally {
-            // Hide loading overlay
-            if (loadingOverlay) {
-                loadingOverlay.classList.add('hidden');
-            }
+            hideLoading();
         }
     }
 
@@ -810,225 +761,200 @@
     }
 
     async function saveProduct() {
-        const form = document.getElementById('productForm');
-        const formData = new FormData(form);
-        
-        const productData = {
-            name: formData.get('name'),
-            price: parseFloat(formData.get('price')),
-            category: formData.get('category'),
-            shortDescription: formData.get('shortDescription'),
-            fullDescription: formData.get('fullDescription'),
-            displayOrder: parseInt(formData.get('displayOrder')) || 0,
-            featured: formData.get('featured') === 'on',
-            bestSeller: formData.get('bestSeller') === 'on',
-            available: formData.get('available') === 'on'
-        };
-        
-        const productId = formData.get('productId');
-        
-        // Handle main image upload
-        const mainImageInput = document.getElementById('mainImageInput');
-        if (mainImageInput.files.length > 0) {
-            const mainImageFile = mainImageInput.files[0];
-            const mainImageBase64 = await fileToBase64(mainImageFile);
-            const mainImageFileName = `product_${Date.now()}_main.${mainImageFile.name.split('.').pop()}`;
+        showLoading('Saving product and uploading images...');
+        try {
+            const form = document.getElementById('productForm');
+            const formData = new FormData(form);
             
-            // Save image to assets/images directory via GitHub
-            const imageUploadSuccess = await saveImageToGitHub(mainImageFileName, mainImageBase64);
-            if (imageUploadSuccess) {
-                productData.mainImage = `assets/images/${mainImageFileName}`;
-                console.log(`✅ Product main image uploaded: ${productData.mainImage}`);
-            } else {
-                console.warn('⚠️ Product main image upload failed, keeping existing image');
-                if (productId) {
+            const productData = {
+                name: formData.get('name'),
+                price: parseFloat(formData.get('price')),
+                category: formData.get('category'),
+                shortDescription: formData.get('shortDescription'),
+                fullDescription: formData.get('fullDescription'),
+                displayOrder: parseInt(formData.get('displayOrder')) || 0,
+                featured: formData.get('featured') === 'on',
+                bestSeller: formData.get('bestSeller') === 'on',
+                available: formData.get('available') === 'on'
+            };
+            
+            const productId = formData.get('productId');
+            
+            // Handle main image upload
+            const mainImageInput = document.getElementById('mainImageInput');
+            if (mainImageInput.files.length > 0) {
+                const mainImageFile = mainImageInput.files[0];
+                const mainImageBase64 = await fileToBase64(mainImageFile);
+                const mainImageFileName = `product_${Date.now()}_main.${mainImageFile.name.split('.').pop()}`;
+                
+                const imageUploadSuccess = await saveImageToGitHub(mainImageFileName, mainImageBase64);
+                if (imageUploadSuccess) {
+                    productData.mainImage = `assets/images/${mainImageFileName}`;
+                } else if (productId) {
                     const index = state.products.findIndex(p => p.id === parseInt(productId));
                     if (index !== -1) {
                         productData.mainImage = state.products[index].mainImage;
                     }
                 }
+            } else if (!productId) {
+                productData.mainImage = 'assets/images/hero_sofa.jpg';
             }
-        } else if (!productId) {
-            // New product without image - use default
-            productData.mainImage = 'assets/images/hero_sofa.jpg';
-        }
 
-        // Handle gallery images upload
-        const galleryImagesInput = document.getElementById('galleryImagesInput');
-        if (galleryImagesInput.files.length > 0) {
-            productData.galleryImages = [];
-            for (let i = 0; i < galleryImagesInput.files.length; i++) {
-                const galleryFile = galleryImagesInput.files[i];
-                const galleryBase64 = await fileToBase64(galleryFile);
-                const galleryFileName = `product_${Date.now()}_gallery_${i}.${galleryFile.name.split('.').pop()}`;
-                
-                const galleryUploadSuccess = await saveImageToGitHub(galleryFileName, galleryBase64);
-                if (galleryUploadSuccess) {
-                    productData.galleryImages.push(`assets/images/${galleryFileName}`);
-                    console.log(`✅ Gallery image ${i+1} uploaded: ${galleryFileName}`);
-                } else {
-                    console.warn(`⚠️ Gallery image ${i+1} upload failed`);
+            // Handle gallery images upload
+            const galleryImagesInput = document.getElementById('galleryImagesInput');
+            if (galleryImagesInput.files.length > 0) {
+                productData.galleryImages = [];
+                for (let i = 0; i < galleryImagesInput.files.length; i++) {
+                    const galleryFile = galleryImagesInput.files[i];
+                    const galleryBase64 = await fileToBase64(galleryFile);
+                    const galleryFileName = `product_${Date.now()}_gallery_${i}.${galleryFile.name.split('.').pop()}`;
+                    
+                    const galleryUploadSuccess = await saveImageToGitHub(galleryFileName, galleryBase64);
+                    if (galleryUploadSuccess) {
+                        productData.galleryImages.push(`assets/images/${galleryFileName}`);
+                    }
                 }
+            } else if (!productId) {
+                productData.galleryImages = [];
             }
-        } else if (!productId) {
-            productData.galleryImages = [];
-        }
-        
-        if (productId) {
-            // Update existing product
-            const index = state.products.findIndex(p => p.id === parseInt(productId));
-            if (index !== -1) {
-                // Keep existing images if no new ones uploaded or upload failed
-                if (!productData.mainImage) {
-                    productData.mainImage = state.products[index].mainImage;
+            
+            if (productId) {
+                const index = state.products.findIndex(p => p.id === parseInt(productId));
+                if (index !== -1) {
+                    if (!productData.mainImage) {
+                        productData.mainImage = state.products[index].mainImage;
+                    }
+                    if (!productData.galleryImages || productData.galleryImages.length === 0) {
+                        productData.galleryImages = state.products[index].galleryImages || [];
+                    }
+                    state.products[index] = { ...state.products[index], ...productData };
                 }
-                if (!productData.galleryImages || productData.galleryImages.length === 0) {
-                    productData.galleryImages = state.products[index].galleryImages || [];
-                }
-                state.products[index] = { ...state.products[index], ...productData };
+            } else {
+                productData.id = Date.now();
+                state.products.push(productData);
             }
-        } else {
-            // Add new product
-            productData.id = Date.now();
-            state.products.push(productData);
-        }
-        
-        // Check if GitHub is configured
-        const githubConfig = getGitHubConfig();
-        const hasGitHubConfig = githubConfig.githubToken;
-        
-        // Save to file system
-        saveDataToFile('products.json', state.products).then(success => {
+            
+            await saveDataToFile('products.json', state.products);
             renderProductsTable();
             renderDashboard();
             closeProductModal();
             
-            if (hasGitHubConfig) {
-                alert('Product saved! Changes are ready for deployment. Click "Deploy" to push these changes to GitHub Pages.');
-            } else {
-                alert('Product saved locally. Configure a GitHub token and click Deploy to publish to GitHub Pages.');
-            }
-        });
+            showSuccess('Product saved successfully! Click "Publish" to deploy.');
+        } catch (error) {
+            console.error('Error saving product:', error);
+            showError('Failed to save product: ' + error.message);
+        } finally {
+            hideLoading();
+        }
     }
 
     function editProduct(productId) {
         showProductModal(productId);
     }
 
-    function deleteProduct(productId) {
-        if (confirm('Are you sure you want to delete this product?')) {
+    async function deleteProduct(productId) {
+        if (!confirm('Are you sure you want to delete this product?')) return;
+        
+        showLoading('Deleting product...');
+        try {
             state.products = state.products.filter(p => p.id !== productId);
-            
-            const githubConfig = getGitHubConfig();
-            const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
-            
-            saveDataToFile('products.json', state.products).then(success => {
-                renderProductsTable();
-                renderDashboard();
-                
-                if (hasGitHubConfig) {
-                    alert('Product deleted locally! Click "Deploy" to push these changes to GitHub.');
-                } else {
-                    alert('Product deleted locally. Configure a GitHub token and click Deploy to publish.');
-                }
-            });
+            await saveDataToFile('products.json', state.products);
+            renderProductsTable();
+            renderDashboard();
+            showSuccess('Product deleted successfully! Click "Publish" to deploy.');
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            showError('Failed to delete product: ' + error.message);
+        } finally {
+            hideLoading();
         }
     }
 
     // Review Management
-    function approveReview(reviewId) {
-        const review = state.reviews.find(r => r.id === reviewId);
-        if (review) {
-            review.status = 'approved';
-            
-            const githubConfig = getGitHubConfig();
-            const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
-            
-            saveDataToFile('reviews.json', state.reviews).then(success => {
+    async function approveReview(reviewId) {
+        showLoading('Approving review...');
+        try {
+            const review = state.reviews.find(r => r.id === reviewId);
+            if (review) {
+                review.status = 'approved';
+                await saveDataToFile('reviews.json', state.reviews);
                 renderReviewsTable();
                 renderDashboard();
-                
-                if (hasGitHubConfig) {
-                    alert('Review approved locally! Click "Deploy" to push these changes to GitHub.');
-                } else {
-                    alert('Review approved locally. Configure a GitHub token and click Deploy to publish.');
-                }
-            });
+                showSuccess('Review approved successfully!');
+            }
+        } catch (error) {
+            console.error('Error approving review:', error);
+            showError('Failed to approve review: ' + error.message);
+        } finally {
+            hideLoading();
         }
     }
 
-    function rejectReview(reviewId) {
-        const review = state.reviews.find(r => r.id === reviewId);
-        if (review) {
-            review.status = 'rejected';
-            
-            const githubConfig = getGitHubConfig();
-            const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
-            
-            saveDataToFile('reviews.json', state.reviews).then(success => {
+    async function rejectReview(reviewId) {
+        showLoading('Rejecting review...');
+        try {
+            const review = state.reviews.find(r => r.id === reviewId);
+            if (review) {
+                review.status = 'rejected';
+                await saveDataToFile('reviews.json', state.reviews);
                 renderReviewsTable();
                 renderDashboard();
-                
-                if (hasGitHubConfig) {
-                    alert('Review rejected locally! Click "Deploy" to push these changes to GitHub.');
-                } else {
-                    alert('Review rejected locally. Configure a GitHub token and click Deploy to publish.');
-                }
-            });
+                showSuccess('Review rejected successfully!');
+            }
+        } catch (error) {
+            console.error('Error rejecting review:', error);
+            showError('Failed to reject review: ' + error.message);
+        } finally {
+            hideLoading();
         }
     }
 
-    function deleteReview(reviewId) {
-        if (confirm('Are you sure you want to delete this review?')) {
+    async function deleteReview(reviewId) {
+        if (!confirm('Are you sure you want to delete this review?')) return;
+        showLoading('Deleting review...');
+        try {
             state.reviews = state.reviews.filter(r => r.id !== reviewId);
-            
-            const githubConfig = getGitHubConfig();
-            const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
-            
-            saveDataToFile('reviews.json', state.reviews).then(success => {
-                renderReviewsTable();
-                renderDashboard();
-                
-                if (hasGitHubConfig) {
-                    alert('Review deleted locally! Click "Deploy" to push these changes to GitHub.');
-                } else {
-                    alert('Review deleted locally. Configure a GitHub token and click Deploy to publish.');
-                }
-            });
+            await saveDataToFile('reviews.json', state.reviews);
+            renderReviewsTable();
+            renderDashboard();
+            showSuccess('Review deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting review:', error);
+            showError('Failed to delete review: ' + error.message);
+        } finally {
+            hideLoading();
         }
     }
 
     // Business Info Management
-    function saveBusinessInfo() {
-        state.businessInfo = {
-            shopName: document.getElementById('shopName').value,
-            phone: document.getElementById('phone').value,
-            whatsapp: document.getElementById('whatsapp').value,
-            email: document.getElementById('email').value,
-            address: document.getElementById('address').value,
-            openingHours: document.getElementById('openingHours').value,
-            socialLinks: {
-                facebook: document.getElementById('facebook')?.value || '#',
-                instagram: document.getElementById('instagram')?.value || '#'
-            },
-            mapCoordinates: {
-                lat: document.getElementById('mapLat')?.value || 25.12345678901234,
-                lng: document.getElementById('mapLng')?.value || 55.12345678901234
-            }
-        };
-        
-        // Check if GitHub is configured
-        const githubConfig = getGitHubConfig();
-        const hasGitHubConfig = githubConfig.githubToken;
-        
-        // Save to file system
-        saveDataToFile('business-info.json', state.businessInfo).then(success => {
-            if (hasGitHubConfig) {
-                alert('Business information saved! Changes are ready for deployment. Click "Deploy" to push these changes to GitHub Pages.');
-            } else {
-                alert('Business information saved locally. Configure a GitHub token and click Deploy to publish to GitHub Pages.');
-            }
-        });
+    async function saveBusinessInfo() {
+        showLoading('Saving business information...');
+        try {
+            state.businessInfo = {
+                shopName: document.getElementById('shopName').value,
+                phone: document.getElementById('phone').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                openingHours: document.getElementById('openingHours').value,
+                socialLinks: {
+                    facebook: document.getElementById('facebook')?.value || '#',
+                    instagram: document.getElementById('instagram')?.value || '#'
+                },
+                mapCoordinates: {
+                    lat: document.getElementById('mapLat')?.value || 25.12345678901234,
+                    lng: document.getElementById('mapLng')?.value || 55.12345678901234
+                }
+            };
+            
+            await saveDataToFile('business-info.json', state.businessInfo);
+            showSuccess('Business information saved successfully! Click "Publish" to deploy.');
+        } catch (error) {
+            console.error('Error saving business info:', error);
+            showError('Failed to save business info: ' + error.message);
+        } finally {
+            hideLoading();
+        }
     }
 
     function populateBusinessInfo() {
@@ -1062,48 +988,43 @@
     function viewContactRequest(requestId) {
         const request = state.contactRequests.find(r => r.id === requestId);
         if (request) {
-            alert(`Name: ${request.name}\nEmail: ${request.email}\nPhone: ${request.phone}\nService: ${request.service}\nMessage: ${request.message}`);
+            showInfo(`<strong>${request.name}</strong><br>Email: ${request.email}<br>Phone: ${request.phone}<br>Message: ${request.message}`);
         }
     }
 
-    function markContactRequestAsRead(requestId) {
-        const request = state.contactRequests.find(r => r.id === requestId);
-        if (request) {
-            request.status = 'read';
-            
-            const githubConfig = getGitHubConfig();
-            const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
-            
-            saveDataToFile('contact-requests.json', state.contactRequests).then(success => {
+    async function markContactRequestAsRead(requestId) {
+        showLoading('Updating inquiry status...');
+        try {
+            const request = state.contactRequests.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'read';
+                await saveDataToFile('contact-requests.json', state.contactRequests);
                 renderContactTable();
                 renderDashboard();
-                
-                if (hasGitHubConfig) {
-                    alert('Contact request marked as read locally! Click "Deploy" to push these changes to GitHub.');
-                } else {
-                    alert('Contact request marked as read locally. Configure a GitHub token and click Deploy to publish.');
-                }
-            });
+                showSuccess('Inquiry marked as read!');
+            }
+        } catch (error) {
+            console.error('Error updating inquiry status:', error);
+            showError('Failed to update inquiry status: ' + error.message);
+        } finally {
+            hideLoading();
         }
     }
 
-    function deleteContactRequest(requestId) {
-        if (confirm('Are you sure you want to delete this contact request?')) {
+    async function deleteContactRequest(requestId) {
+        if (!confirm('Are you sure you want to delete this contact request?')) return;
+        showLoading('Deleting inquiry...');
+        try {
             state.contactRequests = state.contactRequests.filter(r => r.id !== requestId);
-            
-            const githubConfig = getGitHubConfig();
-            const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
-            
-            saveDataToFile('contact-requests.json', state.contactRequests).then(success => {
-                renderContactTable();
-                renderDashboard();
-                
-                if (hasGitHubConfig) {
-                    alert('Contact request deleted locally! Click "Deploy" to push these changes to GitHub.');
-                } else {
-                    alert('Contact request deleted locally. Configure a GitHub token and click Deploy to publish.');
-                }
-            });
+            await saveDataToFile('contact-requests.json', state.contactRequests);
+            renderContactTable();
+            renderDashboard();
+            showSuccess('Inquiry deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting inquiry:', error);
+            showError('Failed to delete inquiry: ' + error.message);
+        } finally {
+            hideLoading();
         }
     }
 
@@ -1140,95 +1061,80 @@
     }
 
     async function saveService() {
-        const form = document.getElementById('serviceForm');
-        const serviceId = document.getElementById('serviceId').value;
-        
-        const serviceData = {
-            title: document.getElementById('serviceTitle').value,
-            description: document.getElementById('serviceDescription').value,
-            features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f),
-            buttonText: document.getElementById('serviceButtonText').value || 'Get Quote',
-            buttonLink: document.getElementById('serviceButtonLink').value || 'whatsapp'
-        };
-
-        // Handle service image upload
-        const serviceImageInput = document.getElementById('serviceImageInput');
-        if (serviceImageInput.files.length > 0) {
-            const serviceImageFile = serviceImageInput.files[0];
-            const serviceImageBase64 = await fileToBase64(serviceImageFile);
-            const serviceImageFileName = `service_${Date.now()}.${serviceImageFile.name.split('.').pop()}`;
+        showLoading('Saving service and uploading image...');
+        try {
+            const form = document.getElementById('serviceForm');
+            const serviceId = document.getElementById('serviceId').value;
             
-            const serviceImageUploadSuccess = await saveImageToGitHub(serviceImageFileName, serviceImageBase64);
-            if (serviceImageUploadSuccess) {
-                serviceData.image = `assets/images/${serviceImageFileName}`;
-                console.log(`✅ Service image uploaded: ${serviceData.image}`);
-            } else {
-                console.warn('⚠️ Service image upload failed, keeping existing image');
-                if (serviceId) {
+            const serviceData = {
+                title: document.getElementById('serviceTitle').value,
+                description: document.getElementById('serviceDescription').value,
+                features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f),
+                buttonText: document.getElementById('serviceButtonText').value || 'Get Quote',
+                buttonLink: document.getElementById('serviceButtonLink').value || 'whatsapp'
+            };
+
+            const serviceImageInput = document.getElementById('serviceImageInput');
+            if (serviceImageInput.files.length > 0) {
+                const serviceImageFile = serviceImageInput.files[0];
+                const serviceImageBase64 = await fileToBase64(serviceImageFile);
+                const serviceImageFileName = `service_${Date.now()}.${serviceImageFile.name.split('.').pop()}`;
+                
+                const serviceImageUploadSuccess = await saveImageToGitHub(serviceImageFileName, serviceImageBase64);
+                if (serviceImageUploadSuccess) {
+                    serviceData.image = `assets/images/${serviceImageFileName}`;
+                } else if (serviceId) {
                     const index = state.services.findIndex(s => s.id === parseInt(serviceId));
                     if (index !== -1) {
                         serviceData.image = state.services[index].image;
                     }
                 }
+            } else if (!serviceId) {
+                serviceData.image = 'assets/images/service_sofa_beds.jpg';
             }
-        } else if (!serviceId) {
-            // New service without image - use default
-            serviceData.image = 'assets/images/service_sofa_beds.jpg';
-        }
-        
-        if (serviceId) {
-            // Update existing service
-            const index = state.services.findIndex(s => s.id === parseInt(serviceId));
-            if (index !== -1) {
-                // Keep existing image if no new one uploaded or upload failed
-                if (!serviceData.image) {
-                    serviceData.image = state.services[index].image;
+            
+            if (serviceId) {
+                const index = state.services.findIndex(s => s.id === parseInt(serviceId));
+                if (index !== -1) {
+                    if (!serviceData.image) {
+                        serviceData.image = state.services[index].image;
+                    }
+                    state.services[index] = { ...state.services[index], ...serviceData };
                 }
-                state.services[index] = { ...state.services[index], ...serviceData };
+            } else {
+                const newId = Math.max(...state.services.map(s => s.id), 0) + 1;
+                state.services.push({ id: newId, ...serviceData });
             }
-        } else {
-            // Add new service
-            const newId = Math.max(...state.services.map(s => s.id), 0) + 1;
-            state.services.push({ id: newId, ...serviceData });
-        }
-        
-        // Check if GitHub is configured
-        const githubConfig = getGitHubConfig();
-        const hasGitHubConfig = githubConfig.githubToken;
-        
-        // Save to file system
-        saveDataToFile('services.json', state.services).then(success => {
+            
+            await saveDataToFile('services.json', state.services);
             renderServicesTable();
             closeServiceModal();
-            
-            if (hasGitHubConfig) {
-                alert('Service saved! Changes are ready for deployment. Click "Deploy" to push these changes to GitHub Pages.');
-            } else {
-                alert('Service saved locally. Configure a GitHub token and click Deploy to publish to GitHub Pages.');
-            }
-        });
+            showSuccess('Service saved successfully! Click "Publish" to deploy.');
+        } catch (error) {
+            console.error('Error saving service:', error);
+            showError('Failed to save service: ' + error.message);
+        } finally {
+            hideLoading();
+        }
     }
 
     function editService(serviceId) {
         showServiceModal(serviceId);
     }
 
-    function deleteService(serviceId) {
-        if (confirm('Are you sure you want to delete this service?')) {
+    async function deleteService(serviceId) {
+        if (!confirm('Are you sure you want to delete this service?')) return;
+        showLoading('Deleting service...');
+        try {
             state.services = state.services.filter(s => s.id !== serviceId);
-            
-            const githubConfig = getGitHubConfig();
-            const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
-            
-            saveDataToFile('services.json', state.services).then(success => {
-                renderServicesTable();
-                
-                if (hasGitHubConfig) {
-                    alert('Service deleted locally! Click "Deploy" to push these changes to GitHub.');
-                } else {
-                    alert('Service deleted locally. Configure a GitHub token and click Deploy to publish.');
-                }
-            });
+            await saveDataToFile('services.json', state.services);
+            renderServicesTable();
+            showSuccess('Service deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting service:', error);
+            showError('Failed to delete service: ' + error.message);
+        } finally {
+            hideLoading();
         }
     }
 
@@ -1254,7 +1160,6 @@
                 document.getElementById('heroActive').checked = slide.active;
                 document.getElementById('heroCurrentImage').value = slide.image;
 
-                // Show current image preview
                 const heroImagePreview = document.getElementById('heroImagePreview');
                 const imagePath = slide.image.startsWith('http')
                     ? slide.image
@@ -1278,125 +1183,180 @@
     }
 
     async function saveHero() {
-        const form = document.getElementById('heroForm');
-        const heroId = document.getElementById('heroId').value;
-        
-        const heroData = {
-            badge: document.getElementById('heroBadge').value,
-            title: document.getElementById('heroTitle').value,
-            description: document.getElementById('heroDescription').value,
-            primaryButtonText: document.getElementById('heroPrimaryButtonText').value,
-            primaryButtonLink: document.getElementById('heroPrimaryButtonLink').value,
-            secondaryButtonText: document.getElementById('heroSecondaryButtonText').value,
-            secondaryButtonLink: document.getElementById('heroSecondaryButtonLink').value,
-            order: parseInt(document.getElementById('heroOrder').value),
-            active: document.getElementById('heroActive').checked
-        };
-
-        // Handle hero image upload
-        const heroImageInput = document.getElementById('heroImageInput');
-        if (heroImageInput.files.length > 0) {
-            const heroImageFile = heroImageInput.files[0];
-            const heroImageBase64 = await fileToBase64(heroImageFile);
-            const heroImageFileName = `hero_${Date.now()}.${heroImageFile.name.split('.').pop()}`;
+        showLoading('Saving hero slide and uploading image...');
+        try {
+            const form = document.getElementById('heroForm');
+            const heroId = document.getElementById('heroId').value;
             
-            const imageUploadSuccess = await saveImageToGitHub(heroImageFileName, heroImageBase64);
-            if (imageUploadSuccess) {
-                heroData.image = `assets/images/${heroImageFileName}`;
-                console.log(`✅ Hero image uploaded and path updated: ${heroData.image}`);
-            } else {
-                console.warn('⚠️ Image upload failed, keeping existing image');
-                // Keep existing image if upload fails
-                if (heroId) {
+            const heroData = {
+                badge: document.getElementById('heroBadge').value,
+                title: document.getElementById('heroTitle').value,
+                description: document.getElementById('heroDescription').value,
+                primaryButtonText: document.getElementById('heroPrimaryButtonText').value,
+                primaryButtonLink: document.getElementById('heroPrimaryButtonLink').value,
+                secondaryButtonText: document.getElementById('heroSecondaryButtonText').value,
+                secondaryButtonLink: document.getElementById('heroSecondaryButtonLink').value,
+                order: parseInt(document.getElementById('heroOrder').value),
+                active: document.getElementById('heroActive').checked
+            };
+
+            const heroImageInput = document.getElementById('heroImageInput');
+            if (heroImageInput.files.length > 0) {
+                const heroImageFile = heroImageInput.files[0];
+                const heroImageBase64 = await fileToBase64(heroImageFile);
+                const heroImageFileName = `hero_${Date.now()}.${heroImageFile.name.split('.').pop()}`;
+                
+                const imageUploadSuccess = await saveImageToGitHub(heroImageFileName, heroImageBase64);
+                if (imageUploadSuccess) {
+                    heroData.image = `assets/images/${heroImageFileName}`;
+                } else if (heroId) {
                     const index = state.heroSlides.findIndex(s => s.id === parseInt(heroId));
                     if (index !== -1) {
                         heroData.image = state.heroSlides[index].image;
                     }
                 }
             }
-        }
-        
-        if (heroId) {
-            // Update existing slide
-            const index = state.heroSlides.findIndex(s => s.id === parseInt(heroId));
-            if (index !== -1) {
-                // Keep existing image if no new one uploaded
-                if (!heroData.image) {
-                    const currentImage = document.getElementById('heroCurrentImage').value;
-                    heroData.image = currentImage || state.heroSlides[index].image;
+            
+            if (heroId) {
+                const index = state.heroSlides.findIndex(s => s.id === parseInt(heroId));
+                if (index !== -1) {
+                    if (!heroData.image) {
+                        const currentImage = document.getElementById('heroCurrentImage').value;
+                        heroData.image = currentImage || state.heroSlides[index].image;
+                    }
+                    heroData.badge = heroData.badge || state.heroSlides[index].badge || 'Premium Custom Made';
+                    heroData.primaryButtonText = heroData.primaryButtonText || state.heroSlides[index].primaryButtonText || 'Get Free Consultation';
+                    heroData.primaryButtonLink = heroData.primaryButtonLink || state.heroSlides[index].primaryButtonLink || '#contact';
+                    heroData.secondaryButtonText = heroData.secondaryButtonText || state.heroSlides[index].secondaryButtonText || 'Call Us';
+                    heroData.secondaryButtonLink = heroData.secondaryButtonLink || state.heroSlides[index].secondaryButtonLink || 'phone';
+                    heroData.id = state.heroSlides[index].id;
+
+                    state.heroSlides[index] = { ...state.heroSlides[index], ...heroData };
                 }
-                // Use default values for empty fields
-                heroData.badge = heroData.badge || state.heroSlides[index].badge || 'Premium Custom Made';
-                heroData.primaryButtonText = heroData.primaryButtonText || state.heroSlides[index].primaryButtonText || 'Get Free Consultation';
-                heroData.primaryButtonLink = heroData.primaryButtonLink || state.heroSlides[index].primaryButtonLink || '#contact';
-                heroData.secondaryButtonText = heroData.secondaryButtonText || state.heroSlides[index].secondaryButtonText || 'Call Us';
-                heroData.secondaryButtonLink = heroData.secondaryButtonLink || state.heroSlides[index].secondaryButtonLink || 'phone';
+            } else {
+                const newId = Math.max(...state.heroSlides.map(s => s.id), 0) + 1;
+                heroData.badge = heroData.badge || 'Premium Custom Made';
+                heroData.primaryButtonText = heroData.primaryButtonText || 'Get Free Consultation';
+                heroData.primaryButtonLink = heroData.primaryButtonLink || '#contact';
+                heroData.secondaryButtonText = heroData.secondaryButtonText || 'Call Us';
+                heroData.secondaryButtonLink = heroData.secondaryButtonLink || 'phone';
+                heroData.image = heroData.image || 'assets/images/hero_sofa.jpg';
 
-                // Ensure ID is preserved
-                heroData.id = state.heroSlides[index].id;
-
-                state.heroSlides[index] = { ...state.heroSlides[index], ...heroData };
+                state.heroSlides.push({ id: newId, ...heroData });
             }
-        } else {
-            // Add new slide
-            const newId = Math.max(...state.heroSlides.map(s => s.id), 0) + 1;
-            // Set default values for new slides
-            heroData.badge = heroData.badge || 'Premium Custom Made';
-            heroData.primaryButtonText = heroData.primaryButtonText || 'Get Free Consultation';
-            heroData.primaryButtonLink = heroData.primaryButtonLink || '#contact';
-            heroData.secondaryButtonText = heroData.secondaryButtonText || 'Call Us';
-            heroData.secondaryButtonLink = heroData.secondaryButtonLink || 'phone';
-            heroData.image = heroData.image || 'assets/images/hero_sofa.jpg';
-
-            state.heroSlides.push({ id: newId, ...heroData });
-        }
-        
-        // Check if GitHub is configured
-        const githubConfig = getGitHubConfig();
-        const hasGitHubConfig = githubConfig.githubToken;
-        
-        // Save to file system
-        saveDataToFile('hero-slides.json', state.heroSlides).then(success => {
+            
+            await saveDataToFile('hero-slides.json', state.heroSlides);
             renderHeroTable();
             closeHeroModal();
-            
-            if (hasGitHubConfig) {
-                alert('Hero slide saved! Changes are ready for deployment. Click "Deploy" to push these changes to GitHub Pages.');
-            } else {
-                alert('Hero slide saved locally. Configure a GitHub token and click Deploy to publish to GitHub Pages.');
-            }
-        });
+            showSuccess('Hero slide saved successfully! Click "Publish" to deploy.');
+        } catch (error) {
+            console.error('Error saving hero slide:', error);
+            showError('Failed to save hero slide: ' + error.message);
+        } finally {
+            hideLoading();
+        }
     }
 
     function editHeroSlide(slideId) {
         showHeroModal(slideId);
     }
 
-    function deleteHeroSlide(slideId) {
-        if (confirm('Are you sure you want to delete this hero slide?')) {
+    async function deleteHeroSlide(slideId) {
+        if (!confirm('Are you sure you want to delete this hero slide?')) return;
+        showLoading('Deleting hero slide...');
+        try {
             state.heroSlides = state.heroSlides.filter(s => s.id !== slideId);
-            
-            const githubConfig = getGitHubConfig();
-            const hasGitHubConfig = githubConfig.githubToken && githubConfig.githubOwner && githubConfig.githubRepo;
-            
-            saveDataToFile('hero-slides.json', state.heroSlides).then(success => {
-                renderHeroTable();
-                
-                if (hasGitHubConfig) {
-                    alert('Hero slide deleted locally! Click "Deploy" to push these changes to GitHub.');
-                } else {
-                    alert('Hero slide deleted locally. Configure a GitHub token and click Deploy to publish.');
-                }
-            });
+            await saveDataToFile('hero-slides.json', state.heroSlides);
+            renderHeroTable();
+            showSuccess('Hero slide deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting hero slide:', error);
+            showError('Failed to delete hero slide: ' + error.message);
+        } finally {
+            hideLoading();
         }
     }
 
     // Utility Functions
-    function refreshData() {
-        loadDashboardData().then(() => {
-            renderDashboard();
-            alert('Data refreshed successfully!');
+    function showToast(message, type = 'info', duration = 3500) {
+        let container = document.getElementById('toastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+
+        const icons = {
+            success: '✓',
+            error: '✕',
+            info: 'ℹ',
+            warning: '⚠️'
+        };
+
+        toast.innerHTML = `
+            <div class="toast-icon">${icons[type] || 'ℹ'}</div>
+            <div class="toast-content">${message}</div>
+            <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        `;
+
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
         });
+
+        if (duration > 0) {
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, duration);
+        }
+    }
+
+    function showSuccess(message) {
+        showToast(message, 'success', 3500);
+    }
+
+    function showError(message) {
+        showToast(message, 'error', 4500);
+    }
+
+    function showInfo(message) {
+        showToast(message, 'info', 4000);
+    }
+
+    function showWarning(message) {
+        showToast(message, 'warning', 4000);
+    }
+
+    function showLoading(message = 'Processing request...') {
+        const overlay = document.getElementById('loadingOverlay');
+        const textEl = document.getElementById('loadingOverlayText');
+        if (textEl) textEl.textContent = message;
+        if (overlay) overlay.classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) overlay.classList.add('hidden');
+    }
+
+    async function refreshData() {
+        showLoading('Refreshing dashboard data...');
+        try {
+            await loadDashboardData();
+            renderDashboard();
+            showSuccess('Data refreshed successfully!');
+        } catch (error) {
+            console.error('Error refreshing data:', error);
+            showError('Failed to refresh data: ' + error.message);
+        } finally {
+            hideLoading();
+        }
     }
 
     function logout() {
