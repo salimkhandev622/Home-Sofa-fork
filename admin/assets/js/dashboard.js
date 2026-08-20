@@ -1224,12 +1224,22 @@
                 document.getElementById('heroSecondaryButtonLink').value = slide.secondaryButtonLink || '';
                 document.getElementById('heroOrder').value = slide.order;
                 document.getElementById('heroActive').checked = slide.active;
+                document.getElementById('heroCurrentImage').value = slide.image;
+
+                // Show current image preview
+                const heroImagePreview = document.getElementById('heroImagePreview');
+                const imagePath = slide.image.startsWith('http')
+                    ? slide.image
+                    : `../public/${slide.image}`;
+                heroImagePreview.innerHTML = `<img src="${imagePath}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;">`;
             }
         } else {
             title.textContent = 'Add Hero Slide';
             form.reset();
             document.getElementById('heroId').value = '';
+            document.getElementById('heroCurrentImage').value = '';
             document.getElementById('heroActive').checked = true;
+            document.getElementById('heroImagePreview').innerHTML = '';
         }
         
         modal.style.display = 'block';
@@ -1272,7 +1282,8 @@
             if (index !== -1) {
                 // Keep existing image if no new one uploaded
                 if (!heroData.image) {
-                    heroData.image = state.heroSlides[index].image;
+                    const currentImage = document.getElementById('heroCurrentImage').value;
+                    heroData.image = currentImage || state.heroSlides[index].image;
                 }
                 // Use default values for empty fields
                 heroData.badge = heroData.badge || state.heroSlides[index].badge || 'Premium Custom Made';
@@ -1280,7 +1291,10 @@
                 heroData.primaryButtonLink = heroData.primaryButtonLink || state.heroSlides[index].primaryButtonLink || '#contact';
                 heroData.secondaryButtonText = heroData.secondaryButtonText || state.heroSlides[index].secondaryButtonText || 'Call Us';
                 heroData.secondaryButtonLink = heroData.secondaryButtonLink || state.heroSlides[index].secondaryButtonLink || 'phone';
-                
+
+                // Ensure ID is preserved
+                heroData.id = state.heroSlides[index].id;
+
                 state.heroSlides[index] = { ...state.heroSlides[index], ...heroData };
             }
         } else {
@@ -1293,7 +1307,7 @@
             heroData.secondaryButtonText = heroData.secondaryButtonText || 'Call Us';
             heroData.secondaryButtonLink = heroData.secondaryButtonLink || 'phone';
             heroData.image = heroData.image || 'assets/images/hero_sofa.jpg';
-            
+
             state.heroSlides.push({ id: newId, ...heroData });
         }
         

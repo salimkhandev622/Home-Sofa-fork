@@ -1,201 +1,52 @@
-now upadte the services in the admin dasboard to add these what services are alreaey present in the home page and then add them there as well in the dasbaord and allow the user to add or remvoe them but keep the same ui but allow the user to change them there so i think its now hardcore so u have to move them correclty so that it sync
+there is still a problem that why the home page image get disappers when when i make any change in the admin dashboard like chaning any name or text then that home page image get disapper and only the blue background get remain there
 
 
-I'll update the admin dashboard to properly handle services that sync with the public website. Let me first check the current state of services in both places.
+I'll investigate the hero image disappearance issue when making changes in the admin dashboard. Let me check the hero slides data and the sync mechanism.
+
+SearchedsaveHeroSlide in D:\Downloads\Home-Sofa\admin\assets\js\dashboard.js
+
+
+
+
+
+
+continue
+
 
 Read
-services.json
-Read
-services.json
-services.json
-+69
--12
-      "Minor repairs included",
-      "Extended lifespan guarantee"
-    ],
-    "buttonText": "Get Quote",
-    "buttonLink": "whatsapp"
-
+content.txt
 Read
 dashboard.js
+#L1280-1309
 Read
 dashboard.html
-#L200-249
-Read
-dashboard.html
-#L480-499
-dashboard.html
-+12
-                            <option value="phone">Phone</option>
-                            <option value="contact">Contact Page</option>
-                        </select>
-                    </div>
-                </form>
+#L540-569
+I found the issue! When editing hero slides in the admin dashboard, the image field is not being populated in the form, and there's no image preview. This causes the image to be lost when saving changes. Let me fix this:
 
+dashboard.js
+Errored
 Read
 dashboard.js
-#L1000-1049
-Read
+#L1207-1246
 dashboard.js
-#L1045-1074
-dashboard.js
-+2
-                document.getElementById('serviceFeatures').value = service.features ? service.features.join(', ') : '';
-                document.getElementById('serviceButtonText').value = service.buttonText || 'Get Quote';
-                document.getElementById('serviceButtonLink').value = service.buttonLink || 'whatsapp';
++8
+                document.getElementById('heroActive').checked = slide.active;
+ 
+                // Show current image preview
+                const heroImagePreview = document.getElementById('heroImagePreview');
+                const imagePath = slide.image.startsWith('http')
+                    ? slide.image
+                    : `../public/${slide.image}`;
+                heroImagePreview.innerHTML = `<img src="${imagePath}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;">`;
             }
-dashboard.js
-+2
-            document.getElementById('serviceId').value = '';
-            document.getElementById('serviceButtonText').value = 'Get Quote';
-            document.getElementById('serviceButtonLink').value = 'whatsapp';
+4 hidden lines
+            document.getElementById('heroActive').checked = true;
+            document.getElementById('heroImagePreview').innerHTML = '';
         }
+
 dashboard.js
 +3
--1
-            features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f)
-            features: document.getElementById('serviceFeatures').value.split(',').map(f => f.trim()).filter(f => f),
-            buttonText: document.getElementById('serviceButtonText').value || 'Get Quote',
-            buttonLink: document.getElementById('serviceButtonLink').value || 'whatsapp'
-        };
-
-dashboard.js
-+6
--1
-                response = await fetch(`../public/data/${filename}?t=${timestamp}`);
-            if (!response.ok) {
-                throw new Error(`Failed to load ${filename}`);
-                }
-            }
-
-dashboard.js
-+10
--4
-            const result = await putResponse.json();
-            console.log('File saved to GitHub:', result);
-                console.log(`File ${filePath} saved to GitHub`);
-            }
+                heroData.secondaryButtonLink = heroData.secondaryButtonLink || state.heroSlides[index].secondaryButtonLink || 'phone';
  
-
-dashboard.js
-+14
-                console.log(`Data saved to admin/data/${filename}`);
-            } catch (error) {
-                console.log(`Could not save to admin/data/${filename} (may not be supported in this environment)`);
-            }
- 
-
-dashboard.js
-+6
--1
-        if (fileData) {
-            localStorage.setItem(filename, JSON.stringify(fileData));
-        }
-        return fileData;
-    }
-
-dashboard.js
-+13
-            console.log(`Could not sync ${filename} from admin to public`);
-        }
-    }
- 
- 
-
-dashboard.js
-+10
--4
-                }
-            }
- 
-            console.log(`Image ${filename} uploaded successfully`);
-            return true;
-
-Perfect! I've updated the admin dashboard to properly sync services with the public website. Here's what I changed:
-
-🔧 Admin Dashboard Services Sync
-Data Sync Changes:
-Updated admin/services.json to match the exact structure of public/services.json with all 6 services
-Modified loadDataFromFile to check both data and data folders
-Updated saveToGitHub to save data to both data and data folders
-Enhanced saveImageToGitHub to upload images to both images and admin/assets/images/
-Added sync functionality to automatically sync data between folders
-Service Modal Enhancements:
-Added "Button Text" field - allows customization of button text (e.g., "Get Quote", "Request Consultation")
-Added "Button Link" dropdown - options for WhatsApp, Phone, or Contact Page
-Updated form handling to include the new fields when saving/editing services
-Set default values for new services (Button Text: "Get Quote", Button Link: "whatsapp")
-Form Logic Updates:
-Edit Service - now loads buttonText and buttonLink from existing data
-Add Service - sets default values for new services
-Save Service - includes the new fields in the service data object
-Sync Process:
-When you make changes in the admin dashboard:
-
-Changes are saved to localStorage
-When you click "Deploy", data is saved to both data and data on GitHub
-Images are uploaded to both images and admin/assets/images/
-Public website loads from data folder
-Admin dashboard loads from data (with fallback to data)
-Now the admin dashboard and public website will stay perfectly synchronized, and you can add/remove/edit services while maintaining the same structure across both!
-
-
-
-
-
-
-
-same for the sofas if not already  , also mke that dasboard images path correct so that if the images are coorectly linked there so that it appear correclty there as well
-
-
-I'll check the current products sync and fix the image paths in the admin dashboard.
-
-Read
-products.json
-Read
-products.json
-products.json
-+30
--30
-    "featured": false,
-    "available": true,
-    "category": "sofa",
-    "galleryImages": ["assets/images/thumb_sofa4.jpg"],
-    "displayOrder": 4
-
-Read
-dashboard.js
-#L520-549
-dashboard.js
-+14
--5
-            </tr>
-        `).join('');
-        `;
-        }).join('');
-    }
-
-dashboard.js
-+13
--4
-            </tr>
-        `).join('');
-        `;
-        }).join('');
-    }
-
-dashboard.js
-+13
--4
-            </tr>
-        `).join('');
-        `;
-        }).join('');
-    }
-
-
-
-
-
-
-
+                // Ensure ID is preserved
+                heroData.id = state.heroSlides[index].id;
