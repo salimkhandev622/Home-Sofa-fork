@@ -450,6 +450,12 @@
     }
 
     async function initializeDashboard() {
+        // Show loading overlay
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+        }
+
         try {
             // Load all data
             await loadDashboardData();
@@ -466,6 +472,11 @@
         } catch (error) {
             console.error('Error initializing dashboard:', error);
             showError('Failed to load dashboard data');
+        } finally {
+            // Hide loading overlay
+            if (loadingOverlay) {
+                loadingOverlay.classList.add('hidden');
+            }
         }
     }
 

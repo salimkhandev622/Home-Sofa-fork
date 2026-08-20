@@ -12,7 +12,14 @@ loginForm.addEventListener('submit', async (e) => {
         remember: formData.get('remember') === 'on'
     };
     
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
     try {
+        // Show loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+        }
+
         // Show loading state
         const submitBtn = loginForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
@@ -39,14 +46,24 @@ loginForm.addEventListener('submit', async (e) => {
         // Reset button state
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
-        
+
+        // Hide loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+        }
+
     } catch (error) {
         console.error('Login error:', error);
         showError('An error occurred. Please try again.');
-        
+
         const submitBtn = loginForm.querySelector('button[type="submit"]');
         submitBtn.textContent = 'Sign In';
         submitBtn.disabled = false;
+
+        // Hide loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+        }
     }
 });
 
