@@ -470,28 +470,29 @@
     }
 
     async function loadDashboardData() {
-        // Load data from localStorage first (dashboard is source of truth)
-        // Fall back to JSON files if localStorage is empty
-        state.products = await loadFromStorageOrFile('products.json', []);
-        state.services = await loadFromStorageOrFile('services.json', []);
-        state.reviews = await loadFromStorageOrFile('reviews.json', []);
-        state.heroSlides = await loadFromStorageOrFile('hero-slides.json', []);
-        state.businessInfo = await loadFromStorageOrFile('business-info.json', {});
+        // Load data from JSON files first (source of truth)
+        // Then sync to localStorage for deployment
+        state.products = await loadDataFromFile('products.json') || [];
+        state.services = await loadDataFromFile('services.json') || [];
+        state.reviews = await loadDataFromFile('reviews.json') || [];
+        state.heroSlides = await loadDataFromFile('hero-slides.json') || [];
+        state.businessInfo = await loadDataFromFile('business-info.json') || {};
         state.contactRequests = await loadDataFromFile('contact-requests.json') || [];
-    }
-
-    async function loadFromStorageOrFile(filename, defaultValue) {
-        const localData = localStorage.getItem(filename);
-        if (localData) {
-            return JSON.parse(localData);
-        }
-        // Fall back to file loading
-        const fileData = await loadDataFromFile(filename) || defaultValue;
-        // Sync to localStorage
-        if (fileData) {
-            localStorage.setItem(filename, JSON.stringify(fileData));
-        }
-        return fileData;
+        
+        // Sync all data to localStorage for deployment
+        localStorage.setItem('products.json', JSON.stringify(state.products));
+        localStorage.setItem('services.json', JSON.stringify(state.services));
+        localStorage.setItem('reviews.json', JSON.stringify(state.reviews));
+        localStorage.setItem('hero-slides.json', JSON.stringify(state.heroSlides));
+        localStorage.setItem('business-info.json', JSON.stringify(state.businessInfo));
+        localStorage.setItem('contact-requests.json', JSON.stringify(state.contactRequests));
+        
+        console.log('Dashboard data loaded:', {
+            products: state.products.length,
+            services: state.services.length,
+            reviews: state.reviews.length,
+            heroSlides: state.heroSlides.length
+        });
     }
 
     // Sync admin data with public data
