@@ -111,34 +111,30 @@
         return await saveFileContent(filePath, content, `Update ${filePath} via admin dashboard`);
     }
 
-    async function saveFileContent(filePath, base64Content, message) {
-        // 1. Try Vercel Serverless API if configured or running on Vercel domain
-        const customVercelUrl = localStorage.getItem('vercelApiUrl');
-        const isVercelHost = window.location.origin.includes('vercel.app');
-        const vercelEndpoint = customVercelUrl || (isVercelHost ? '/api/save' : null);
+    const VERCEL_API_ENDPOINT = 'https://home-sofa-fork.vercel.app/api/save';
 
-        if (vercelEndpoint) {
-            try {
-                const res = await fetch(vercelEndpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ filePath, content: base64Content, message })
-                });
-                if (res.ok) {
-                    console.log(`✅ Saved ${filePath} via Vercel Serverless API`);
-                    return true;
-                }
-                const errData = await res.json();
-                console.warn('Vercel API error, falling back to direct GitHub API:', errData);
-            } catch (err) {
-                console.warn('Vercel API unreachable, falling back to direct GitHub API:', err);
+    async function saveFileContent(filePath, base64Content, message) {
+        // 1. Try Vercel Serverless API first (secure backend with GITHUB_TOKEN in Vercel .env)
+        try {
+            const res = await fetch(VERCEL_API_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filePath, content: base64Content, message })
+            });
+            if (res.ok) {
+                console.log(`✅ Saved ${filePath} via Vercel Serverless API`);
+                return true;
             }
+            const errData = await res.json().catch(() => ({}));
+            console.warn('Vercel API error, falling back to direct GitHub API:', errData);
+        } catch (err) {
+            console.warn('Vercel API unreachable, falling back to direct GitHub API:', err);
         }
 
-        // 2. Direct GitHub REST API
+        // 2. Direct GitHub REST API fallback
         const githubConfig = getGitHubConfig();
         if (!githubConfig.githubToken) {
-            throw new Error('GitHub token not configured.');
+            throw new Error('Deployment error: Unable to connect to Vercel API or GitHub.');
         }
 
         let sha = null;
