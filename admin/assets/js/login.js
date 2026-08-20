@@ -1,3 +1,6 @@
+// Admin Login JavaScript
+const loginForm = document.getElementById('loginForm');
+
 function redirectToDashboard() {
     const isGitHubPages = window.location.pathname.includes('/Home-Sofa-fork');
     const prefix = isGitHubPages ? '/Home-Sofa-fork' : '';
@@ -5,54 +8,62 @@ function redirectToDashboard() {
 }
 
 // Form submission
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const rememberInput = document.querySelector('input[name="remember"]');
-    
-    const loginData = {
-        email: (emailInput ? emailInput.value : '').trim().toLowerCase(),
-        password: (passwordInput ? passwordInput.value : '').trim(),
-        remember: rememberInput ? rememberInput.checked : false
-    };
-    
-    console.log('[Login Attempt]', { email: loginData.email });
-    
-    const submitBtn = loginForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    
-    try {
-        submitBtn.textContent = 'Signing in...';
-        submitBtn.disabled = true;
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        // Validation
-        if (await authenticateUser(loginData)) {
-            console.log('[Login Success] Credentials verified. Redirecting to dashboard...');
-            // Store authentication token
-            const token = generateToken(loginData);
-            localStorage.setItem('adminToken', token);
-            
-            if (loginData.remember) {
-                localStorage.setItem('rememberAdmin', 'true');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const rememberInput = document.querySelector('input[name="remember"]');
+        
+        const loginData = {
+            email: (emailInput ? emailInput.value : '').trim().toLowerCase(),
+            password: (passwordInput ? passwordInput.value : '').trim(),
+            remember: rememberInput ? rememberInput.checked : false
+        };
+        
+        console.log('[Login Attempt]', { email: loginData.email });
+        
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn ? submitBtn.textContent : 'Sign In';
+        
+        try {
+            if (submitBtn) {
+                submitBtn.textContent = 'Signing in...';
+                submitBtn.disabled = true;
             }
             
-            // Redirect to dashboard
-            redirectToDashboard();
-        } else {
-            console.warn('[Login Failed] Invalid email or password provided:', loginData.email);
-            showError('Invalid email or password. Please use: sofahaven.admin@gmail.com / SofaH@ven#20332');
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
+            // Validation
+            if (await authenticateUser(loginData)) {
+                console.log('[Login Success] Credentials verified. Redirecting to dashboard...');
+                // Store authentication token
+                const token = generateToken(loginData);
+                localStorage.setItem('adminToken', token);
+                
+                if (loginData.remember) {
+                    localStorage.setItem('rememberAdmin', 'true');
+                }
+                
+                // Redirect to dashboard
+                redirectToDashboard();
+            } else {
+                console.warn('[Login Failed] Invalid email or password provided:', loginData.email);
+                showError('Invalid email or password. Please use: sofahaven.admin@gmail.com / SofaH@ven#20332');
+                if (submitBtn) {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
+        } catch (error) {
+            console.error('[Login Error]', error);
+            showError('An error occurred during login: ' + error.message);
+            if (submitBtn) {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
         }
-    } catch (error) {
-        console.error('[Login Error]', error);
-        showError('An error occurred during login: ' + error.message);
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    }
-});
+    });
+}
 
 // Simple authentication function
 async function authenticateUser(credentials) {
@@ -104,7 +115,9 @@ function showError(message) {
     `;
     errorDiv.textContent = message;
     
-    loginForm.insertBefore(errorDiv, loginForm.firstChild);
+    if (loginForm) {
+        loginForm.insertBefore(errorDiv, loginForm.firstChild);
+    }
 }
 
 // Check if user is already logged in
@@ -131,20 +144,22 @@ document.addEventListener('DOMContentLoaded', () => {
 const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
 inputs.forEach(input => {
     input.addEventListener('focus', () => {
-        input.parentElement.classList.add('focused');
+        if (input.parentElement) input.parentElement.classList.add('focused');
     });
     
     input.addEventListener('blur', () => {
-        if (!input.value) {
+        if (!input.value && input.parentElement) {
             input.parentElement.classList.remove('focused');
         }
     });
 });
 
 // Enter key handling
-loginForm.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        loginForm.dispatchEvent(new Event('submit'));
-    }
-});
+if (loginForm) {
+    loginForm.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            loginForm.dispatchEvent(new Event('submit'));
+        }
+    });
+}
