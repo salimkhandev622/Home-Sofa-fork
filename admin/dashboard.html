@@ -4,8 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - Sofa Haven Admin</title>
+    <script>
+        (function() {
+            const isGitHubPages = window.location.pathname.includes('/Home-Sofa-fork');
+            const basePath = isGitHubPages ? '/Home-Sofa-fork/admin/' : '/admin/';
+            document.write('<base href="' + basePath + '">');
+        })();
+    </script>
+    <style>
+        .hidden { display: none !important; }
+    </style>
     <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
-    <link rel="stylesheet" href="assets/css/admin.css?v=3.0">
+    <link rel="stylesheet" href="assets/css/admin.css?v=4.0">
 </head>
 <body>
     <!-- Loading Overlay -->
