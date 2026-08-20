@@ -12,24 +12,14 @@ loginForm.addEventListener('submit', async (e) => {
         remember: formData.get('remember') === 'on'
     };
     
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    
-    try {
-        // Show loading overlay
-        if (loadingOverlay) {
-            loadingOverlay.classList.remove('hidden');
-        }
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
 
-        // Show loading state
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
+    try {
         submitBtn.textContent = 'Signing in...';
         submitBtn.disabled = true;
         
-        // In production, this would call your authentication API
-        // For now, using a simple validation
         if (await authenticateUser(loginData)) {
-            // Store authentication token
             const token = generateToken(loginData);
             localStorage.setItem('adminToken', token);
             
@@ -37,33 +27,17 @@ loginForm.addEventListener('submit', async (e) => {
                 localStorage.setItem('rememberAdmin', 'true');
             }
             
-            // Redirect to dashboard
             window.location.href = 'dashboard.html';
         } else {
             showError('Invalid email or password');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
-        
-        // Reset button state
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-
-        // Hide loading overlay
-        if (loadingOverlay) {
-            loadingOverlay.classList.add('hidden');
-        }
-
     } catch (error) {
         console.error('Login error:', error);
         showError('An error occurred. Please try again.');
-
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        submitBtn.textContent = 'Sign In';
+        submitBtn.textContent = originalText;
         submitBtn.disabled = false;
-
-        // Hide loading overlay
-        if (loadingOverlay) {
-            loadingOverlay.classList.add('hidden');
-        }
     }
 });
 
