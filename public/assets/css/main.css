@@ -193,11 +193,26 @@ input, select, textarea, button {
     cursor: pointer;
     transition: var(--transition);
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn svg,
+.btn .btn-icon,
+.btn-icon {
+    width: 18px !important;
+    height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .btn-primary {
