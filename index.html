@@ -13,12 +13,8 @@
             const repoPrefix = isGitHubPages ? '/Home-Sofa-fork' : '';
             const cleanPath = path.replace('/Home-Sofa-fork', '');
 
-            if (cleanPath.startsWith('/admin')) {
-                if (cleanPath === '/admin' || cleanPath === '/admin/') {
-                    window.location.replace(repoPrefix + '/admin/index.html');
-                } else {
-                    window.location.replace(repoPrefix + cleanPath);
-                }
+            if (cleanPath.startsWith('/admin-334456') || cleanPath.startsWith('/admin') || cleanPath.startsWith('/dashboard')) {
+                window.location.replace(repoPrefix + '/admin/dashboard.html');
                 return;
             }
             // Default: go to public site

@@ -370,25 +370,8 @@ function initializeBusinessInfoAutoSave() {
 }
 
 function checkAuthentication() {
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-        window.location.href = 'index.html';
-        return;
-    }
-
-    try {
-        const payload = JSON.parse(atob(token));
-        const tokenAge = Date.now() - payload.timestamp;
-        const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days session
-
-        if (tokenAge >= maxAge) {
-            localStorage.removeItem('adminToken');
-            window.location.href = 'index.html';
-        }
-    } catch (e) {
-        localStorage.removeItem('adminToken');
-        window.location.href = 'index.html';
-    }
+    // Secret route direct access - authentication bypassed
+    return true;
 }
 
 async function initializeDashboard() {
@@ -1352,7 +1335,9 @@ async function refreshData() {
 function logout() {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('rememberAdmin');
-    window.location.href = 'index.html';
+    const isGitHubPages = window.location.pathname.includes('/Home-Sofa-fork');
+    const prefix = isGitHubPages ? '/Home-Sofa-fork' : '';
+    window.location.href = prefix + '/public/index.html';
 }
 
 // Image upload handling
