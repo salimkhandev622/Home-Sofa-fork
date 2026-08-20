@@ -69,15 +69,10 @@
     // GitHub API Functions
     function getGitHubConfig() {
         const DEFAULT_TOKEN = atob('Z2hwX3owR1dCUjVrempibGtqb2JmV2NHbTA5bFM1bFZDMTVFV3hT');
-        let token = localStorage.getItem('githubToken');
-        if (!token || token.length !== DEFAULT_TOKEN.length) {
-            token = DEFAULT_TOKEN;
-            localStorage.setItem('githubToken', token);
-        }
         return {
             githubOwner: 'salimkhandev622',
             githubRepo: 'Home-Sofa-fork',
-            githubToken: token,
+            githubToken: DEFAULT_TOKEN,
             githubBranch: 'main'
         };
     }
@@ -116,7 +111,7 @@
                     `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}?ref=${githubConfig.githubBranch}&t=${Date.now()}`,
                     {
                         headers: {
-                            'Authorization': `Bearer ${githubConfig.githubToken}`,
+                            'Authorization': `token ${githubConfig.githubToken}`,
                             'Accept': 'application/vnd.github.v3+json'
                         }
                     }
@@ -145,7 +140,7 @@
                 {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${githubConfig.githubToken}`,
+                        'Authorization': `token ${githubConfig.githubToken}`,
                         'Content-Type': 'application/json',
                         'Accept': 'application/vnd.github.v3+json'
                     },
@@ -178,7 +173,7 @@
                     `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}?ref=${config.githubBranch}&t=${Date.now()}`,
                     {
                         headers: {
-                            'Authorization': `Bearer ${config.githubToken}`,
+                            'Authorization': `token ${config.githubToken}`,
                             'Accept': 'application/vnd.github.v3+json'
                         }
                     }
@@ -208,7 +203,7 @@
                 {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${config.githubToken}`,
+                        'Authorization': `token ${config.githubToken}`,
                         'Content-Type': 'application/json',
                         'Accept': 'application/vnd.github.v3+json'
                     },
@@ -1341,10 +1336,6 @@
         localStorage.removeItem('adminToken');
         localStorage.removeItem('rememberAdmin');
         window.location.href = 'index.html';
-    }
-
-    function showError(message) {
-        alert('Error: ' + message);
     }
 
     // Image upload handling
