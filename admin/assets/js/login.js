@@ -16,12 +16,10 @@ loginForm.addEventListener('submit', async (e) => {
     const originalHTML = submitBtn.innerHTML;
 
     try {
-        console.log('[Auth] Attempting admin login for:', loginData.email);
-        submitBtn.textContent = 'Signing in...';
+        submitBtn.innerHTML = '<span class="btn-spinner"></span> Signing in...';
         submitBtn.disabled = true;
         
         if (await authenticateUser(loginData)) {
-            console.log('[Auth] Login successful. Generating token and redirecting...');
             const token = generateToken(loginData);
             localStorage.setItem('adminToken', token);
             
@@ -31,15 +29,13 @@ loginForm.addEventListener('submit', async (e) => {
             
             window.location.href = 'dashboard.html';
         } else {
-            console.warn('[Auth] Login failed: Invalid email or password.');
             showError('Invalid email or password');
-            submitBtn.textContent = originalHTML;
+            submitBtn.innerHTML = originalHTML;
             submitBtn.disabled = false;
         }
     } catch (error) {
-        console.error('[Auth] Login exception:', error);
         showError('An error occurred. Please try again.');
-        submitBtn.textContent = originalHTML;
+        submitBtn.innerHTML = originalHTML;
         submitBtn.disabled = false;
     }
 });
