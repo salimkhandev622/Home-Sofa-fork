@@ -837,3 +837,33 @@ window.changeHeroBg = function(imageUrl, element) {
 
 // Lightbox functionality removed - images now only change background
 // Lightbox functions are no longer needed
+
+// Initialize Mobile Menu
+function initializeMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navMenu = document.getElementById('navMenu');
+
+    if (mobileMenuBtn && navMenu) {
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+            }
+        });
+
+        // Close menu when a link inside navMenu is clicked
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+            });
+        });
+    }
+}

@@ -808,13 +808,19 @@ body {
 @media (max-width: 768px) {
     /* Slide sidebar off-screen; .active slides it back in */
     .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 250px;
         transform: translateX(-100%);
-        width: 240px;
+        transition: transform 0.3s ease;
+        z-index: 1001;
     }
 
     .sidebar.active {
-        transform: translateX(0);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        transform: translateX(0) !important;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
     }
 
     .main-content {
