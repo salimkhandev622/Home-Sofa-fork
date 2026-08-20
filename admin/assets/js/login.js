@@ -7,19 +7,27 @@ loginForm.addEventListener('submit', async (e) => {
     
     const formData = new FormData(loginForm);
     const loginData = {
-        email: (formData.get('email') || '').trim().toLowerCase(),
-        password: (formData.get('password') || '').trim(),
+        email: formData.get('email'),
+        password: formData.get('password'),
         remember: formData.get('remember') === 'on'
     };
     
-    const submitBtn = loginForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
+    const loadingOverlay = document.getElementById('loadingOverlay');
     
     try {
+        // Show loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+        }
+
+        // Show loading state
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Signing in...';
         submitBtn.disabled = true;
         
-        // Validation
+        // In production, this would call your authentication API
+        // For now, using a simple validation
         if (await authenticateUser(loginData)) {
             // Store authentication token
             const token = generateToken(loginData);
@@ -33,40 +41,51 @@ loginForm.addEventListener('submit', async (e) => {
             window.location.href = 'dashboard.html';
         } else {
             showError('Invalid email or password');
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
         }
+        
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+
+        // Hide loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+        }
+
     } catch (error) {
         console.error('Login error:', error);
         showError('An error occurred. Please try again.');
-        submitBtn.textContent = originalText;
+
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Sign In';
         submitBtn.disabled = false;
+
+        // Hide loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+        }
     }
 });
 
-// Simple authentication function
+// Simple authentication function (replace with real API call)
 async function authenticateUser(credentials) {
-    const validEmails = [
-        'sofahaven.admin@gmail.com',
-        'admin@sofahaven.ae',
-        'admin@gmail.com',
-        'admin'
-    ];
+    // In production, this would call your authentication endpoint
+    // For demo purposes, using hardcoded credentials
+    const validCredentials = {
+        email: 'sofahaven.admin@gmail.com',
+        password: 'SofaH@ven#20332'
+    };
     
-    const validPasswords = [
-        'SofaH@ven#20332',
-        'admin123',
-        'admin'
-    ];
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Simulate short API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    return validEmails.includes(credentials.email) && validPasswords.includes(credentials.password);
+    return credentials.email === validCredentials.email && 
+           credentials.password === validCredentials.password;
 }
 
-// Generate simple token
+// Generate simple token (replace with JWT in production)
 function generateToken(user) {
+    // In production, this would be a proper JWT from your server
     const payload = {
         email: user.email,
         timestamp: Date.now()
@@ -76,11 +95,13 @@ function generateToken(user) {
 
 // Show error message
 function showError(message) {
+    // Remove existing error messages
     const existingError = document.querySelector('.error-message');
     if (existingError) {
         existingError.remove();
     }
     
+    // Create and insert error message
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.style.cssText = `
@@ -101,17 +122,21 @@ function showError(message) {
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('adminToken');
     if (token) {
+        // Validate token (in production, this would verify with your server)
         try {
             const payload = JSON.parse(atob(token));
             const tokenAge = Date.now() - payload.timestamp;
-            const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+            const maxAge = 24 * 60 * 60 * 1000; // 24 hours
             
             if (tokenAge < maxAge) {
+                // Token is valid, redirect to dashboard
                 window.location.href = 'dashboard.html';
             } else {
+                // Token expired, remove it
                 localStorage.removeItem('adminToken');
             }
         } catch (e) {
+            // Invalid token, remove it
             localStorage.removeItem('adminToken');
         }
     }
