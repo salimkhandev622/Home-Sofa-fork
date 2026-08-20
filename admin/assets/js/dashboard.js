@@ -9,6 +9,9 @@
         currentSection: 'dashboard'
     };
 
+    // Track if GitHub is configured
+    let isGitHubConfigured = false;
+
     // Data Management Functions
     async function loadDataFromFile(filename) {
         try {
@@ -22,7 +25,12 @@
                     throw new Error(`Failed to load ${filename}`);
                 }
             }
-            return await response.json();
+            const data = await response.json();
+            
+            // Also save to localStorage for deployment
+            localStorage.setItem(filename, JSON.stringify(data));
+            
+            return data;
         } catch (error) {
             console.error(`Error loading ${filename}:`, error);
             return null;
@@ -31,23 +39,17 @@
 
     async function saveDataToFile(filename, data) {
         try {
-            // Save to localStorage only (manual deployment via deploy button)
+            // Save to localStorage for deployment
             localStorage.setItem(filename, JSON.stringify(data));
             console.log(`Data saved to localStorage ${filename}:`, data);
             
-            // Also save to admin data folder for local syncing
-            try {
-                const adminResponse = await fetch(`data/${filename}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                console.log(`Data saved to admin/data/${filename}`);
-            } catch (error) {
-                console.log(`Could not save to admin/data/${filename} (may not be supported in this environment)`);
-            }
+            // Update local state immediately
+            if (filename === 'products.json') state.products = data;
+            if (filename === 'services.json') state.services = data;
+            if (filename === 'reviews.json') state.reviews = data;
+            if (filename === 'hero-slides.json') state.heroSlides = data;
+            if (filename === 'business-info.json') state.businessInfo = data;
+            if (filename === 'contact-requests.json') state.contactRequests = data;
             
             return true;
         } catch (error) {
@@ -94,62 +96,58 @@
         }
 
         try {
-            const filePaths = [
-                `public/assets/images/${filename}`,
-                `admin/assets/images/${filename}`
-            ];
+            // Only upload to public folder for GitHub Pages
+            const filePath = `public/assets/images/${filename}`;
             
-            for (const filePath of filePaths) {
-                // Get current file SHA if it exists
-                let sha = null;
-                try {
-                    const getFileResponse = await fetch(
-                        `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}?ref=${githubConfig.githubBranch}`,
-                        {
-                            headers: {
-                                'Authorization': `token ${githubConfig.githubToken}`,
-                                'Accept': 'application/vnd.github.v3+json'
-                            }
-                        }
-                    );
-                    
-                    if (getFileResponse.ok) {
-                        const fileData = await getFileResponse.json();
-                        sha = fileData.sha;
-                    }
-                } catch (error) {
-                    console.log(`Image file ${filePath} does not exist yet, will create new`);
-                }
-                
-                // Create or update file
-                const putData = {
-                    message: `Upload image ${filename} via admin dashboard`,
-                    content: base64Content,
-                    branch: githubConfig.githubBranch
-                };
-                
-                if (sha) {
-                    putData.sha = sha;
-                }
-                
-                const putResponse = await fetch(
-                    `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}`,
+            // Get current file SHA if it exists
+            let sha = null;
+            try {
+                const getFileResponse = await fetch(
+                    `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}?ref=${githubConfig.githubBranch}`,
                     {
-                        method: 'PUT',
                         headers: {
                             'Authorization': `token ${githubConfig.githubToken}`,
-                            'Content-Type': 'application/json',
                             'Accept': 'application/vnd.github.v3+json'
-                        },
-                        body: JSON.stringify(putData)
+                        }
                     }
                 );
                 
-                if (!putResponse.ok) {
-                    console.warn(`Failed to upload image to ${filePath}: ${putResponse.statusText}`);
-                } else {
-                    console.log(`Image ${filename} uploaded successfully to ${filePath}`);
+                if (getFileResponse.ok) {
+                    const fileData = await getFileResponse.json();
+                    sha = fileData.sha;
                 }
+            } catch (error) {
+                console.log(`Image file ${filePath} does not exist yet, will create new`);
+            }
+            
+            // Create or update file
+            const putData = {
+                message: `Upload image ${filename} via admin dashboard`,
+                content: base64Content,
+                branch: githubConfig.githubBranch
+            };
+            
+            if (sha) {
+                putData.sha = sha;
+            }
+            
+            const putResponse = await fetch(
+                `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubConfig.githubToken}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(putData)
+                }
+            );
+            
+            if (!putResponse.ok) {
+                console.warn(`Failed to upload image to ${filePath}: ${putResponse.statusText}`);
+            } else {
+                console.log(`Image ${filename} uploaded successfully to ${filePath}`);
             }
             
             return true;
@@ -159,70 +157,62 @@
         }
     }
 
-    async function saveToGitHub(filename, data, config) {
+    async function saveToGitHub(filePath, data, config) {
         try {
             const content = utf8ToBase64(JSON.stringify(data, null, 2));
             
-            // Save to both public and admin data folders
-            const filePaths = [
-                `public/data/${filename}`,
-                `admin/data/${filename}`
-            ];
-            
-            for (const filePath of filePaths) {
-                // Get current file SHA if it exists
-                let sha = null;
-                try {
-                    const getFileResponse = await fetch(
-                        `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}?ref=${config.githubBranch}`,
-                        {
-                            headers: {
-                                'Authorization': `token ${config.githubToken}`,
-                                'Accept': 'application/vnd.github.v3+json'
-                            }
-                        }
-                    );
-                    
-                    if (getFileResponse.ok) {
-                        const fileData = await getFileResponse.json();
-                        sha = fileData.sha;
-                    }
-                } catch (error) {
-                    console.log(`File ${filePath} does not exist yet, will create new`);
-                }
-                
-                // Create or update file
-                const putData = {
-                    message: `Update ${filename} via admin dashboard`,
-                    content: content,
-                    branch: config.githubBranch
-                };
-                
-                if (sha) {
-                    putData.sha = sha;
-                }
-                
-                const putResponse = await fetch(
-                    `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}`,
+            // Get current file SHA if it exists
+            let sha = null;
+            try {
+                const getFileResponse = await fetch(
+                    `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}?ref=${config.githubBranch}`,
                     {
-                        method: 'PUT',
                         headers: {
                             'Authorization': `token ${config.githubToken}`,
-                            'Content-Type': 'application/json',
                             'Accept': 'application/vnd.github.v3+json'
-                        },
-                        body: JSON.stringify(putData)
+                        }
                     }
                 );
                 
-                if (!putResponse.ok) {
-                    const errorText = await putResponse.text();
-                    console.error('GitHub API error details:', errorText);
-                    throw new Error(`GitHub API error: ${putResponse.status} - ${errorText}`);
+                if (getFileResponse.ok) {
+                    const fileData = await getFileResponse.json();
+                    sha = fileData.sha;
                 }
-                
-                console.log(`File ${filePath} saved to GitHub`);
+            } catch (error) {
+                console.log(`File ${filePath} does not exist yet, will create new`);
             }
+            
+            // Create or update file
+            const putData = {
+                message: `Update ${filePath} via admin dashboard`,
+                content: content,
+                branch: config.githubBranch
+            };
+            
+            if (sha) {
+                putData.sha = sha;
+            }
+            
+            const putResponse = await fetch(
+                `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${config.githubToken}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(putData)
+                }
+            );
+            
+            if (!putResponse.ok) {
+                const errorText = await putResponse.text();
+                console.error('GitHub API error details:', errorText);
+                throw new Error(`GitHub API error: ${putResponse.status} - ${errorText}`);
+            }
+            
+            console.log(`File ${filePath} saved to GitHub`);
             
             return true;
         } catch (error) {
@@ -279,47 +269,58 @@
             console.log('Business info keys:', Object.keys(businessInfo));
             console.log('GitHub config:', githubConfig.githubOwner, githubConfig.githubRepo);
             console.log('Token present:', !!githubConfig.githubToken);
+            
+            // Log image paths being deployed
+            console.log('=== IMAGES IN DEPLOYMENT ===');
+            heroSlides.forEach((slide, i) => console.log(`Hero slide ${i+1}: ${slide.image}`));
+            products.forEach((product, i) => console.log(`Product ${i+1}: ${product.mainImage}`));
+            services.forEach((service, i) => console.log(`Service ${i+1}: ${service.image}`));
             console.log('============================');
             
             // Deploy all data files to GitHub
             const deployResults = [];
             
-            // Deploy products
+            // Deploy products to both locations
             try {
-                await saveToGitHub('products.json', products, githubConfig);
-                deployResults.push('✅ Products deployed');
+                await saveToGitHub('public/data/products.json', products, githubConfig);
+                await saveToGitHub('admin/data/products.json', products, githubConfig);
+                deployResults.push('✅ Products deployed to both locations');
             } catch (error) {
                 deployResults.push(`❌ Products failed: ${error.message}`);
             }
             
-            // Deploy services
+            // Deploy services to both locations
             try {
-                await saveToGitHub('services.json', services, githubConfig);
-                deployResults.push('✅ Services deployed');
+                await saveToGitHub('public/data/services.json', services, githubConfig);
+                await saveToGitHub('admin/data/services.json', services, githubConfig);
+                deployResults.push('✅ Services deployed to both locations');
             } catch (error) {
                 deployResults.push(`❌ Services failed: ${error.message}`);
             }
             
-            // Deploy reviews
+            // Deploy reviews to both locations
             try {
-                await saveToGitHub('reviews.json', reviews, githubConfig);
-                deployResults.push('✅ Reviews deployed');
+                await saveToGitHub('public/data/reviews.json', reviews, githubConfig);
+                await saveToGitHub('admin/data/reviews.json', reviews, githubConfig);
+                deployResults.push('✅ Reviews deployed to both locations');
             } catch (error) {
                 deployResults.push(`❌ Reviews failed: ${error.message}`);
             }
             
-            // Deploy hero slides
+            // Deploy hero slides to both locations
             try {
-                await saveToGitHub('hero-slides.json', heroSlides, githubConfig);
-                deployResults.push('✅ Hero slides deployed');
+                await saveToGitHub('public/data/hero-slides.json', heroSlides, githubConfig);
+                await saveToGitHub('admin/data/hero-slides.json', heroSlides, githubConfig);
+                deployResults.push('✅ Hero slides deployed to both locations');
             } catch (error) {
                 deployResults.push(`❌ Hero slides failed: ${error.message}`);
             }
             
-            // Deploy business info
+            // Deploy business info to both locations
             try {
-                await saveToGitHub('business-info.json', businessInfo, githubConfig);
-                deployResults.push('✅ Business info deployed');
+                await saveToGitHub('public/data/business-info.json', businessInfo, githubConfig);
+                await saveToGitHub('admin/data/business-info.json', businessInfo, githubConfig);
+                deployResults.push('✅ Business info deployed to both locations');
             } catch (error) {
                 deployResults.push(`❌ Business info failed: ${error.message}`);
             }
@@ -354,9 +355,9 @@
         try {
             statusDiv.innerHTML = '<p class="status-loading">🔄 Checking deployment status...</p>';
             
-            // Check latest workflow run
+            // Simple repository check for GitHub Pages
             const response = await fetch(
-                `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/actions/runs?branch=${config.githubBranch}&per_page=1`,
+                `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}`,
                 {
                     headers: {
                         'Authorization': `token ${config.githubToken}`,
@@ -366,40 +367,27 @@
             );
             
             if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Repository not found or GitHub Actions not enabled. Please check your repository configuration.');
-                } else if (response.status === 403) {
-                    throw new Error('Access denied. Please check your GitHub token permissions.');
-                } else {
-                    throw new Error(`GitHub API error: ${response.status}`);
-                }
+                throw new Error(`GitHub API error: ${response.status}`);
             }
             
             const data = await response.json();
-            const latestRun = data.workflow_runs && data.workflow_runs[0];
+            const lastUpdated = new Date(data.pushed_at).toLocaleString();
             
-            if (latestRun) {
-                const statusIcon = latestRun.status === 'completed' ? '✅' : '🔄';
-                const conclusionIcon = latestRun.conclusion === 'success' ? '✅' : '❌';
-                
-                statusDiv.innerHTML = `
-                    <div class="status-item">
-                        <span class="status-icon">${statusIcon}</span>
-                        <span class="status-text">Status: ${latestRun.status}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-icon">${conclusionIcon}</span>
-                        <span class="status-text">Conclusion: ${latestRun.conclusion || 'running'}</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-icon">📅</span>
-                        <span class="status-text">Last run: ${new Date(latestRun.created_at).toLocaleString()}</span>
-                    </div>
-                    <a href="${latestRun.html_url}" target="_blank" class="btn btn-secondary btn-sm">View Workflow Run</a>
-                `;
-            } else {
-                statusDiv.innerHTML = '<p class="status-info">ℹ️ No workflow runs found. GitHub Actions may not be configured for this repository.</p>';
-            }
+            statusDiv.innerHTML = `
+                <div class="status-item">
+                    <span class="status-icon">✅</span>
+                    <span class="status-text">Repository: ${config.githubOwner}/${config.githubRepo}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">🌿</span>
+                    <span class="status-text">Branch: ${config.githubBranch}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">📅</span>
+                    <span class="status-text">Last Updated: ${lastUpdated}</span>
+                </div>
+                <a href="https://${config.githubOwner}.github.io/${config.githubRepo}/" target="_blank" class="btn btn-secondary btn-sm">View Live Site</a>
+            `;
         } catch (error) {
             console.error('Error checking deployment status:', error);
             statusDiv.innerHTML = `<p class="status-error">❌ Error checking deployment status: ${error.message}</p>`;
@@ -551,21 +539,15 @@
     }
 
     function renderRecentActivity() {
-        const activities = [
-            { activity: 'New product added', type: 'Product', date: '2024-01-15', status: 'completed' },
-            { activity: 'Review submitted', type: 'Review', date: '2024-01-14', status: 'pending' },
-            { activity: 'Contact request received', type: 'Contact', date: '2024-01-13', status: 'pending' }
-        ];
-        
         const tbody = document.getElementById('recentActivity');
-        tbody.innerHTML = activities.map(activity => `
+        if (!tbody) return;
+        
+        // Show no recent activity message instead of fake data
+        tbody.innerHTML = `
             <tr>
-                <td>${activity.activity}</td>
-                <td><span class="badge badge-info">${activity.type}</span></td>
-                <td>${activity.date}</td>
-                <td><span class="badge badge-${activity.status === 'completed' ? 'success' : 'warning'}">${activity.status}</span></td>
+                <td colspan="4" style="text-align: center; color: #666;">No recent activity to display</td>
             </tr>
-        `).join('');
+        `;
     }
 
     function renderProductsTable() {
@@ -830,8 +812,19 @@
             const mainImageFileName = `product_${Date.now()}_main.${mainImageFile.name.split('.').pop()}`;
             
             // Save image to assets/images directory via GitHub
-            await saveImageToGitHub(mainImageFileName, mainImageBase64);
-            productData.mainImage = `assets/images/${mainImageFileName}`;
+            const imageUploadSuccess = await saveImageToGitHub(mainImageFileName, mainImageBase64);
+            if (imageUploadSuccess) {
+                productData.mainImage = `assets/images/${mainImageFileName}`;
+                console.log(`✅ Product main image uploaded: ${productData.mainImage}`);
+            } else {
+                console.warn('⚠️ Product main image upload failed, keeping existing image');
+                if (productId) {
+                    const index = state.products.findIndex(p => p.id === parseInt(productId));
+                    if (index !== -1) {
+                        productData.mainImage = state.products[index].mainImage;
+                    }
+                }
+            }
         } else if (!productId) {
             // New product without image - use default
             productData.mainImage = 'assets/images/hero_sofa.jpg';
@@ -846,8 +839,13 @@
                 const galleryBase64 = await fileToBase64(galleryFile);
                 const galleryFileName = `product_${Date.now()}_gallery_${i}.${galleryFile.name.split('.').pop()}`;
                 
-                await saveImageToGitHub(galleryFileName, galleryBase64);
-                productData.galleryImages.push(`assets/images/${galleryFileName}`);
+                const galleryUploadSuccess = await saveImageToGitHub(galleryFileName, galleryBase64);
+                if (galleryUploadSuccess) {
+                    productData.galleryImages.push(`assets/images/${galleryFileName}`);
+                    console.log(`✅ Gallery image ${i+1} uploaded: ${galleryFileName}`);
+                } else {
+                    console.warn(`⚠️ Gallery image ${i+1} upload failed`);
+                }
             }
         } else if (!productId) {
             productData.galleryImages = [];
@@ -857,11 +855,11 @@
             // Update existing product
             const index = state.products.findIndex(p => p.id === parseInt(productId));
             if (index !== -1) {
-                // Keep existing images if no new ones uploaded
+                // Keep existing images if no new ones uploaded or upload failed
                 if (!productData.mainImage) {
                     productData.mainImage = state.products[index].mainImage;
                 }
-                if (!productData.galleryImages) {
+                if (!productData.galleryImages || productData.galleryImages.length === 0) {
                     productData.galleryImages = state.products[index].galleryImages || [];
                 }
                 state.products[index] = { ...state.products[index], ...productData };
@@ -883,9 +881,9 @@
             closeProductModal();
             
             if (hasGitHubConfig) {
-                alert('Product saved locally! Click "Deploy" to push these changes to GitHub.');
+                alert('Product saved! Changes are ready for deployment. Click "Deploy" to push these changes to GitHub Pages.');
             } else {
-                alert('Product saved locally. Configure a GitHub token and click Deploy to publish.');
+                alert('Product saved locally. Configure a GitHub token and click Deploy to publish to GitHub Pages.');
             }
         });
     }
@@ -1004,9 +1002,9 @@
         // Save to file system
         saveDataToFile('business-info.json', state.businessInfo).then(success => {
             if (hasGitHubConfig) {
-                alert('Business information saved locally! Click "Deploy" to push these changes to GitHub.');
+                alert('Business information saved! Changes are ready for deployment. Click "Deploy" to push these changes to GitHub Pages.');
             } else {
-                alert('Business information saved locally. Configure a GitHub token and click Deploy to publish.');
+                alert('Business information saved locally. Configure a GitHub token and click Deploy to publish to GitHub Pages.');
             }
         });
     }
@@ -1141,8 +1139,19 @@
             const serviceImageBase64 = await fileToBase64(serviceImageFile);
             const serviceImageFileName = `service_${Date.now()}.${serviceImageFile.name.split('.').pop()}`;
             
-            await saveImageToGitHub(serviceImageFileName, serviceImageBase64);
-            serviceData.image = `assets/images/${serviceImageFileName}`;
+            const serviceImageUploadSuccess = await saveImageToGitHub(serviceImageFileName, serviceImageBase64);
+            if (serviceImageUploadSuccess) {
+                serviceData.image = `assets/images/${serviceImageFileName}`;
+                console.log(`✅ Service image uploaded: ${serviceData.image}`);
+            } else {
+                console.warn('⚠️ Service image upload failed, keeping existing image');
+                if (serviceId) {
+                    const index = state.services.findIndex(s => s.id === parseInt(serviceId));
+                    if (index !== -1) {
+                        serviceData.image = state.services[index].image;
+                    }
+                }
+            }
         } else if (!serviceId) {
             // New service without image - use default
             serviceData.image = 'assets/images/service_sofa_beds.jpg';
@@ -1152,7 +1161,7 @@
             // Update existing service
             const index = state.services.findIndex(s => s.id === parseInt(serviceId));
             if (index !== -1) {
-                // Keep existing image if no new one uploaded
+                // Keep existing image if no new one uploaded or upload failed
                 if (!serviceData.image) {
                     serviceData.image = state.services[index].image;
                 }
@@ -1174,9 +1183,9 @@
             closeServiceModal();
             
             if (hasGitHubConfig) {
-                alert('Service saved locally! Click "Deploy" to push these changes to GitHub.');
+                alert('Service saved! Changes are ready for deployment. Click "Deploy" to push these changes to GitHub Pages.');
             } else {
-                alert('Service saved locally. Configure a GitHub token and click Deploy to publish.');
+                alert('Service saved locally. Configure a GitHub token and click Deploy to publish to GitHub Pages.');
             }
         });
     }
@@ -1272,8 +1281,20 @@
             const heroImageBase64 = await fileToBase64(heroImageFile);
             const heroImageFileName = `hero_${Date.now()}.${heroImageFile.name.split('.').pop()}`;
             
-            await saveImageToGitHub(heroImageFileName, heroImageBase64);
-            heroData.image = `assets/images/${heroImageFileName}`;
+            const imageUploadSuccess = await saveImageToGitHub(heroImageFileName, heroImageBase64);
+            if (imageUploadSuccess) {
+                heroData.image = `assets/images/${heroImageFileName}`;
+                console.log(`✅ Hero image uploaded and path updated: ${heroData.image}`);
+            } else {
+                console.warn('⚠️ Image upload failed, keeping existing image');
+                // Keep existing image if upload fails
+                if (heroId) {
+                    const index = state.heroSlides.findIndex(s => s.id === parseInt(heroId));
+                    if (index !== -1) {
+                        heroData.image = state.heroSlides[index].image;
+                    }
+                }
+            }
         }
         
         if (heroId) {
@@ -1321,9 +1342,9 @@
             closeHeroModal();
             
             if (hasGitHubConfig) {
-                alert('Hero slide saved locally! Click "Deploy" to push these changes to GitHub.');
+                alert('Hero slide saved! Changes are ready for deployment. Click "Deploy" to push these changes to GitHub Pages.');
             } else {
-                alert('Hero slide saved locally. Configure a GitHub token and click Deploy to publish.');
+                alert('Hero slide saved locally. Configure a GitHub token and click Deploy to publish to GitHub Pages.');
             }
         });
     }

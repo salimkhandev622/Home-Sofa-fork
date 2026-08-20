@@ -11,5 +11,57 @@
     "secondaryButtonLink": "phone",
     "order": 1,
     "active": true
+  },
+  {
+    "id": 2,
+    "image": "assets/images/thumb_sofa1.jpg",
+    "badge": "Premium Collection",
+    "title": "Nebraska L-Shape Sofa",
+    "description": "Experience ultimate comfort with our premium L-shaped sofa collection, perfect for modern living rooms.",
+    "primaryButtonText": "Get Quote",
+    "primaryButtonLink": "#contact",
+    "secondaryButtonText": "View Details",
+    "secondaryButtonLink": "#products",
+    "order": 2,
+    "active": true
+  },
+  {
+    "id": 3,
+    "image": "assets/images/thumb_sofa2.jpg",
+    "badge": "Custom Design",
+    "title": "Nebraska U-Shape Sofa",
+    "description": "Maximize your seating space with our elegant U-shaped sofas, designed for large families and gatherings.",
+    "primaryButtonText": "WhatsApp Us",
+    "primaryButtonLink": "whatsapp",
+    "secondaryButtonText": "Call Now",
+    "secondaryButtonLink": "phone",
+    "order": 3,
+    "active": true
+  },
+  {
+    "id": 4,
+    "image": "assets/images/thumb_sofa3.jpg",
+    "badge": "Space Saver",
+    "title": "Corner Sofa Bed",
+    "description": "Perfect for small spaces, our corner sofa beds provide comfort and functionality without compromising style.",
+    "primaryButtonText": "Get Quote",
+    "primaryButtonLink": "#contact",
+    "secondaryButtonText": "View Details",
+    "secondaryButtonLink": "#products",
+    "order": 4,
+    "active": true
+  },
+  {
+    "id": 5,
+    "image": "assets/images/thumb_sofa4.jpg",
+    "badge": "Handcrafted",
+    "title": "Custom 3-Seater Sofa",
+    "description": "Handcrafted with premium materials, our 3-seater sofas offer the perfect blend of comfort and durability.",
+    "primaryButtonText": "WhatsApp Us",
+    "primaryButtonLink": "whatsapp",
+    "secondaryButtonText": "Call Now",
+    "secondaryButtonLink": "phone",
+    "order": 5,
+    "active": true
   }
 ]

@@ -4,13 +4,13 @@
     "name": "Nebraska L-Shape Sofa Bed",
     "mainImage": "assets/images/thumb_sofa1.jpg",
     "shortDescription": "Premium L-shaped sofa bed with high-density foam and durable fabric.",
-    "fullDescription": "Premium L-shaped sofa bed with high-density foam and durable fabric. Perfect for modern living spaces with customizable options.",
+    "fullDescription": "Premium L-shaped sofa bed with high-density foam and durable fabric. Perfect for modern living spaces with customizable options. Features easy conversion from sofa to bed, storage compartments, and premium upholstery.",
     "price": 4500,
     "bestSeller": true,
     "featured": true,
     "available": true,
     "category": "sofa-bed",
-    "galleryImages": ["assets/images/thumb_sofa1.jpg"],
+    "galleryImages": ["assets/images/thumb_sofa1.jpg", "assets/images/hero_sofa.jpg"],
     "displayOrder": 1
   },
   {
@@ -18,13 +18,13 @@
     "name": "Nebraska U-Shape Sofa",
     "mainImage": "assets/images/thumb_sofa2.jpg",
     "shortDescription": "Spacious U-shaped sofa perfect for large living rooms.",
-    "fullDescription": "Spacious U-shaped sofa perfect for large living rooms. Features premium upholstery and comfortable seating for the whole family.",
+    "fullDescription": "Spacious U-shaped sofa perfect for large living rooms. Features premium upholstery and comfortable seating for the whole family. Includes removable cushions, solid wood frame, and 10-year warranty.",
     "price": 5500,
     "bestSeller": true,
     "featured": false,
     "available": true,
     "category": "sectional",
-    "galleryImages": ["assets/images/thumb_sofa2.jpg"],
+    "galleryImages": ["assets/images/thumb_sofa2.jpg", "assets/images/thumb_sofa1.jpg"],
     "displayOrder": 2
   },
   {
@@ -32,13 +32,13 @@
     "name": "Corner Sofa Bed",
     "mainImage": "assets/images/thumb_sofa3.jpg",
     "shortDescription": "Space-saving corner sofa with comfortable sleeping solution.",
-    "fullDescription": "Space-saving corner sofa with comfortable sleeping solution. Ideal for apartments and smaller spaces without compromising on comfort.",
+    "fullDescription": "Space-saving corner sofa with comfortable sleeping solution. Ideal for apartments and smaller spaces without compromising on comfort. Features high-density foam, easy-clean fabric, and sturdy construction.",
     "price": 3800,
     "bestSeller": true,
     "featured": true,
     "available": true,
     "category": "sofa-bed",
-    "galleryImages": ["assets/images/thumb_sofa3.jpg"],
+    "galleryImages": ["assets/images/thumb_sofa3.jpg", "assets/images/thumb_sofa4.jpg"],
     "displayOrder": 3
   },
   {
@@ -46,13 +46,13 @@
     "name": "Custom 3-Seater Sofa",
     "mainImage": "assets/images/thumb_sofa4.jpg",
     "shortDescription": "Elegant 3-seater sofa with premium upholstery options.",
-    "fullDescription": "Elegant 3-seater sofa with premium upholstery options. Customizable in various fabrics and colors to match your interior design.",
+    "fullDescription": "Elegant 3-seater sofa with premium upholstery options. Customizable in various fabrics and colors to match your interior design. Made with solid wood frame and premium foam for lasting comfort.",
     "price": 3200,
     "bestSeller": false,
     "featured": false,
     "available": true,
     "category": "sofa",
-    "galleryImages": ["assets/images/thumb_sofa4.jpg"],
+    "galleryImages": ["assets/images/thumb_sofa4.jpg", "assets/images/hero_sofa.jpg"],
     "displayOrder": 4
   }
 ]

@@ -3,16 +3,32 @@
     "id": 1,
     "name": "Sarah Johnson",
     "rating": 5,
-    "reviewText": "Amazing quality and service!",
-    "status": "approved",
-    "profilePicture": "https://via.placeholder.com/60x60/3a68b8/FFFFFF?text=SJ"
+    "reviewText": "Amazing quality and service! The custom sofa bed fits perfectly in our apartment. Highly recommended for anyone looking for premium furniture in Dubai.",
+    "profilePicture": "assets/images/service_upholstery.jpg",
+    "status": "approved"
   },
   {
     "id": 2,
-    "name": "Mohammed Ali",
+    "name": "Mohammad Al-Mansoori",
     "rating": 5,
-    "reviewText": "Best sofa shop in Dubai.",
-    "status": "approved",
-    "profilePicture": "https://via.placeholder.com/60x60/3a68b8/FFFFFF?text=MA"
+    "reviewText": "Excellent craftsmanship. We ordered a Nebraska U-shape sofa and the fabric and cushion density are top notch. Very professional team and quick delivery.",
+    "profilePicture": "assets/images/service_sofa_beds.jpg",
+    "status": "approved"
+  },
+  {
+    "id": 3,
+    "name": "Fatima Hassan",
+    "rating": 5,
+    "reviewText": "Best upholstery service in Dubai! They restored our 10-year-old sofa to look brand new. The fabric selection is amazing and prices are reasonable.",
+    "profilePicture": "assets/images/hero_sofa.jpg",
+    "status": "approved"
+  },
+  {
+    "id": 4,
+    "name": "John Smith",
+    "rating": 4,
+    "reviewText": "Great quality custom sofa. The team was helpful with design suggestions and the final product exceeded our expectations. Would definitely recommend.",
+    "profilePicture": "assets/images/thumb_sofa1.jpg",
+    "status": "approved"
   }
 ]

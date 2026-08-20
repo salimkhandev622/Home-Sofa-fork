@@ -24,7 +24,7 @@ function initializeApp() {
         
         fetchAllContent().then(() => {
             renderHeroSlider();
-            renderGallery();
+            renderCategoryBar();
             renderReviews();
             renderServices();
             renderBestsellers();
@@ -188,14 +188,20 @@ function renderHeroSlider() {
     `;
 }
 
-function renderGallery() {
-    const galleryCarousel = document.getElementById('galleryCarousel');
-    if (!galleryCarousel || state.products.length === 0) return;
+function renderCategoryBar() {
+    const categoryBarGrid = document.getElementById('categoryBarGrid');
+    if (!categoryBarGrid || state.services.length === 0) return;
     
-    galleryCarousel.innerHTML = state.products.map(product => `
-        <div class="gallery-item">
-            <img src="${product.mainImage}" alt="${product.name}" loading="lazy">
-        </div>
+    // Extract unique categories from services
+    const categories = [...new Set(state.services.map(service => {
+        // Extract category from service title (e.g., "Custom Sofa Beds" -> "Sofa Beds")
+        return service.title.replace(/^(Custom |Corner )/, '').trim();
+    }))];
+    
+    categoryBarGrid.innerHTML = categories.map(category => `
+        <a href="#services" class="category-bar-item">
+            <span class="category-bar-label">${category}</span>
+        </a>
     `).join('');
 }
 

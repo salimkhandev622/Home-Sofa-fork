@@ -1,14 +1,14 @@
 {
   "shopName": "Home Sofa",
-  "phone": "+971 50 000 0000",
-  "whatsapp": "+971 50 000 0000",
+  "phone": "+971 4 123 4567",
+  "whatsapp": "+971 50 123 4567",
   "email": "info@homesofa.ae",
-  "address": "Dubai, United Arab Emirates",
+  "address": "Al Quoz Industrial Area 3, Dubai, United Arab Emirates",
   "openingHours": "9:00 AM - 10:00 PM",
   "socialLinks": {
-    "facebook": "#",
-    "instagram": "#",
-    "twitter": "#"
+    "facebook": "https://facebook.com/homesofa",
+    "instagram": "https://instagram.com/homesofa",
+    "twitter": "https://twitter.com/homesofa"
   },
   "mapCoordinates": {
     "lat": 25.12345678901234,

@@ -2,13 +2,14 @@
   {
     "id": 1,
     "title": "Custom Sofa Beds",
-    "description": "Transform your living space with our custom-made sofa beds designed for comfort and style.",
+    "description": "Transform your living space with our custom-made sofa beds designed for comfort and style. Perfect for Dubai apartments and modern homes.",
     "image": "assets/images/service_sofa_beds.jpg",
     "features": [
       "High-density foam for lasting comfort",
-      "Premium fabric options",
+      "Premium fabric options including Italian leather",
       "Customizable sizes and configurations",
-      "Easy conversion mechanism"
+      "Easy conversion mechanism from sofa to bed",
+      "Storage compartments available"
     ],
     "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
@@ -16,13 +17,14 @@
   {
     "id": 2,
     "title": "Corner Sofa Beds",
-    "description": "Maximize your space with our stylish corner sofa beds that combine functionality with elegance.",
+    "description": "Maximize your space with our stylish corner sofa beds that combine functionality with elegance. Ideal for compact living spaces.",
     "image": "assets/images/service_upholstery.jpg",
     "features": [
-      "Space-saving design",
-      "Multiple configuration options",
+      "Space-saving L-shaped design",
+      "Multiple configuration options (left/right facing)",
       "Premium upholstery fabrics",
-      "Durable wooden frame"
+      "Durable solid wooden frame",
+      "Removable and washable cushions"
     ],
     "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
@@ -30,13 +32,14 @@
   {
     "id": 3,
     "title": "Upholstery Services",
-    "description": "Breathe new life into your existing furniture with our professional upholstery services.",
+    "description": "Breathe new life into your existing furniture with our professional upholstery services. We work with all major furniture brands.",
     "image": "assets/images/service_upholstery.jpg",
     "features": [
-      "Wide range of premium fabrics",
-      "Expert craftsmanship",
-      "Foam replacement options",
-      "Quick turnaround time"
+      "Wide range of premium fabrics and leathers",
+      "Expert craftsmanship with attention to detail",
+      "Foam replacement and cushion restoration",
+      "Quick turnaround time (3-5 days)",
+      "Free pickup and delivery in Dubai"
     ],
     "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
@@ -44,13 +47,14 @@
   {
     "id": 4,
     "title": "Custom Sofas",
-    "description": "Design your dream sofa with our custom manufacturing service tailored to your specifications.",
+    "description": "Design your dream sofa with our custom manufacturing service tailored to your specifications. Made locally in our Dubai factory.",
     "image": "assets/images/hero_sofa.jpg",
     "features": [
-      "Fully customizable dimensions",
-      "Premium material selection",
-      "Expert design consultation",
-      "10-year frame warranty"
+      "Fully customizable dimensions to fit your space",
+      "Premium material selection (foams, fabrics, frames)",
+      "Expert design consultation included",
+      "10-year frame warranty",
+      "Professional installation service"
     ],
     "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
@@ -58,13 +62,14 @@
   {
     "id": 5,
     "title": "Sofa Repair",
-    "description": "Professional repair services to restore your sofa to its original comfort and appearance.",
+    "description": "Professional repair services to restore your sofa to its original comfort and appearance. We fix all types of sofa issues.",
     "image": "assets/images/service_upholstery.jpg",
     "features": [
       "Frame repair and reinforcement",
-      "Spring replacement",
-      "Fabric patching and replacement",
-      "Foam restoration"
+      "Spring replacement and adjustment",
+      "Fabric patching and full replacement",
+      "Foam restoration and upgrading",
+      "Same-day service for urgent repairs"
     ],
     "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
@@ -72,13 +77,14 @@
   {
     "id": 6,
     "title": "Sofa Maintenance",
-    "description": "Regular maintenance services to keep your sofa looking and feeling like new.",
+    "description": "Regular maintenance services to keep your sofa looking and feeling like new. Preventive care extends furniture life.",
     "image": "assets/images/service_sofa_beds.jpg",
     "features": [
-      "Professional cleaning",
-      "Fabric protection treatment",
-      "Minor repairs included",
-      "Extended lifespan guarantee"
+      "Professional deep cleaning and sanitization",
+      "Fabric protection treatment (stain resistant)",
+      "Minor repairs included in maintenance",
+      "Extended lifespan guarantee with regular service",
+      "Annual maintenance contracts available"
     ],
     "buttonText": "Get Quote",
     "buttonLink": "whatsapp"
