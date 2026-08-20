@@ -1,17 +1,16 @@
 {
   "shopName": "Sofa Haven",
-  "phone": "+971 4 123 4567",
+  "phone": "+92 320 1970604",
   "whatsapp": "+92 320 1970604",
   "email": "info@sofahaven.ae",
   "address": "Al Quoz Industrial Area 3, Dubai, United Arab Emirates",
-  "openingHours": "9:00 AM - 10:00 PM",
+  "openingHours": "9:00 AM - 12:00 PM",
   "socialLinks": {
     "facebook": "https://facebook.com/sofahaven",
     "instagram": "https://instagram.com/sofahaven"
   },
   "mapCoordinates": {
-    "lat": 25.12345678901234,
-    "lng": 55.12345678901234
-  },
-  "location": "Dubai, UAE"
+    "lat": "25.12345678901234",
+    "lng": "55.12345678901234"
+  }
 }
