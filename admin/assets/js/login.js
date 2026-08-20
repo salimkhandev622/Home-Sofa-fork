@@ -12,11 +12,14 @@ function getAdminDashboardUrl() {
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const formData = new FormData(loginForm);
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const rememberInput = document.querySelector('input[name="remember"]');
+    
     const loginData = {
-        email: formData.get('email'),
-        password: formData.get('password'),
-        remember: formData.get('remember') === 'on'
+        email: emailInput ? emailInput.value : '',
+        password: passwordInput ? passwordInput.value : '',
+        remember: rememberInput ? rememberInput.checked : false
     };
     
     const submitBtn = loginForm.querySelector('button[type="submit"]');
