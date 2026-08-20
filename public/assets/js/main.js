@@ -441,7 +441,7 @@ window.startReviewAutoSlide = function() {
 
         reviews[state.currentReview].classList.add('active');
         if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
-    }, 5000);
+    }, 2000);
 }
 
 window.stopReviewAutoSlide = function() {
@@ -514,7 +514,7 @@ window.startAutoSlide = function() {
 
         slides[state.currentSlide].classList.add('active');
         if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
-    }, 5000);
+    }, 2000);
 }
 
 window.stopAutoSlide = function() {

@@ -17,68 +17,98 @@ if sys.platform == 'win32':
     sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
 
 # Target file size in KB
-TARGET_SIZE_KB = 120
+TARGET_SIZE_KB = 80
 TARGET_SIZE_BYTES = TARGET_SIZE_KB * 1024
 
 # Project directory
 PROJECT_DIR = r"D:\Downloads\Home-Sofa"
 
 # Image extensions to process
-IMAGE_EXTENSIONS = ['.jpg', '.jpeg']
+IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp']
 
 def compress_image(image_path, target_size_bytes):
     """
     Compress an image to meet target file size.
-    Uses iterative quality reduction to achieve target size.
+    Uses iterative quality reduction, then dimension scaling as last resort.
     """
+    temp_path = image_path + '.temp'
     try:
-        # Open the image
         img = Image.open(image_path)
-        
-        # Convert to RGB if necessary (for JPEG)
-        if img.mode != 'RGB':
+        ext = Path(image_path).suffix.lower()
+
+        # Determine save format
+        if ext in ('.jpg', '.jpeg'):
+            fmt = 'JPEG'
+        elif ext == '.png':
+            fmt = 'PNG'
+        elif ext == '.webp':
+            fmt = 'WEBP'
+        else:
+            fmt = 'JPEG'
+
+        # Convert to RGB for JPEG/WebP (strip alpha)
+        if fmt in ('JPEG', 'WEBP') and img.mode in ('RGBA', 'P', 'LA'):
             img = img.convert('RGB')
-        
-        # Get original file size
+
         original_size = os.path.getsize(image_path)
-        
-        # If already under target size, skip
+
         if original_size <= target_size_bytes:
             print(f"  [OK] Already under target: {original_size / 1024:.1f} KB")
             return True
-        
+
         print(f"  Original size: {original_size / 1024:.1f} KB")
-        
-        # Start with high quality and reduce iteratively
-        quality = 95
+
+        quality = 90
         min_quality = 10
-        temp_path = image_path + '.temp'
-        
+        current_img = img.copy()
+
+        # Phase 1: reduce quality iteratively
         while quality >= min_quality:
-            # Save with current quality
-            img.save(temp_path, 'JPEG', quality=quality, optimize=True)
-            
-            # Check file size
+            if fmt == 'PNG':
+                current_img.save(temp_path, fmt, optimize=True, compress_level=9)
+            else:
+                current_img.save(temp_path, fmt, quality=quality, optimize=True)
+
             compressed_size = os.path.getsize(temp_path)
-            
+
             if compressed_size <= target_size_bytes:
-                # Replace original with compressed version
                 os.replace(temp_path, image_path)
                 print(f"  [OK] Compressed to: {compressed_size / 1024:.1f} KB (Quality: {quality})")
                 return True
-            
-            # Try lower quality
+
             quality -= 5
-        
-        # If we couldn't reach target size, use the best we got
+
+        # Phase 2: scale down dimensions until target reached
+        scale = 0.9
+        current_img = img.copy()
+        while scale >= 0.2:
+            new_w = int(img.width * scale)
+            new_h = int(img.height * scale)
+            resized = img.resize((new_w, new_h), Image.LANCZOS)
+
+            save_quality = 60 if fmt != 'PNG' else None
+            if fmt == 'PNG':
+                resized.save(temp_path, fmt, optimize=True, compress_level=9)
+            else:
+                resized.save(temp_path, fmt, quality=save_quality, optimize=True)
+
+            compressed_size = os.path.getsize(temp_path)
+
+            if compressed_size <= target_size_bytes:
+                os.replace(temp_path, image_path)
+                print(f"  [OK] Scaled+compressed to: {compressed_size / 1024:.1f} KB ({new_w}x{new_h}, scale={scale:.1f})")
+                return True
+
+            scale -= 0.1
+
+        # Best effort: save whatever we have
         os.replace(temp_path, image_path)
         final_size = os.path.getsize(image_path)
-        print(f"  [WARNING] Best effort: {final_size / 1024:.1f} KB (Quality: {quality})")
+        print(f"  [WARNING] Best effort: {final_size / 1024:.1f} KB")
         return True
-        
+
     except Exception as e:
-        print(f"  [ERROR] Error compressing {image_path}: {e}")
-        # Clean up temp file if it exists
+        print(f"  [ERROR] {image_path}: {e}")
         if os.path.exists(temp_path):
             os.remove(temp_path)
         return False
