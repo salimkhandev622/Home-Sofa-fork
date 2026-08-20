@@ -1,16 +1,24 @@
-// Admin Login JavaScript
-const loginForm = document.getElementById('loginForm');
+function redirectToDashboard() {
+    const isGitHubPages = window.location.pathname.includes('/Home-Sofa-fork');
+    const prefix = isGitHubPages ? '/Home-Sofa-fork' : '';
+    window.location.href = prefix + '/admin/dashboard.html';
+}
 
 // Form submission
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const formData = new FormData(loginForm);
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const rememberInput = document.querySelector('input[name="remember"]');
+    
     const loginData = {
-        email: (formData.get('email') || '').trim().toLowerCase(),
-        password: (formData.get('password') || '').trim(),
-        remember: formData.get('remember') === 'on'
+        email: (emailInput ? emailInput.value : '').trim().toLowerCase(),
+        password: (passwordInput ? passwordInput.value : '').trim(),
+        remember: rememberInput ? rememberInput.checked : false
     };
+    
+    console.log('[Login Attempt]', { email: loginData.email });
     
     const submitBtn = loginForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
@@ -21,6 +29,7 @@ loginForm.addEventListener('submit', async (e) => {
         
         // Validation
         if (await authenticateUser(loginData)) {
+            console.log('[Login Success] Credentials verified. Redirecting to dashboard...');
             // Store authentication token
             const token = generateToken(loginData);
             localStorage.setItem('adminToken', token);
@@ -30,15 +39,16 @@ loginForm.addEventListener('submit', async (e) => {
             }
             
             // Redirect to dashboard
-            window.location.href = 'dashboard.html';
+            redirectToDashboard();
         } else {
-            showError('Invalid email or password');
+            console.warn('[Login Failed] Invalid email or password provided:', loginData.email);
+            showError('Invalid email or password. Please use: sofahaven.admin@gmail.com / SofaH@ven#20332');
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
     } catch (error) {
-        console.error('Login error:', error);
-        showError('An error occurred. Please try again.');
+        console.error('[Login Error]', error);
+        showError('An error occurred during login: ' + error.message);
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
     }
@@ -107,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
             
             if (tokenAge < maxAge) {
-                window.location.href = 'dashboard.html';
+                redirectToDashboard();
             } else {
                 localStorage.removeItem('adminToken');
             }
