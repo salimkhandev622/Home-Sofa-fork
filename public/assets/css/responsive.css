@@ -464,9 +464,9 @@
         margin-bottom: 20px;
     }
 
-    /* Hero Section */
+    /* Hero Section — use fixed height so height:100% on slides resolves correctly */
     .hero {
-        height: auto;
+        height: 520px;
         min-height: 520px;
         display: flex;
         align-items: center;

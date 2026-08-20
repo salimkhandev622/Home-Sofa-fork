@@ -320,6 +320,7 @@ input, select, textarea, button {
 
 .hero-slider {
     height: 100%;
+    min-height: inherit;  /* propagates hero min-height so slides resolve correctly */
     position: relative;
     width: 100%;
 }
@@ -336,6 +337,8 @@ input, select, textarea, button {
     align-items: center;
     justify-content: center;
     opacity: 0;
+    /* inactive slides must not capture pointer events — prevents blocked button clicks */
+    pointer-events: none;
     transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     transform: scale(1.04);
 }
@@ -343,6 +346,7 @@ input, select, textarea, button {
 .hero-slide.active {
     opacity: 1;
     transform: scale(1);
+    pointer-events: auto;
 }
 
 /* Luxurious dark overlay for maximum text legibility and rich atmosphere */
