@@ -1454,3 +1454,26 @@
             reader.readAsDataURL(file);
         }
     });
+
+    // ── Mobile sidebar toggle ──
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar    = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    menuToggle?.addEventListener('click', function () {
+        const isOpen = sidebar.classList.toggle('active');
+        sidebarOverlay.classList.toggle('active', isOpen);
+    });
+
+    // Called by the overlay's onclick attribute in the HTML
+    function closeSidebar() {
+        sidebar?.classList.remove('active');
+        sidebarOverlay?.classList.remove('active');
+    }
+
+    // Also close sidebar when a nav link is tapped on mobile
+    document.querySelectorAll('.sidebar-nav a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            if (window.innerWidth <= 768) closeSidebar();
+        });
+    });
