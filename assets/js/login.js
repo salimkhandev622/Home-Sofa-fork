@@ -60,7 +60,7 @@ async function authenticateUser(credentials) {
     // In production, this would call your authentication endpoint
     // For demo purposes, using hardcoded credentials
     const validCredentials = {
-        email: 'admin@homesofa.ae',
+        email: 'admin@sofahaven.ae',
         password: 'admin123'
     };
     

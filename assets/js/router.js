@@ -207,8 +207,7 @@ const Router = {
                 <div class="container">
                     <div class="header-content">
                         <div class="logo-section">
-                            <img src="assets/images/logo.png" alt="Home Sofa Logo" class="logo" id="logo">
-                            <h1 class="shop-name" id="shopName">Home Sofa</h1>
+                            <img src="assets/images/logo.jpg" alt="Sofa Haven Logo" class="logo-image">
                         </div>
                         <nav class="nav-menu" id="navMenu">
                             <ul>
@@ -244,7 +243,7 @@ const Router = {
                 <div class="container">
                     <div class="footer-content">
                         <div class="footer-section">
-                            <h3>Home Sofa</h3>
+                            <h3>Sofa Haven</h3>
                             <p>Dubai's premier sofa shop for custom sofa beds and upholstery solutions.</p>
                             <div class="social-links">
                                 <a href="#" class="social-link">Facebook</a>
@@ -275,11 +274,11 @@ const Router = {
                             <h3>Contact</h3>
                             <p>📍 <span id="address">Dubai, UAE</span></p>
                             <p>📞 <span id="phone">+971 50 000 0000</span></p>
-                            <p>✉️ <span id="email">info@homesofa.ae</span></p>
+                            <p>✉️ <span id="email">info@sofahaven.ae</span></p>
                         </div>
                     </div>
                     <div class="footer-bottom">
-                        <p>&copy; 2024 Home Sofa. All rights reserved.</p>
+                        <p>&copy; 2024 Sofa Haven. All rights reserved.</p>
                     </div>
                 </div>
             </footer>
@@ -362,7 +361,7 @@ const Router = {
                     <div class="highlight-carousel-container" id="highlightSlider">
                         <div class="highlight-slide active" data-highlight-index="0">
                             <p class="highlight-quote">"All of our custom sofa beds and upholstery services are made with top-quality materials. Nebraska L-Shape sofa bed is one of our best sellers in Dubai."</p>
-                            <span class="highlight-author">Home Sofa Dubai Factory</span>
+                            <span class="highlight-author">Sofa Haven Dubai Factory</span>
                         </div>
                         <div class="highlight-slide" data-highlight-index="1">
                             <p class="highlight-quote">"Nebraska U-Shape sofa is custom-made with premium fabric, high density foam for long lasting comfort, and a sturdy frame."</p>
@@ -394,12 +393,12 @@ const Router = {
                 </div>
             </section>
 
-            <!-- Why Home Sofa Section (Split 50/50) -->
+            <!-- Why Sofa Haven Section (Split 50/50) -->
             <section class="why-section">
                 <div class="container">
                     <div class="why-grid">
                         <div class="why-left">
-                            <h2>Why Home Sofa is Dubai's Trusted Sofa Factory</h2>
+                            <h2>Why Sofa Haven is Dubai's Trusted Sofa Factory</h2>
                             <p>All our sofas are built to last using locally sourced materials and top-tier workmanship. We focus on customization and convenience to give you exactly what your living space needs.</p>
                             <div class="why-checklist">
                                 <div class="why-checklist-item"><span class="chk-icon">✓</span> Expert Customization</div>
@@ -415,7 +414,7 @@ const Router = {
                             </div>
                         </div>
                         <div class="why-right">
-                            <img src="assets/images/hero_sofa.jpg" alt="Home Sofa Dubai Factory">
+                            <img src="assets/images/hero_sofa.jpg" alt="Sofa Haven Dubai Factory">
                         </div>
                     </div>
                 </div>
@@ -597,7 +596,7 @@ const Router = {
                                 <div class="contact-card-icon">✉️</div>
                                 <div class="contact-card-text">
                                     <h4>Email Us</h4>
-                                    <p><a href="#" id="email">info@homesofa.ae</a></p>
+                                    <p><a href="#" id="email">info@sofahaven.ae</a></p>
                                 </div>
                             </div>
                         </div>
@@ -801,7 +800,7 @@ const Router = {
                 <div class="login-container">
                     <div class="login-box">
                         <div class="login-header">
-                            <img src="assets/images/logo.png" alt="Home Sofa Logo" class="login-logo">
+                            <img src="assets/logo.jpg" alt="Sofa Haven Logo" class="login-logo">
                             <h1>Admin Dashboard</h1>
                             <p>Sign in to manage your website content</p>
                         </div>
@@ -809,7 +808,7 @@ const Router = {
                         <form id="loginForm" class="login-form">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required placeholder="admin@homesofa.ae">
+                                <input type="email" id="email" name="email" required placeholder="admin@sofahaven.ae">
                             </div>
                             
                             <div class="form-group">
@@ -855,8 +854,8 @@ const Router = {
                 <!-- Sidebar -->
                 <aside class="sidebar" id="sidebar">
                     <div class="sidebar-header">
-                        <img src="assets/images/logo.png" alt="Home Sofa Logo" class="sidebar-logo">
-                        <span class="sidebar-title">Home Sofa</span>
+                        <img src="assets/logo.jpg" alt="Sofa Haven Logo" class="sidebar-logo">
+                        <span class="sidebar-title">Sofa Haven</span>
                     </div>
                     
                     <nav class="sidebar-nav">

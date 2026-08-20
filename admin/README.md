@@ -163,7 +163,7 @@ console.log(JSON.parse(localStorage.getItem('products.json')));
 ```
 
 ## Login Credentials
-- **Email**: admin@homesofa.ae
+- **Email**: admin@sofahaven.ae
 - **Password**: admin123
 
 ## Security Notes

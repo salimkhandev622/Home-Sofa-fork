@@ -120,10 +120,10 @@ async function fetchBusinessInfo() {
         return await r.json();
     } catch {
         return {
-            shopName: 'Home Sofa',
+            shopName: 'Sofa Haven',
             phone: '+971 50 000 0000',
             whatsapp: '+971 50 000 0000',
-            email: 'info@homesofa.ae',
+            email: 'info@sofahaven.ae',
             address: 'Dubai, United Arab Emirates',
             logo: 'assets/images/logo.png',
             socialLinks: {

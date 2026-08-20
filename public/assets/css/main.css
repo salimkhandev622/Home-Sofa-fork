@@ -132,6 +132,12 @@ input, select, textarea, button {
     width: auto;
 }
 
+.logo-image {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
 .shop-name {
     font-size: 24px;
     font-weight: bold;
@@ -1659,7 +1665,7 @@ form button {
     width: 100%;
 }
 
-/* Why Home Sofa (Split Section) */
+/* Why Sofa Haven (Split Section) */
 .why-section {
     padding: 80px 0;
     background-color: var(--white);

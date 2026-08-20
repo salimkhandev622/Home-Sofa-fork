@@ -132,10 +132,10 @@ async function fetchBusinessInfo() {
     } catch (error) {
         console.error('Error loading business info:', error);
         return {
-            shopName: 'Home Sofa',
+            shopName: 'Sofa Haven',
             phone: '+971 50 000 0000',
             whatsapp: '+971 50 000 0000',
-            email: 'info@homesofa.ae',
+            email: 'info@sofahaven.ae',
             address: 'Dubai, United Arab Emirates',
             openingHours: '9:00 AM - 10:00 PM'
         };
@@ -651,7 +651,7 @@ async function handleConsultationSubmit(e) {
 *Message:* ${consultationData.message}
 
 ---
-Sent from Home Sofa Website`;
+Sent from Sofa Haven Website`;
         
         // Encode the message for URL
         const encodedMessage = encodeURIComponent(whatsappMessage);
