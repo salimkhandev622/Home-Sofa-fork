@@ -66,5 +66,19 @@
       "assets/images/hero_sofa.jpg"
     ],
     "displayOrder": 4
+  },
+  {
+    "name": "Best ever",
+    "price": 570,
+    "category": "sofa",
+    "shortDescription": "the best and better ever",
+    "fullDescription": "best of all sofas",
+    "displayOrder": 0,
+    "featured": false,
+    "bestSeller": false,
+    "available": true,
+    "mainImage": "assets/images/product_1787262099200_main.jpg",
+    "galleryImages": [],
+    "id": 1787262100787
   }
 ]
