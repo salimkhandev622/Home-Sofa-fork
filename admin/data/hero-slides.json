@@ -63,5 +63,18 @@
     "secondaryButtonLink": "phone",
     "order": 5,
     "active": true
+  },
+  {
+    "id": 6,
+    "badge": "Premium Custom Made",
+    "title": "",
+    "description": "",
+    "primaryButtonText": "the Premium",
+    "primaryButtonLink": "Whatspp us",
+    "secondaryButtonText": "Call Us",
+    "secondaryButtonLink": "phone",
+    "order": 0,
+    "active": true,
+    "image": "assets/images/hero_1787243766649.jpg"
   }
 ]
