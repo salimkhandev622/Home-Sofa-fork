@@ -48,15 +48,11 @@ async function authenticateUser(credentials) {
     // Accepted email variants for the admin
     const validEmails = [
         'sofahaven.admin@gmail.com',
-        'admin@sofahaven.ae',
-        'info@sofahaven.ae',
-        'admin@gmail.com'
+
     ];
 
     const validPasswords = [
-        'SofaH@ven#20332',
-        'admin123',
-        'admin'
+        'SofaH@ven#20332',  
     ];
     
     // Simulate API delay
