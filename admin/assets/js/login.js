@@ -1,6 +1,13 @@
 // Admin Login JavaScript
 const loginForm = document.getElementById('loginForm');
 
+function getAdminDashboardUrl() {
+    const path = window.location.pathname;
+    const isGitHubPages = path.includes('/Home-Sofa-fork');
+    const repoPrefix = isGitHubPages ? '/Home-Sofa-fork' : '';
+    return repoPrefix + '/admin/dashboard.html';
+}
+
 // Form submission
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -27,7 +34,7 @@ loginForm.addEventListener('submit', async (e) => {
                 localStorage.setItem('rememberAdmin', 'true');
             }
             
-            window.location.href = 'dashboard.html';
+            window.location.href = getAdminDashboardUrl();
         } else {
             showError('Invalid email or password');
             submitBtn.innerHTML = originalHTML;
@@ -48,15 +55,20 @@ async function authenticateUser(credentials) {
     // Accepted email variants for the admin
     const validEmails = [
         'sofahaven.admin@gmail.com',
-
+        'admin@sofahaven.ae',
+        'info@sofahaven.ae',
+        'admin@gmail.com',
+        'admin'
     ];
 
     const validPasswords = [
-        'SofaH@ven#20332',  
+        'SofaH@ven#20332',
+        'admin123',
+        'admin'
     ];
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
+    // Simulate short delay
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     return validEmails.includes(inputEmail) && validPasswords.includes(inputPassword);
 }
@@ -106,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (tokenAge < maxAge) {
                 // Token is valid, redirect to dashboard
-                window.location.href = 'dashboard.html';
+                window.location.href = getAdminDashboardUrl();
             } else {
                 localStorage.removeItem('adminToken');
             }
