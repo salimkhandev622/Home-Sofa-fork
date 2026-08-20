@@ -235,7 +235,7 @@
             
             // Prompt for token if not stored (more secure approach)
             if (!githubConfig.githubToken) {
-                const token = prompt('Enter your GitHub Personal Access Token for deployment:');
+                const token = prompt('Enter your access token for deployment:');
                 if (!token) {
                     alert('Deployment cancelled. Token is required for deployment.');
                     deployBtn.innerHTML = originalText;

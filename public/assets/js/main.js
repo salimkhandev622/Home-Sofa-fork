@@ -398,6 +398,16 @@ function renderBusinessInfo() {
             instagramLink.href = state.businessInfo.socialLinks.instagram;
         }
     }
+
+    // Update Google Maps button link dynamically
+    const mapLinkBtn = document.querySelector('.location-map a.btn');
+    if (mapLinkBtn) {
+        if (state.businessInfo.mapCoordinates && state.businessInfo.mapCoordinates.lat) {
+            mapLinkBtn.href = `https://www.google.com/maps?q=${state.businessInfo.mapCoordinates.lat},${state.businessInfo.mapCoordinates.lng}`;
+        } else if (state.businessInfo.address) {
+            mapLinkBtn.href = `https://maps.google.com/?q=${encodeURIComponent(state.businessInfo.address)}`;
+        }
+    }
 }
 
 // Hero Slider Functions
@@ -552,24 +562,51 @@ window.goToSlide = function(index) {
     if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
 }
 
-// Mobile Menu
+// Mobile Menu Initialization
 function initializeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navMenu = document.getElementById('navMenu');
     
-    if (mobileMenuBtn && navMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-        
-        // Close menu when clicking on a link
-        const navLinks = navMenu.querySelectorAll('a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-            });
-        });
+    if (!mobileMenuBtn || !navMenu) return;
+
+    // Create backdrop overlay if it doesn't exist
+    let navOverlay = document.getElementById('navOverlay');
+    if (!navOverlay) {
+        navOverlay = document.createElement('div');
+        navOverlay.id = 'navOverlay';
+        navOverlay.className = 'nav-overlay';
+        document.body.appendChild(navOverlay);
     }
+
+    // Toggle menu state cleanly
+    function toggleMenu(show) {
+        const isActive = typeof show === 'boolean' ? show : !navMenu.classList.contains('active');
+        navMenu.classList.toggle('active', isActive);
+        mobileMenuBtn.classList.toggle('active', isActive);
+        navOverlay.classList.toggle('active', isActive);
+        mobileMenuBtn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        document.body.style.overflow = isActive ? 'hidden' : '';
+    }
+
+    mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+    });
+
+    navOverlay.addEventListener('click', () => toggleMenu(false));
+
+    // Close menu when clicking navigation links
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => toggleMenu(false));
+    });
+
+    // Close on Escape key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            toggleMenu(false);
+        }
+    });
 }
 
 // Form Handling

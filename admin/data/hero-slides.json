@@ -2,12 +2,12 @@
   {
     "id": 1,
     "image": "assets/images/hero_sofa.jpg",
-    "badge": "Premium Custom Made",
-    "title": "Custom Sofa Beds & Upholstery Solutions In Dubai",
-    "description": "Transform your living space with our custom-made sofa beds and premium upholstery services in Dubai. High quality materials, sturdy frames, custom colors and sizes made to fit your space perfectly.",
-    "primaryButtonText": "Get Free Consultation",
-    "primaryButtonLink": "#contact",
-    "secondaryButtonText": "Call Us",
+    "badge": "Dubai Sofa Factory",
+    "title": "Custom Sofa Beds & Upholstery Solutions in Dubai",
+    "description": "Transform your living space with our custom-made sofa beds and premium upholstery services in Dubai. High quality materials, sturdy frames, custom colors and sizes.",
+    "primaryButtonText": "WhatsApp Us",
+    "primaryButtonLink": "whatsapp",
+    "secondaryButtonText": "Call Now",
     "secondaryButtonLink": "phone",
     "order": 1,
     "active": true

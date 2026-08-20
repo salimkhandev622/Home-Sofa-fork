@@ -555,24 +555,51 @@ function goToSlide(index) {
     startAutoSlide();
 }
 
-// Mobile Menu
+// Mobile Menu Initialization
 function initializeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const navMenu = document.getElementById('navMenu');
     
-    if (mobileMenuBtn && navMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-        
-        // Close menu when clicking on a link
-        const navLinks = navMenu.querySelectorAll('a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-            });
-        });
+    if (!mobileMenuBtn || !navMenu) return;
+
+    // Create backdrop overlay if it doesn't exist
+    let navOverlay = document.getElementById('navOverlay');
+    if (!navOverlay) {
+        navOverlay = document.createElement('div');
+        navOverlay.id = 'navOverlay';
+        navOverlay.className = 'nav-overlay';
+        document.body.appendChild(navOverlay);
     }
+
+    // Toggle menu state cleanly
+    function toggleMenu(show) {
+        const isActive = typeof show === 'boolean' ? show : !navMenu.classList.contains('active');
+        navMenu.classList.toggle('active', isActive);
+        mobileMenuBtn.classList.toggle('active', isActive);
+        navOverlay.classList.toggle('active', isActive);
+        mobileMenuBtn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        document.body.style.overflow = isActive ? 'hidden' : '';
+    }
+
+    mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+    });
+
+    navOverlay.addEventListener('click', () => toggleMenu(false));
+
+    // Close menu when clicking navigation links
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => toggleMenu(false));
+    });
+
+    // Close on Escape key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            toggleMenu(false);
+        }
+    });
 }
 
 // Form Handling

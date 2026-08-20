@@ -117,7 +117,7 @@ This admin dashboard uses a file-based CMS system with GitHub API integration. A
 
 ## GitHub API Setup
 
-### Step 1: Create GitHub Personal Access Token
+### Step 1: Create Access Token
 1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
 2. Click "Generate new token (classic)"
 3. Select the following scopes:
@@ -129,7 +129,7 @@ This admin dashboard uses a file-based CMS system with GitHub API integration. A
 2. Fill in the GitHub API configuration:
    - **Repository Owner**: Your GitHub username (e.g., `salimkhandev622`)
    - **Repository Name**: Your repository name (e.g., `Home-Sofa-fork`)
-   - **Personal Access Token**: The token you created in Step 1
+   - **Access Token**: The token you created in Step 1
    - **Branch Name**: Usually `main`
 3. Click "Save Configuration"
 

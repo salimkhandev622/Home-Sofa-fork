@@ -328,9 +328,9 @@ zip -r ../public-site.zip .
 - Review access controls regularly
 ## GitHub Integration Setup
 
-### GitHub Personal Access Token Configuration
+### Access Token Configuration
 
-The admin dashboard uses GitHub's Contents API to directly update data files in the repository. This requires a Personal Access Token (PAT) with proper permissions.
+The admin dashboard uses GitHub's Contents API to directly update data files in the repository. This requires an access token with proper permissions.
 
 #### Required Token Permissions
 
