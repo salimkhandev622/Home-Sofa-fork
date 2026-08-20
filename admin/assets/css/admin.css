@@ -220,9 +220,26 @@ body {
     display: flex;
     flex-direction: column;
     position: fixed;
+    top: 0;
+    left: 0;
     height: 100vh;
     overflow-y: auto;
     transition: var(--transition);
+    z-index: 1001; /* always above overlay */
+}
+
+/* Backdrop overlay — hidden by default, shown on mobile when sidebar opens */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000; /* below sidebar (1001), above content */
+    cursor: pointer;
+}
+
+.sidebar-overlay.active {
+    display: block;
 }
 
 .sidebar-header {
@@ -789,29 +806,15 @@ body {
 
 /* ── Mobile Responsive ── */
 @media (max-width: 768px) {
-    /* Sidebar slides off-screen; toggled via .active */
+    /* Slide sidebar off-screen; .active slides it back in */
     .sidebar {
         transform: translateX(-100%);
-        z-index: 1000;
         width: 240px;
     }
 
     .sidebar.active {
         transform: translateX(0);
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Backdrop overlay when sidebar is open */
-    .sidebar-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        z-index: 999;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
     }
 
     .main-content {
