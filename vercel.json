@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "rewrites": [
+    { "source": "/", "destination": "/public/index.html" },
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/api/save", "destination": "/api/save.js" }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
