@@ -397,6 +397,7 @@
     // DOM Elements
     const elements = {
         sidebar: document.getElementById('sidebar'),
+        sidebarOverlay: document.getElementById('sidebarOverlay'),
         menuToggle: document.getElementById('menuToggle'),
         currentSection: document.getElementById('currentSection'),
         navLinks: document.querySelectorAll('.sidebar-nav a')
@@ -728,14 +729,24 @@
         state.currentSection = section;
         
         // Close mobile menu
-        elements.sidebar.classList.remove('active');
+        closeSidebar();
     }
+
+    function closeSidebar() {
+        if (elements.sidebar) elements.sidebar.classList.remove('active');
+        if (elements.sidebarOverlay) elements.sidebarOverlay.classList.remove('active');
+    }
+    window.closeSidebar = closeSidebar;
 
     // Mobile Menu
     function initializeMobileMenu() {
-        elements.menuToggle.addEventListener('click', () => {
-            elements.sidebar.classList.toggle('active');
-        });
+        if (elements.menuToggle) {
+            elements.menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (elements.sidebar) elements.sidebar.classList.toggle('active');
+                if (elements.sidebarOverlay) elements.sidebarOverlay.classList.toggle('active');
+            });
+        }
     }
 
     // Product Management
