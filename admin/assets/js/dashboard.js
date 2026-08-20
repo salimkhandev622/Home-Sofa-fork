@@ -95,134 +95,103 @@
         });
     }
 
-    // Save image to GitHub
+    // Save image to GitHub / Vercel API
     async function saveImageToGitHub(filename, base64Content) {
-        const githubConfig = getGitHubConfig();
-        if (!githubConfig.githubToken) {
-            console.warn('GitHub not configured, skipping image upload');
-            return false;
-        }
-
         try {
             const filePath = `public/assets/images/${filename}`;
-            let sha = null;
-            try {
-                const getFileResponse = await fetch(
-                    `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}?ref=${githubConfig.githubBranch}&t=${Date.now()}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${githubConfig.githubToken}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
-                );
-                
-                if (getFileResponse.ok) {
-                    const fileData = await getFileResponse.json();
-                    sha = fileData.sha;
-                }
-            } catch (error) {
-                console.log(`Image file ${filePath} does not exist yet`);
-            }
-            
-            const putData = {
-                message: `Upload image ${filename} via admin dashboard`,
-                content: base64Content,
-                branch: githubConfig.githubBranch
-            };
-            
-            if (sha) {
-                putData.sha = sha;
-            }
-            
-            const putResponse = await fetch(
-                `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${githubConfig.githubToken}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify(putData)
-                }
-            );
-            
-            if (!putResponse.ok) {
-                const errorText = await putResponse.text();
-                console.error(`Failed to upload image ${filename}:`, errorText);
-                return false;
-            }
-            
-            console.log(`✅ Image ${filename} committed to GitHub successfully`);
-            return true;
+            return await saveFileContent(filePath, base64Content, `Upload image ${filename} via admin dashboard`);
         } catch (error) {
-            console.error('Error uploading image to GitHub:', error);
+            console.error('Error uploading image:', error);
             return false;
         }
     }
 
     async function saveToGitHub(filePath, data, config) {
-        try {
-            const content = utf8ToBase64(JSON.stringify(data, null, 2));
-            
-            // Get current file SHA if it exists
-            let sha = null;
+        const content = utf8ToBase64(JSON.stringify(data, null, 2));
+        return await saveFileContent(filePath, content, `Update ${filePath} via admin dashboard`);
+    }
+
+    async function saveFileContent(filePath, base64Content, message) {
+        // 1. Try Vercel Serverless API if configured or running on Vercel domain
+        const customVercelUrl = localStorage.getItem('vercelApiUrl');
+        const isVercelHost = window.location.origin.includes('vercel.app');
+        const vercelEndpoint = customVercelUrl || (isVercelHost ? '/api/save' : null);
+
+        if (vercelEndpoint) {
             try {
-                const getFileResponse = await fetch(
-                    `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}?ref=${config.githubBranch}&t=${Date.now()}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${config.githubToken}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
-                );
-                
-                if (getFileResponse.ok) {
-                    const fileData = await getFileResponse.json();
-                    sha = fileData.sha;
+                const res = await fetch(vercelEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filePath, content: base64Content, message })
+                });
+                if (res.ok) {
+                    console.log(`✅ Saved ${filePath} via Vercel Serverless API`);
+                    return true;
                 }
-            } catch (error) {
-                console.log(`File ${filePath} not found on remote, creating new`);
+                const errData = await res.json();
+                console.warn('Vercel API error, falling back to direct GitHub API:', errData);
+            } catch (err) {
+                console.warn('Vercel API unreachable, falling back to direct GitHub API:', err);
             }
-            
-            // Create or update file
-            const putData = {
-                message: `Update ${filePath} via admin dashboard`,
-                content: content,
-                branch: config.githubBranch
-            };
-            
-            if (sha) {
-                putData.sha = sha;
-            }
-            
-            const putResponse = await fetch(
-                `https://api.github.com/repos/${config.githubOwner}/${config.githubRepo}/contents/${filePath}`,
+        }
+
+        // 2. Direct GitHub REST API
+        const githubConfig = getGitHubConfig();
+        if (!githubConfig.githubToken) {
+            throw new Error('GitHub token not configured.');
+        }
+
+        let sha = null;
+        try {
+            const getFileResponse = await fetch(
+                `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}?ref=${githubConfig.githubBranch}&t=${Date.now()}`,
                 {
-                    method: 'PUT',
                     headers: {
-                        'Authorization': `token ${config.githubToken}`,
-                        'Content-Type': 'application/json',
+                        'Authorization': `token ${githubConfig.githubToken}`,
                         'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify(putData)
+                    }
                 }
             );
-            
-            if (!putResponse.ok) {
-                const errorText = await putResponse.text();
-                console.error('GitHub API error details:', errorText);
-                throw new Error(`GitHub API error: ${putResponse.status} - ${errorText}`);
+
+            if (getFileResponse.ok) {
+                const fileData = await getFileResponse.json();
+                sha = fileData.sha;
             }
-            
-            console.log(`✅ File ${filePath} successfully committed to GitHub`);
-            return true;
         } catch (error) {
-            console.error(`❌ Error saving ${filePath} to GitHub:`, error);
-            throw error;
+            console.log(`File ${filePath} does not exist yet on remote, creating new`);
         }
+
+        const putData = {
+            message: message || `Update ${filePath} via admin dashboard`,
+            content: base64Content,
+            branch: githubConfig.githubBranch
+        };
+
+        if (sha) {
+            putData.sha = sha;
+        }
+
+        const putResponse = await fetch(
+            `https://api.github.com/repos/${githubConfig.githubOwner}/${githubConfig.githubRepo}/contents/${filePath}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${githubConfig.githubToken}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify(putData)
+            }
+        );
+
+        if (!putResponse.ok) {
+            const errorText = await putResponse.text();
+            console.error('GitHub API error details:', errorText);
+            throw new Error(`GitHub API error: ${putResponse.status} - ${errorText}`);
+        }
+
+        console.log(`✅ File ${filePath} successfully committed to GitHub`);
+        return true;
     }
 
     async function manualDeploy() {
