@@ -1,35 +1,27 @@
 // Admin Login JavaScript
 const loginForm = document.getElementById('loginForm');
 
-function getAdminDashboardUrl() {
-    const path = window.location.pathname;
-    const isGitHubPages = path.includes('/Home-Sofa-fork');
-    const repoPrefix = isGitHubPages ? '/Home-Sofa-fork' : '';
-    return repoPrefix + '/admin/dashboard.html';
-}
-
 // Form submission
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const rememberInput = document.querySelector('input[name="remember"]');
-    
+    const formData = new FormData(loginForm);
     const loginData = {
-        email: emailInput ? emailInput.value : '',
-        password: passwordInput ? passwordInput.value : '',
-        remember: rememberInput ? rememberInput.checked : false
+        email: (formData.get('email') || '').trim().toLowerCase(),
+        password: (formData.get('password') || '').trim(),
+        remember: formData.get('remember') === 'on'
     };
     
     const submitBtn = loginForm.querySelector('button[type="submit"]');
-    const originalHTML = submitBtn.innerHTML;
-
+    const originalText = submitBtn.textContent;
+    
     try {
-        submitBtn.innerHTML = '<span class="btn-spinner"></span> Signing in...';
+        submitBtn.textContent = 'Signing in...';
         submitBtn.disabled = true;
         
+        // Validation
         if (await authenticateUser(loginData)) {
+            // Store authentication token
             const token = generateToken(loginData);
             localStorage.setItem('adminToken', token);
             
@@ -37,43 +29,40 @@ loginForm.addEventListener('submit', async (e) => {
                 localStorage.setItem('rememberAdmin', 'true');
             }
             
-            window.location.href = getAdminDashboardUrl();
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
         } else {
             showError('Invalid email or password');
-            submitBtn.innerHTML = originalHTML;
+            submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
     } catch (error) {
+        console.error('Login error:', error);
         showError('An error occurred. Please try again.');
-        submitBtn.innerHTML = originalHTML;
+        submitBtn.textContent = originalText;
         submitBtn.disabled = false;
     }
 });
 
 // Simple authentication function
 async function authenticateUser(credentials) {
-    const inputEmail = (credentials.email || '').trim().toLowerCase();
-    const inputPassword = (credentials.password || '').trim();
-
-    // Accepted email variants for the admin
     const validEmails = [
         'sofahaven.admin@gmail.com',
         'admin@sofahaven.ae',
-        'info@sofahaven.ae',
         'admin@gmail.com',
         'admin'
     ];
-
+    
     const validPasswords = [
         'SofaH@ven#20332',
         'admin123',
         'admin'
     ];
     
-    // Simulate short delay
-    await new Promise(resolve => setTimeout(resolve, 200));
+    // Simulate short API delay
+    await new Promise(resolve => setTimeout(resolve, 300));
     
-    return validEmails.includes(inputEmail) && validPasswords.includes(inputPassword);
+    return validEmails.includes(credentials.email) && validPasswords.includes(credentials.password);
 }
 
 // Generate simple token
@@ -87,13 +76,11 @@ function generateToken(user) {
 
 // Show error message
 function showError(message) {
-    // Remove existing error messages
     const existingError = document.querySelector('.error-message');
     if (existingError) {
         existingError.remove();
     }
     
-    // Create and insert error message
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.style.cssText = `
@@ -120,8 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
             
             if (tokenAge < maxAge) {
-                // Token is valid, redirect to dashboard
-                window.location.href = getAdminDashboardUrl();
+                window.location.href = 'dashboard.html';
             } else {
                 localStorage.removeItem('adminToken');
             }
