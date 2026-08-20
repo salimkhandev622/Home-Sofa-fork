@@ -72,8 +72,8 @@ async function authenticateUser(credentials) {
     // In production, this would call your authentication endpoint
     // For demo purposes, using hardcoded credentials
     const validCredentials = {
-        email: 'admin@sofahaven.ae',
-        password: 'admin123'
+        email: 'sofahaven.admin@gmail.com',
+        password: 'SofaH@ven#2025'
     };
     
     // Simulate API delay

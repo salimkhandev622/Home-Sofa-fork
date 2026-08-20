@@ -17,6 +17,8 @@
     </div>
 
     <div class="dashboard-layout">
+        <!-- Mobile sidebar overlay backdrop -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
@@ -53,8 +55,8 @@
                     </div>
                 </div>
                 <div class="top-bar-right">
-                    <a href="https://salimkhandev622.github.io/Home-Sofa-fork/public/index.html" class="btn btn-secondary">Back to Home</a>
-                    <button class="btn btn-primary" id="deployBtn" onclick="manualDeploy()">Deploy Changes</button>
+                    <a href="https://salimkhandev622.github.io/Home-Sofa-fork/public/index.html" class="btn btn-secondary">View Site</a>
+                    <button class="btn btn-primary" id="deployBtn" onclick="manualDeploy()">Publish</button>
                     <div class="user-menu">
                         <div class="user-avatar">A</div>
                         <span class="user-name">Admin</span>
@@ -359,13 +361,13 @@
                     
                     <div class="card">
                         <div class="card-header">
-                            <h2 class="card-title">Deployment Status</h2>
+                            <h2 class="card-title">Publish Status</h2>
                         </div>
                         <div class="card-body">
                             <div id="deploymentStatus">
-                                <p class="status-info">Configure GitHub API to enable automatic deployment</p>
+                                <p class="status-info">Connect your GitHub account to publish changes automatically</p>
                             </div>
-                            <button type="button" class="btn btn-secondary" onclick="checkDeploymentStatus()">Check Deployment Status</button>
+                            <button type="button" class="btn btn-secondary" onclick="checkDeploymentStatus()">Check Publish Status</button>
                         </div>
                     </div>
                 </section>
@@ -575,5 +577,30 @@
     </div>
     
     <script src="assets/js/dashboard.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // Close sidebar when a nav link is clicked on mobile
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) closeSidebar();
+            });
+        });
+    </script>
 </body>
 </html>
