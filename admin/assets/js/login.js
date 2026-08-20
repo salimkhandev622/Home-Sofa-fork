@@ -13,13 +13,23 @@ loginForm.addEventListener('submit', async (e) => {
     };
     
     const submitBtn = loginForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
+    const originalHTML = submitBtn.innerHTML;
 
     try {
-        submitBtn.textContent = 'Signing in...';
+        console.log('[Auth] Attempting admin login for:', loginData.email);
+        submitBtn.innerHTML = `
+            <span style="display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                <svg style="animation: spin 0.8s linear infinite; width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                    <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+                </svg>
+                Signing in...
+            </span>
+        `;
         submitBtn.disabled = true;
         
         if (await authenticateUser(loginData)) {
+            console.log('[Auth] Login successful. Generating token and redirecting...');
             const token = generateToken(loginData);
             localStorage.setItem('adminToken', token);
             
@@ -29,14 +39,15 @@ loginForm.addEventListener('submit', async (e) => {
             
             window.location.href = 'dashboard.html';
         } else {
+            console.warn('[Auth] Login failed: Invalid email or password.');
             showError('Invalid email or password');
-            submitBtn.textContent = originalText;
+            submitBtn.innerHTML = originalHTML;
             submitBtn.disabled = false;
         }
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('[Auth] Login exception:', error);
         showError('An error occurred. Please try again.');
-        submitBtn.textContent = originalText;
+        submitBtn.innerHTML = originalHTML;
         submitBtn.disabled = false;
     }
 });
