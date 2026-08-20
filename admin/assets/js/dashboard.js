@@ -817,7 +817,7 @@
             renderDashboard();
             closeProductModal();
             
-            showSuccess('Product saved successfully! Click "Publish" to deploy.');
+            showSuccess('Product saved and updated on GitHub successfully!');
         } catch (error) {
             console.error('Error saving product:', error);
             showError('Failed to save product: ' + error.message);
@@ -839,7 +839,7 @@
             await saveDataToFile('products.json', state.products);
             renderProductsTable();
             renderDashboard();
-            showSuccess('Product deleted successfully! Click "Publish" to deploy.');
+            showSuccess('Product deleted and updated on GitHub!');
         } catch (error) {
             console.error('Error deleting product:', error);
             showError('Failed to delete product: ' + error.message);
@@ -926,7 +926,7 @@
             };
             
             await saveDataToFile('business-info.json', state.businessInfo);
-            showSuccess('Business information saved successfully! Click "Publish" to deploy.');
+            showSuccess('Business information saved and updated on GitHub successfully!');
         } catch (error) {
             console.error('Error saving business info:', error);
             showError('Failed to save business info: ' + error.message);
@@ -1087,7 +1087,7 @@
             await saveDataToFile('services.json', state.services);
             renderServicesTable();
             closeServiceModal();
-            showSuccess('Service saved successfully! Click "Publish" to deploy.');
+            showSuccess('Service saved and updated on GitHub successfully!');
         } catch (error) {
             console.error('Error saving service:', error);
             showError('Failed to save service: ' + error.message);
@@ -1107,7 +1107,7 @@
             state.services = state.services.filter(s => s.id !== serviceId);
             await saveDataToFile('services.json', state.services);
             renderServicesTable();
-            showSuccess('Service deleted successfully!');
+            showSuccess('Service deleted and updated on GitHub!');
         } catch (error) {
             console.error('Error deleting service:', error);
             showError('Failed to delete service: ' + error.message);
@@ -1226,7 +1226,7 @@
             await saveDataToFile('hero-slides.json', state.heroSlides);
             renderHeroTable();
             closeHeroModal();
-            showSuccess('Hero slide saved successfully! Click "Publish" to deploy.');
+            showSuccess('Hero slide saved and updated on GitHub successfully!');
         } catch (error) {
             console.error('Error saving hero slide:', error);
             showError('Failed to save hero slide: ' + error.message);
@@ -1246,7 +1246,7 @@
             state.heroSlides = state.heroSlides.filter(s => s.id !== slideId);
             await saveDataToFile('hero-slides.json', state.heroSlides);
             renderHeroTable();
-            showSuccess('Hero slide deleted successfully!');
+            showSuccess('Hero slide deleted and updated on GitHub!');
         } catch (error) {
             console.error('Error deleting hero slide:', error);
             showError('Failed to delete hero slide: ' + error.message);
