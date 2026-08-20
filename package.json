@@ -3,12 +3,8 @@
   "version": "1.0.0",
   "description": "Sofa Shop Website with Admin Dashboard - Single Page Application",
   "main": "index.html",
-  "homepage": "https://salimkhandev622.github.io/Home-Sofa-fork/",
   "scripts": {
-    "dev": "npx serve . -p 3000",
-    "build": "echo 'Static SPA - no build needed'",
-    "deploy": "gh-pages -d .",
-    "predeploy": "echo 'Deploying to GitHub Pages...'"
+    "dev": "npx serve . -p 3000"
   },
   "keywords": [
     "sofa",
@@ -18,12 +14,5 @@
     "spa"
   ],
   "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "gh-pages": "^5.0.0",
-    "serve": "^14.2.0"
-  },
-  "dependencies": {
-    "contentful": "^10.0.0"
-  }
+  "license": "MIT"
 }

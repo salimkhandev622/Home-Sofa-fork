@@ -286,7 +286,7 @@
                     <span class="status-icon">📅</span>
                     <span class="status-text">Last Updated: ${lastUpdated}</span>
                 </div>
-                <a href="https://${config.githubOwner}.github.io/${config.githubRepo}/" target="_blank" class="btn btn-secondary btn-sm">View Live Site</a>
+                <a href="/public/index.html" target="_blank" class="btn btn-secondary btn-sm">View Live Site</a>
             `;
         } catch (error) {
             console.error('Error checking deployment status:', error);
