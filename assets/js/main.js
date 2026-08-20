@@ -224,18 +224,31 @@ function renderReviews() {
     
     if (approvedReviews.length === 0) return;
     
+    // Star generator for crisp gold SVG stars
+    const renderStars = (rating) => {
+        return Array.from({ length: 5 }, (_, i) => {
+            const isFilled = i < rating;
+            return `<svg class="star-icon ${isFilled ? 'filled' : 'empty'}" viewBox="0 0 24 24" width="16" height="16" fill="${isFilled ? '#F59E0B' : '#E2E8F0'}"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+        }).join('');
+    };
+    
     // Render reviews in slider
     reviewsSlider.innerHTML = approvedReviews.map((review, index) => `
         <div class="review-slide ${index === 0 ? 'active' : ''}" data-review="${index}">
             <div class="review-card">
+                <div class="review-quote-icon">“</div>
                 <div class="review-header">
-                    <img src="${review.profilePicture}" alt="${review.name}" class="review-avatar" onerror="this.src='https://via.placeholder.com/60x60/3a68b8/FFFFFF?text=${review.name.charAt(0)}'">
-                    <div>
+                    <div class="review-avatar-wrapper">
+                        <img src="${review.profilePicture}" alt="${review.name}" class="review-avatar" onerror="this.src='https://via.placeholder.com/60x60/3a68b8/FFFFFF?text=${review.name.charAt(0)}'">
+                        <span class="verified-badge" title="Verified Customer">✓</span>
+                    </div>
+                    <div class="review-author-info">
                         <div class="review-name">${review.name}</div>
-                        <div class="review-rating">${'⭐'.repeat(review.rating)}</div>
+                        <div class="review-verified-text">Verified Customer • Dubai</div>
+                        <div class="review-rating">${renderStars(review.rating)}</div>
                     </div>
                 </div>
-                <p class="review-text">${review.reviewText}</p>
+                <p class="review-text">"${review.reviewText}"</p>
             </div>
         </div>
     `).join('');
@@ -396,15 +409,19 @@ function renderBusinessInfo() {
     
     // Update social links if they exist
     if (state.businessInfo.socialLinks) {
-        const facebookLink = document.getElementById('socialFacebook');
-        const instagramLink = document.getElementById('socialInstagram');
+        const facebookLinks = [document.getElementById('socialFacebook'), document.getElementById('headerFacebook')];
+        const instagramLinks = [document.getElementById('socialInstagram'), document.getElementById('headerInstagram')];
         
-        if (facebookLink && state.businessInfo.socialLinks.facebook) {
-            facebookLink.href = state.businessInfo.socialLinks.facebook;
-        }
-        if (instagramLink && state.businessInfo.socialLinks.instagram) {
-            instagramLink.href = state.businessInfo.socialLinks.instagram;
-        }
+        facebookLinks.forEach(link => {
+            if (link && state.businessInfo.socialLinks.facebook) {
+                link.href = state.businessInfo.socialLinks.facebook;
+            }
+        });
+        instagramLinks.forEach(link => {
+            if (link && state.businessInfo.socialLinks.instagram) {
+                link.href = state.businessInfo.socialLinks.instagram;
+            }
+        });
     }
 
     // Update Google Maps button link dynamically

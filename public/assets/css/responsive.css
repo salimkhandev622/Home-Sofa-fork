@@ -344,16 +344,26 @@
     .reviews-section {
         overflow: hidden;
         width: 100%;
+        padding: 60px 0;
     }
 
     .reviews-carousel {
-        padding: 0 40px;
+        padding: 0 45px;
         width: 100%;
-        max-width: 100%;
+        max-width: 680px;
     }
 
     .review-card {
-        padding: 20px;
+        padding: 28px 24px;
+        border-radius: 16px;
+    }
+
+    .review-arrow.prev {
+        left: 0;
+    }
+
+    .review-arrow.next {
+        right: 0;
     }
 
     /* Serving Locations */
@@ -461,7 +471,53 @@
     /* Section Title */
     .section-title {
         font-size: 24px;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
+    }
+
+    .section-title::after {
+        width: 45px;
+        height: 3px;
+        margin: 10px auto 0;
+    }
+
+    /* Section Subtitle — clean spacing below the blue bar */
+    .section-subtitle {
+        margin: 12px auto 30px auto;
+        font-size: 13.5px;
+        line-height: 1.5;
+        padding: 0 10px;
+    }
+
+    /* Header adjustments for mobile */
+    .logo-section {
+        gap: 8px;
+    }
+
+    .logo-image {
+        height: 42px;
+    }
+
+    .header-social {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: 2px;
+    }
+
+    .header-social-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-light);
+        display: inline-block;
+    }
+
+    .header-social-link {
+        padding: 5px;
+    }
+
+    .header-social-link svg {
+        width: 14px;
+        height: 14px;
     }
 
     /* Hero Section — use fixed height so height:100% on slides resolves correctly */
@@ -900,50 +956,71 @@
 
     /* Reviews Section */
     .reviews-section {
-        padding: 40px 0;
+        padding: 45px 0 55px 0;
         overflow: hidden;
     }
 
     .reviews-carousel {
-        padding: 0 30px;
+        padding: 0 20px;
         width: 100%;
         max-width: 100%;
     }
 
     .review-card {
-        padding: 15px;
+        padding: 22px 18px;
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
+        border-radius: 14px;
+    }
+
+    .review-quote-icon {
+        top: 10px;
+        right: 15px;
+        font-size: 55px;
     }
 
     .review-header {
         gap: 12px;
+        margin-bottom: 15px;
     }
 
-    .review-avatar {
-        width: 45px;
-        height: 45px;
+    .review-avatar-wrapper {
+        width: 48px;
+        height: 48px;
     }
 
     .review-name {
-        font-size: 14px;
+        font-size: 15px;
     }
 
-    .review-rating {
-        font-size: 12px;
+    .review-verified-text {
+        font-size: 11px;
+    }
+
+    .review-rating .star-icon {
+        width: 13px;
+        height: 13px;
     }
 
     .review-text {
-        font-size: 13px;
+        font-size: 14px;
+        line-height: 1.6;
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
 
     .review-arrow {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .review-arrow.prev {
+        left: -8px;
+    }
+
+    .review-arrow.next {
+        right: -8px;
     }
 
     /* Serving Locations */

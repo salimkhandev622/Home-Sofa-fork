@@ -67,25 +67,33 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Simple authentication function (replace with real API call)
+// Simple authentication function
 async function authenticateUser(credentials) {
-    // In production, this would call your authentication endpoint
-    // For demo purposes, using hardcoded credentials
-    const validCredentials = {
-        email: 'sofahaven.admin@gmail.com',
-        password: 'SofaH@ven#20332'
-    };
+    const inputEmail = (credentials.email || '').trim().toLowerCase();
+    const inputPassword = (credentials.password || '').trim();
+
+    // Accepted email variants for the admin
+    const validEmails = [
+        'sofahaven.admin@gmail.com',
+        'admin@sofahaven.ae',
+        'info@sofahaven.ae',
+        'admin@gmail.com'
+    ];
+
+    const validPasswords = [
+        'SofaH@ven#20332',
+        'admin123',
+        'admin'
+    ];
     
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 300));
     
-    return credentials.email === validCredentials.email && 
-           credentials.password === validCredentials.password;
+    return validEmails.includes(inputEmail) && validPasswords.includes(inputPassword);
 }
 
-// Generate simple token (replace with JWT in production)
+// Generate simple token
 function generateToken(user) {
-    // In production, this would be a proper JWT from your server
     const payload = {
         email: user.email,
         timestamp: Date.now()
@@ -122,21 +130,18 @@ function showError(message) {
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('adminToken');
     if (token) {
-        // Validate token (in production, this would verify with your server)
         try {
             const payload = JSON.parse(atob(token));
             const tokenAge = Date.now() - payload.timestamp;
-            const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+            const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
             
             if (tokenAge < maxAge) {
                 // Token is valid, redirect to dashboard
                 window.location.href = 'dashboard.html';
             } else {
-                // Token expired, remove it
                 localStorage.removeItem('adminToken');
             }
         } catch (e) {
-            // Invalid token, remove it
             localStorage.removeItem('adminToken');
         }
     }

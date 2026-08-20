@@ -6,18 +6,23 @@
     <meta name="description" content="Premium sofa shop in Dubai - Custom sofa beds, upholstery solutions, and premium furniture">
     <title>Sofa Haven - Premium Sofa Shop in Dubai</title>
     <script>
-        // Smart routing for both GitHub Pages and Vercel
+        // Smart routing for GitHub Pages, Vercel, and local development
         (function() {
             const path = window.location.pathname;
-            // Strip GitHub Pages repo prefix if present
+            const isGitHubPages = path.includes('/Home-Sofa-fork');
+            const repoPrefix = isGitHubPages ? '/Home-Sofa-fork' : '';
             const cleanPath = path.replace('/Home-Sofa-fork', '');
 
             if (cleanPath.startsWith('/admin')) {
-                window.location.href = '/admin/index.html';
+                if (cleanPath === '/admin' || cleanPath === '/admin/') {
+                    window.location.replace(repoPrefix + '/admin/index.html');
+                } else {
+                    window.location.replace(repoPrefix + cleanPath);
+                }
                 return;
             }
             // Default: go to public site
-            window.location.href = '/public/index.html';
+            window.location.replace(repoPrefix + '/public/index.html');
         })();
     </script>
 </head>
