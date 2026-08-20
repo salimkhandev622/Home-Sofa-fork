@@ -1,9 +1,11 @@
 {
   "version": 2,
+  "framework": null,
+  "buildCommand": "",
+  "outputDirectory": ".",
   "rewrites": [
-    { "source": "/", "destination": "/public/index.html" },
     { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/api/save", "destination": "/api/save.js" }
+    { "source": "/", "destination": "/public/index.html" }
   ],
   "headers": [
     {
