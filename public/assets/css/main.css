@@ -1410,8 +1410,15 @@ form button {
 .hero-buttons {
     display: flex;
     gap: 15px;
-    justify-content: flex-start;
-    margin-bottom: 40px;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 40px auto;
+}
+
+.hero-buttons .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hero-buttons .btn-primary {
