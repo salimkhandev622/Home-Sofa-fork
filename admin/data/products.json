@@ -10,7 +10,10 @@
     "featured": true,
     "available": true,
     "category": "sofa-bed",
-    "galleryImages": ["assets/images/thumb_sofa1.jpg", "assets/images/hero_sofa.jpg"],
+    "galleryImages": [
+      "assets/images/thumb_sofa1.jpg",
+      "assets/images/hero_sofa.jpg"
+    ],
     "displayOrder": 1
   },
   {
@@ -24,7 +27,10 @@
     "featured": false,
     "available": true,
     "category": "sectional",
-    "galleryImages": ["assets/images/thumb_sofa2.jpg", "assets/images/thumb_sofa1.jpg"],
+    "galleryImages": [
+      "assets/images/thumb_sofa2.jpg",
+      "assets/images/thumb_sofa1.jpg"
+    ],
     "displayOrder": 2
   },
   {
@@ -38,7 +44,10 @@
     "featured": true,
     "available": true,
     "category": "sofa-bed",
-    "galleryImages": ["assets/images/thumb_sofa3.jpg", "assets/images/thumb_sofa4.jpg"],
+    "galleryImages": [
+      "assets/images/thumb_sofa3.jpg",
+      "assets/images/thumb_sofa4.jpg"
+    ],
     "displayOrder": 3
   },
   {
@@ -52,7 +61,10 @@
     "featured": false,
     "available": true,
     "category": "sofa",
-    "galleryImages": ["assets/images/thumb_sofa4.jpg", "assets/images/hero_sofa.jpg"],
+    "galleryImages": [
+      "assets/images/thumb_sofa4.jpg",
+      "assets/images/hero_sofa.jpg"
+    ],
     "displayOrder": 4
   }
 ]
