@@ -310,19 +310,63 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuthentication();
     initializeDashboard();
     initializeGitHubConfigForm();
+    initializeBusinessInfoAutoSave();
 });
 
 function initializeGitHubConfigForm() {
+    const tokenInput = document.getElementById('githubToken');
     const form = document.getElementById('apiConfigForm');
-    if (form) {
-        document.getElementById('githubToken').value = localStorage.getItem('githubToken') || '';
+    if (tokenInput) {
+        tokenInput.value = localStorage.getItem('githubToken') || '';
 
+        tokenInput.addEventListener('input', () => {
+            localStorage.setItem('githubToken', tokenInput.value.trim());
+        });
+    }
+    if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            localStorage.setItem('githubToken', document.getElementById('githubToken').value);
+            if (tokenInput) localStorage.setItem('githubToken', tokenInput.value.trim());
             showSuccess('GitHub API configuration saved successfully!');
         });
     }
+}
+
+// Auto-save: debounce timer for business info form
+let _businessAutoSaveTimer = null;
+
+function setAutoSaveStatus(state) {
+    const el = document.getElementById('autoSaveStatus');
+    if (!el) return;
+    el.className = 'auto-save-status ' + state;
+    if (state === 'saving') el.textContent = '⏳ Saving...';
+    else if (state === 'saved') el.textContent = '✓ Saved';
+    else if (state === 'error') el.textContent = '✗ Save failed';
+    else el.textContent = 'Unsaved changes';
+}
+
+/* Attach debounced auto-save listeners to all business info inputs.
+   Called after DOM is ready; safe to call even before the section is visible. */
+function initializeBusinessInfoAutoSave() {
+    const form = document.getElementById('businessInfoForm');
+    if (!form) return;
+
+    form.addEventListener('input', () => {
+        setAutoSaveStatus('unsaved');
+        clearTimeout(_businessAutoSaveTimer);
+        // 1.5s debounce — save only after user stops typing
+        _businessAutoSaveTimer = setTimeout(() => {
+            saveBusinessInfo(true); // silent = true
+        }, 1500);
+    });
+
+    form.addEventListener('change', () => {
+        setAutoSaveStatus('unsaved');
+        clearTimeout(_businessAutoSaveTimer);
+        _businessAutoSaveTimer = setTimeout(() => {
+            saveBusinessInfo(true);
+        }, 1500);
+    });
 }
 
 function checkAuthentication() {
@@ -866,8 +910,12 @@ async function deleteReview(reviewId) {
 }
 
 // Business Info Management
-async function saveBusinessInfo() {
-    showLoading('Saving business information...');
+/* silent=true: skip full-screen overlay, only update inline status badge.
+   silent=false (default): original behaviour with showLoading overlay. */
+async function saveBusinessInfo(silent = false) {
+    if (!silent) showLoading('Saving business information...');
+    else setAutoSaveStatus('saving');
+
     try {
         state.businessInfo = {
             shopName: document.getElementById('shopName').value,
@@ -887,12 +935,15 @@ async function saveBusinessInfo() {
         };
 
         await saveDataToFile('business-info.json', state.businessInfo);
-        showSuccess('Business information saved and updated on GitHub successfully!');
+
+        if (!silent) showSuccess('Business information saved and updated on GitHub successfully!');
+        else setAutoSaveStatus('saved');
     } catch (error) {
         console.error('Error saving business info:', error);
-        showError('Failed to save business info: ' + error.message);
+        if (!silent) showError('Failed to save business info: ' + error.message);
+        else setAutoSaveStatus('error');
     } finally {
-        hideLoading();
+        if (!silent) hideLoading();
     }
 }
 
