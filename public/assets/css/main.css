@@ -1182,16 +1182,27 @@ textarea {
 }
 
 .social-link {
-    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
     background-color: var(--medium-gray);
     color: var(--text-color);
-    border-radius: 4px;
+    border-radius: 50%;
     transition: var(--transition);
 }
 
 .social-link:hover {
     background-color: var(--primary-blue);
     color: var(--white);
+    transform: translateY(-2px);
+}
+
+.social-link svg {
+    width: 20px;
+    height: 20px;
+}
 }
 
 .footer-bottom {

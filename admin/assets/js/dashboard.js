@@ -986,8 +986,7 @@
             openingHours: document.getElementById('openingHours').value,
             socialLinks: {
                 facebook: document.getElementById('facebook')?.value || '#',
-                instagram: document.getElementById('instagram')?.value || '#',
-                twitter: document.getElementById('twitter')?.value || '#'
+                instagram: document.getElementById('instagram')?.value || '#'
             },
             mapCoordinates: {
                 lat: document.getElementById('mapLat')?.value || 25.12345678901234,
@@ -1023,9 +1022,6 @@
             }
             if (document.getElementById('instagram')) {
                 document.getElementById('instagram').value = state.businessInfo.socialLinks.instagram || '';
-            }
-            if (document.getElementById('twitter')) {
-                document.getElementById('twitter').value = state.businessInfo.socialLinks.twitter || '';
             }
         }
         

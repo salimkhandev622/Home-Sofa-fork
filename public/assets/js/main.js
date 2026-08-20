@@ -388,15 +388,14 @@ function renderBusinessInfo() {
     
     // Update social links if they exist
     if (state.businessInfo.socialLinks) {
-        const socialLinks = document.querySelectorAll('.social-link');
-        if (socialLinks.length > 0 && state.businessInfo.socialLinks.facebook) {
-            socialLinks[0].href = state.businessInfo.socialLinks.facebook;
+        const facebookLink = document.getElementById('socialFacebook');
+        const instagramLink = document.getElementById('socialInstagram');
+        
+        if (facebookLink && state.businessInfo.socialLinks.facebook) {
+            facebookLink.href = state.businessInfo.socialLinks.facebook;
         }
-        if (socialLinks.length > 1 && state.businessInfo.socialLinks.instagram) {
-            socialLinks[1].href = state.businessInfo.socialLinks.instagram;
-        }
-        if (socialLinks.length > 2 && state.businessInfo.socialLinks.twitter) {
-            socialLinks[2].href = state.businessInfo.socialLinks.twitter;
+        if (instagramLink && state.businessInfo.socialLinks.instagram) {
+            instagramLink.href = state.businessInfo.socialLinks.instagram;
         }
     }
 }
