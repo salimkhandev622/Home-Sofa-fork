@@ -53,32 +53,23 @@
         </div>
         <!-- Thumbnail bar overlay on hero bottom left -->
         <div class="hero-thumbnails-container" id="heroThumbnails">
-            <div class="hero-thumbnail-item active" onclick="changeHeroBg('assets/images/hero_sofa.jpg', this)">
+            <div class="hero-thumbnail-item active" onclick="window.changeHeroBg('assets/images/hero_sofa.jpg', this)">
                 <img src="assets/images/hero_sofa.jpg" alt="Hero Sofa" data-caption="Hero Sofa Collection">
             </div>
-            <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa1.jpg', this)">
+            <div class="hero-thumbnail-item" onclick="window.changeHeroBg('assets/images/thumb_sofa1.jpg', this)">
                 <img src="assets/images/thumb_sofa1.jpg" alt="Nebraska L-Shape Sofa" data-caption="Nebraska L-Shape Sofa">
             </div>
-            <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa2.jpg', this)">
+            <div class="hero-thumbnail-item" onclick="window.changeHeroBg('assets/images/thumb_sofa2.jpg', this)">
                 <img src="assets/images/thumb_sofa2.jpg" alt="Nebraska U-Shape Sofa" data-caption="Nebraska U-Shape Sofa">
             </div>
-            <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa3.jpg', this)">
+            <div class="hero-thumbnail-item" onclick="window.changeHeroBg('assets/images/thumb_sofa3.jpg', this)">
                 <img src="assets/images/thumb_sofa3.jpg" alt="Corner Sofa Bed" data-caption="Corner Sofa Bed">
             </div>
-            <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa4.jpg', this)">
+            <div class="hero-thumbnail-item" onclick="window.changeHeroBg('assets/images/thumb_sofa4.jpg', this)">
                 <img src="assets/images/thumb_sofa4.jpg" alt="Custom 3-Seater Sofa" data-caption="Custom 3-Seater Sofa">
             </div>
         </div>
     </section>
-
-    <!-- Image Lightbox Modal -->
-    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
-        <span class="lightbox-close">&times;</span>
-        <div class="lightbox-content">
-            <img class="lightbox-image" id="lightboxImage" src="" alt="Full size image">
-            <div class="lightbox-caption" id="lightboxCaption"></div>
-        </div>
-    </div>
 
     <!-- Category Section -->
     <section class="category-bar-section">
@@ -295,11 +286,11 @@
         <div class="container">
             <h2 class="section-title">What Our Customers Say</h2>
             <div class="reviews-carousel">
-                <button class="review-arrow prev" onclick="prevReview()">❮</button>
+                <button class="review-arrow prev" onclick="window.prevReview()">❮</button>
                 <div class="reviews-slider" id="reviewsSlider">
                     <!-- Reviews will be loaded from JSON -->
                 </div>
-                <button class="review-arrow next" onclick="nextReview()">❯</button>
+                <button class="review-arrow next" onclick="window.nextReview()">❯</button>
             </div>
             <div class="reviews-nav" id="reviewsNav">
                 <!-- Review navigation dots will be added here -->

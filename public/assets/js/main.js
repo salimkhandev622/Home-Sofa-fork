@@ -178,11 +178,11 @@ function renderHeroSlider() {
         </div>
     `;
     }).join('') + `
-        <button class="hero-arrow prev" onclick="prevSlide()">❮</button>
-        <button class="hero-arrow next" onclick="nextSlide()">❯</button>
+        <button class="hero-arrow prev" onclick="window.prevSlide()">❮</button>
+        <button class="hero-arrow next" onclick="window.nextSlide()">❯</button>
         <div class="hero-nav">
             ${slidesWithFixedPaths.map((_, index) => `
-                <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>
+                <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="window.goToSlide(${index})"></div>
             `).join('')}
         </div>
     `;
@@ -228,12 +228,12 @@ function renderReviews() {
     
     // Render navigation dots
     reviewsNav.innerHTML = approvedReviews.map((_, index) => `
-        <div class="review-nav-dot ${index === 0 ? 'active' : ''}" onclick="goToReview(${index})"></div>
+        <div class="review-nav-dot ${index === 0 ? 'active' : ''}" onclick="window.goToReview(${index})"></div>
     `).join('');
     
     // Start auto-slide for reviews if there are multiple reviews
     if (approvedReviews.length > 1) {
-        startReviewAutoSlide();
+        window.startReviewAutoSlide();
     }
 }
 
@@ -398,131 +398,153 @@ function renderBusinessInfo() {
 // Hero Slider Functions
 function initializeHeroSlider() {
     if (state.heroSlides.length < 2) return;
-    
-    startAutoSlide();
+
+    window.startAutoSlide();
 }
 
 // Review Slider Functions
-function startReviewAutoSlide() {
-    stopReviewAutoSlide();
+window.startReviewAutoSlide = function() {
+    window.stopReviewAutoSlide();
     state.reviewAutoSlideInterval = setInterval(() => {
-        nextReview();
+        // Inline the review logic to avoid function reference issues
+        const reviews = document.querySelectorAll('.review-slide');
+        const dots = document.querySelectorAll('.review-nav-dot');
+
+        if (reviews.length === 0) return;
+
+        reviews[state.currentReview].classList.remove('active');
+        if (dots[state.currentReview]) dots[state.currentReview].classList.remove('active');
+
+        state.currentReview = (state.currentReview + 1) % reviews.length;
+
+        reviews[state.currentReview].classList.add('active');
+        if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
     }, 5000);
 }
 
-function stopReviewAutoSlide() {
+window.stopReviewAutoSlide = function() {
     if (state.reviewAutoSlideInterval) {
         clearInterval(state.reviewAutoSlideInterval);
         state.reviewAutoSlideInterval = null;
     }
 }
 
-function nextReview() {
+window.nextReview = function() {
     const reviews = document.querySelectorAll('.review-slide');
     const dots = document.querySelectorAll('.review-nav-dot');
-    
+
     if (reviews.length === 0) return;
-    
+
     reviews[state.currentReview].classList.remove('active');
-    dots[state.currentReview].classList.remove('active');
-    
+    if (dots[state.currentReview]) dots[state.currentReview].classList.remove('active');
+
     state.currentReview = (state.currentReview + 1) % reviews.length;
-    
+
     reviews[state.currentReview].classList.add('active');
-    dots[state.currentReview].classList.add('active');
+    if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
 }
 
-function prevReview() {
+window.prevReview = function() {
     const reviews = document.querySelectorAll('.review-slide');
     const dots = document.querySelectorAll('.review-nav-dot');
-    
+
     if (reviews.length === 0) return;
-    
+
     reviews[state.currentReview].classList.remove('active');
-    dots[state.currentReview].classList.remove('active');
-    
+    if (dots[state.currentReview]) dots[state.currentReview].classList.remove('active');
+
     state.currentReview = (state.currentReview - 1 + reviews.length) % reviews.length;
-    
+
     reviews[state.currentReview].classList.add('active');
-    dots[state.currentReview].classList.add('active');
+    if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
 }
 
-function goToReview(index) {
+window.goToReview = function(index) {
     const reviews = document.querySelectorAll('.review-slide');
     const dots = document.querySelectorAll('.review-nav-dot');
-    
+
     if (reviews.length === 0 || index < 0 || index >= reviews.length) return;
-    
+
     reviews[state.currentReview].classList.remove('active');
-    dots[state.currentReview].classList.remove('active');
-    
+    if (dots[state.currentReview]) dots[state.currentReview].classList.remove('active');
+
     state.currentReview = index;
-    
+
     reviews[state.currentReview].classList.add('active');
-    dots[state.currentReview].classList.add('active');
-    
-    startReviewAutoSlide();
+    if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
+
+    window.startReviewAutoSlide();
 }
 
-function startAutoSlide() {
-    stopAutoSlide();
+window.startAutoSlide = function() {
+    window.stopAutoSlide();
     state.autoSlideInterval = setInterval(() => {
-        nextSlide();
+        // Inline the slide logic to avoid function reference issues
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.hero-nav-dot');
+
+        if (slides.length === 0) return;
+
+        slides[state.currentSlide].classList.remove('active');
+        if (dots[state.currentSlide]) dots[state.currentSlide].classList.remove('active');
+
+        state.currentSlide = (state.currentSlide + 1) % slides.length;
+
+        slides[state.currentSlide].classList.add('active');
+        if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
     }, 5000);
 }
 
-function stopAutoSlide() {
+window.stopAutoSlide = function() {
     if (state.autoSlideInterval) {
         clearInterval(state.autoSlideInterval);
         state.autoSlideInterval = null;
     }
 }
 
-function nextSlide() {
+window.nextSlide = function() {
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-nav-dot');
-    
+
     if (slides.length === 0) return;
-    
+
     slides[state.currentSlide].classList.remove('active');
-    dots[state.currentSlide].classList.remove('active');
-    
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.remove('active');
+
     state.currentSlide = (state.currentSlide + 1) % slides.length;
-    
+
     slides[state.currentSlide].classList.add('active');
-    dots[state.currentSlide].classList.add('active');
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
 }
 
-function prevSlide() {
+window.prevSlide = function() {
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-nav-dot');
-    
+
     if (slides.length === 0) return;
-    
+
     slides[state.currentSlide].classList.remove('active');
-    dots[state.currentSlide].classList.remove('active');
-    
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.remove('active');
+
     state.currentSlide = (state.currentSlide - 1 + slides.length) % slides.length;
-    
+
     slides[state.currentSlide].classList.add('active');
-    dots[state.currentSlide].classList.add('active');
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
 }
 
-function goToSlide(index) {
+window.goToSlide = function(index) {
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-nav-dot');
-    
+
     if (slides.length === 0 || index < 0 || index >= slides.length) return;
-    
+
     slides[state.currentSlide].classList.remove('active');
-    dots[state.currentSlide].classList.remove('active');
-    
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.remove('active');
+
     state.currentSlide = index;
-    
+
     slides[state.currentSlide].classList.add('active');
-    dots[state.currentSlide].classList.add('active');
-    
-    startAutoSlide();
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
 }
 
 // Mobile Menu
@@ -696,12 +718,30 @@ window.addEventListener('scroll', () => {
 // Initialize the app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
-    
+
     // Pause auto-slide on hover - only after DOM is ready
     const heroSlider = document.getElementById('heroSlider');
     if (heroSlider) {
-        heroSlider.addEventListener('mouseenter', stopAutoSlide);
-        heroSlider.addEventListener('mouseleave', startAutoSlide);
+        heroSlider.addEventListener('mouseenter', window.stopAutoSlide);
+        heroSlider.addEventListener('mouseleave', window.startAutoSlide);
+    }
+
+    // Add click listeners to arrow buttons to restart auto-slide
+    const prevArrow = document.querySelector('.hero-arrow.prev');
+    const nextArrow = document.querySelector('.hero-arrow.next');
+
+    if (prevArrow) {
+        prevArrow.addEventListener('click', () => {
+            window.stopAutoSlide();
+            setTimeout(() => window.startAutoSlide(), 100);
+        });
+    }
+
+    if (nextArrow) {
+        nextArrow.addEventListener('click', () => {
+            window.stopAutoSlide();
+            setTimeout(() => window.startAutoSlide(), 100);
+        });
     }
 });
 
@@ -734,53 +774,17 @@ function initHighlightSlider() {
 // Hero thumbnail background switcher
 window.changeHeroBg = function(imageUrl, element) {
     const activeSlide = document.querySelector('.hero-slide.active');
-    if (activeSlide) activeSlide.style.backgroundImage = `url(${imageUrl})`;
+    if (activeSlide) {
+        activeSlide.style.backgroundImage = `url(${imageUrl})`;
+        // Update the data-image attribute to match the new background
+        activeSlide.setAttribute('data-image', imageUrl);
+    }
     document.querySelectorAll('.hero-thumbnail-item').forEach(t => t.classList.remove('active'));
     element.classList.add('active');
+
+    // Restart auto-slide timer when manually changing background
+    window.startAutoSlide();
 };
 
-// Lightbox functionality
-window.openLightbox = function(imageUrl, caption) {
-    const lightbox = document.getElementById('lightboxModal');
-    const lightboxImage = document.getElementById('lightboxImage');
-    const lightboxCaption = document.getElementById('lightboxCaption');
-    
-    lightboxImage.src = imageUrl;
-    lightboxCaption.textContent = caption || '';
-    lightbox.style.display = 'block';
-};
-
-window.closeLightbox = function() {
-    const lightbox = document.getElementById('lightboxModal');
-    lightbox.style.display = 'none';
-};
-
-// Add click handlers to hero slides for lightbox
-document.addEventListener('DOMContentLoaded', function() {
-    // Add click functionality to hero slider with proper event delegation
-    const heroSlider = document.getElementById('heroSlider');
-    if (heroSlider) {
-        heroSlider.addEventListener('click', function(e) {
-            // Check if click is on hero slide background (not on buttons, arrows, dots, or content)
-            const heroSlide = e.target.closest('.hero-slide');
-            if (heroSlide && !e.target.closest('.hero-content') && !e.target.closest('.hero-arrow') && !e.target.closest('.hero-nav-dot')) {
-                const imageUrl = heroSlide.getAttribute('data-image');
-                const title = heroSlide.getAttribute('data-title');
-                if (imageUrl) {
-                    openLightbox(imageUrl, title);
-                }
-            }
-        });
-    }
-    
-    // Add click functionality to thumbnails
-    const thumbnails = document.querySelectorAll('.hero-thumbnail-item img');
-    thumbnails.forEach(thumb => {
-        thumb.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const imageUrl = this.src;
-            const caption = this.getAttribute('data-caption') || this.alt || 'Home Sofa';
-            openLightbox(imageUrl, caption);
-        });
-    });
-});
+// Lightbox functionality removed - images now only change background
+// Lightbox functions are no longer needed
