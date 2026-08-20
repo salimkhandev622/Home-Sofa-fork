@@ -1,8 +1,8 @@
 /* Products Page Specific Styles */
 
 .page-header {
-    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-    color: var(--white);
+    background: linear-gradient(135deg, var(--light-gray), var(--medium-gray));
+    color: var(--dark-blue);
     padding: 60px 0;
     text-align: center;
 }

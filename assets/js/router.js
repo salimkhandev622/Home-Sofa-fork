@@ -307,380 +307,295 @@ const Router = {
                 <div class="hero-slider" id="heroSlider">
                     <!-- Hero slides will be loaded from CMS -->
                 </div>
-                <!-- Thumbnail bar overlay on hero bottom left -->
-                <div class="hero-thumbnails-container" id="heroThumbnails">
-                    <div class="hero-thumbnail-item active" onclick="changeHeroBg('assets/images/hero_sofa.jpg', this)">
-                        <img src="assets/images/hero_sofa.jpg" alt="Hero Sofa">
-                    </div>
-                    <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa1.jpg', this)">
-                        <img src="assets/images/thumb_sofa1.jpg" alt="Sofa 1">
-                    </div>
-                    <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa2.jpg', this)">
-                        <img src="assets/images/thumb_sofa2.jpg" alt="Sofa 2">
-                    </div>
-                    <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa3.jpg', this)">
-                        <img src="assets/images/thumb_sofa3.jpg" alt="Sofa 3">
-                    </div>
-                    <div class="hero-thumbnail-item" onclick="changeHeroBg('assets/images/thumb_sofa4.jpg', this)">
-                        <img src="assets/images/thumb_sofa4.jpg" alt="Sofa 4">
-                    </div>
-                </div>
             </section>
 
-            <!-- 5 Category Circular Icons Section -->
-            <section class="category-bar-section">
+            <!-- Sofa Image Gallery / Carousel -->
+            <section class="gallery-section">
                 <div class="container">
-                    <div class="category-bar-grid">
-                        <a href="/#services" class="category-bar-item">
-                            <div class="category-circle-icon">🛋️</div>
-                            <span class="category-bar-label">Custom Sofa Beds</span>
-                        </a>
-                        <a href="/#services" class="category-bar-item">
-                            <div class="category-circle-icon">🪑</div>
-                            <span class="category-bar-label">Corner Sofa Bed</span>
-                        </a>
-                        <a href="/#services" class="category-bar-item">
-                            <div class="category-circle-icon">🛠️</div>
-                            <span class="category-bar-label">Upholstery Services</span>
-                        </a>
-                        <a href="/#services" class="category-bar-item">
-                            <div class="category-circle-icon">📏</div>
-                            <span class="category-bar-label">Custom Sofas</span>
-                        </a>
-                        <a href="/#services" class="category-bar-item">
-                            <div class="category-circle-icon">⚙️</div>
-                            <span class="category-bar-label">Sofa Repair</span>
-                        </a>
+                    <h2 class="section-title">Our Sofa Collection</h2>
+                    <div class="gallery-carousel" id="galleryCarousel">
+                        <!-- Gallery images will be loaded from CMS -->
                     </div>
                 </div>
             </section>
 
-            <!-- Black Review/Highlight Slider Section -->
-            <section class="highlight-carousel-section">
+            <!-- Trust/Benefit Indicators -->
+            <section class="trust-section">
                 <div class="container">
-                    <div class="highlight-carousel-container" id="highlightSlider">
-                        <div class="highlight-slide active" data-highlight-index="0">
-                            <p class="highlight-quote">"All of our custom sofa beds and upholstery services are made with top-quality materials. Nebraska L-Shape sofa bed is one of our best sellers in Dubai."</p>
-                            <span class="highlight-author">Sofa Haven Dubai Factory</span>
+                    <div class="trust-indicators">
+                        <div class="trust-item">
+                            <div class="trust-icon">✓</div>
+                            <h3>Premium Quality</h3>
+                            <p>Highest quality materials and craftsmanship</p>
                         </div>
-                        <div class="highlight-slide" data-highlight-index="1">
-                            <p class="highlight-quote">"Nebraska U-Shape sofa is custom-made with premium fabric, high density foam for long lasting comfort, and a sturdy frame."</p>
-                            <span class="highlight-author">Master Craftsman Quality</span>
+                        <div class="trust-item">
+                            <div class="trust-icon">✓</div>
+                            <h3>Custom Design</h3>
+                            <p>Tailored to your specific requirements</p>
                         </div>
-                        <div class="highlight-slide" data-highlight-index="2">
-                            <p class="highlight-quote">"Free delivery and professional assembly included with all orders. Handcrafted in our local Dubai factory."</p>
-                            <span class="highlight-author">100% Quality Sofa Factory</span>
+                        <div class="trust-item">
+                            <div class="trust-icon">✓</div>
+                            <h3>Fast Delivery</h3>
+                            <p>Quick turnaround and installation</p>
                         </div>
-                        <div class="highlight-bullets">
-                            <span class="highlight-bullet active" onclick="goToHighlightSlide(0)"></span>
-                            <span class="highlight-bullet" onclick="goToHighlightSlide(1)"></span>
-                            <span class="highlight-bullet" onclick="goToHighlightSlide(2)"></span>
+                        <div class="trust-item">
+                            <div class="trust-icon">✓</div>
+                            <h3>Best Prices</h3>
+                            <p>Competitive pricing with no hidden costs</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Our Dubai Specialty Services -->
-            <section class="specialty-services-section" id="services">
+            <!-- Customer Reviews -->
+            <section class="reviews-section" id="reviews">
+                <div class="container">
+                    <h2 class="section-title">What Our Customers Say</h2>
+                    <div class="reviews-grid" id="reviewsGrid">
+                        <!-- Reviews will be loaded from CMS -->
+                    </div>
+                    <div class="review-submission">
+                        <h3>Leave a Review</h3>
+                        <form id="reviewForm">
+                            <input type="text" name="name" placeholder="Your Name" required>
+                            <select name="rating" required>
+                                <option value="">Select Rating</option>
+                                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ Good</option>
+                                <option value="3">⭐⭐⭐ Average</option>
+                                <option value="2">⭐⭐ Poor</option>
+                                <option value="1">⭐ Very Poor</option>
+                            </select>
+                            <textarea name="review" placeholder="Your Review" required></textarea>
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Specialty Services -->
+            <section class="services-section" id="services">
                 <div class="container">
                     <h2 class="section-title">Our Dubai Specialty Services</h2>
-                    <p style="text-align: center; color: var(--text-light); max-width: 600px; margin: -30px auto 50px auto; font-size: 14px;">
-                        Right choice for premium quality sofa beds, custom sofas, upholstery and couch repair in Dubai
-                    </p>
-                    <div class="specialty-grid" id="servicesGrid">
-                        <!-- Services will be loaded from JSON -->
+                    <div class="services-grid" id="servicesGrid">
+                        <!-- Services will be loaded from CMS -->
                     </div>
                 </div>
             </section>
 
-            <!-- Why Sofa Haven Section (Split 50/50) -->
-            <section class="why-section">
+            <!-- Company/About Section -->
+            <section class="about-section" id="about">
                 <div class="container">
-                    <div class="why-grid">
-                        <div class="why-left">
-                            <h2>Why Sofa Haven is Dubai's Trusted Sofa Factory</h2>
-                            <p>All our sofas are built to last using locally sourced materials and top-tier workmanship. We focus on customization and convenience to give you exactly what your living space needs.</p>
-                            <div class="why-checklist">
-                                <div class="why-checklist-item"><span class="chk-icon">✓</span> Expert Customization</div>
-                                <div class="why-checklist-item"><span class="chk-icon">✓</span> Premium Upholstery</div>
-                                <div class="why-checklist-item"><span class="chk-icon">✓</span> Durable Materials</div>
-                                <div class="why-checklist-item"><span class="chk-icon">✓</span> Competitive Pricing</div>
-                                <div class="why-checklist-item"><span class="chk-icon">✓</span> Professional Installation</div>
-                                <div class="why-checklist-item"><span class="chk-icon">✓</span> Customer Satisfaction</div>
-                            </div>
-                            <div class="why-buttons">
-                                <a href="#" class="btn btn-primary" id="whyWhatsapp" target="_blank">📱 WhatsApp Sofa Factory</a>
-                                <a href="#" class="btn btn-secondary" id="whyPhone">📞 Call Sofa Expert</a>
+                    <div class="about-content">
+                        <div class="about-text">
+                            <h2 class="section-title">About Sofa Haven</h2>
+                            <p>Sofa Haven is Dubai's premier destination for custom sofa beds and upholstery solutions. With years of experience in the furniture industry, we pride ourselves on delivering exceptional quality and customer service.</p>
+                            <p>Our team of skilled craftsmen uses only the finest materials to create beautiful, comfortable, and durable sofas that transform your living spaces. From classic designs to modern styles, we have something for every taste and budget.</p>
+                            <div class="about-stats">
+                                <div class="stat">
+                                    <h3>500+</h3>
+                                    <p>Happy Customers</p>
+                                </div>
+                                <div class="stat">
+                                    <h3>10+</h3>
+                                    <p>Years Experience</p>
+                                </div>
+                                <div class="stat">
+                                    <h3>100%</h3>
+                                    <p>Satisfaction Rate</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="why-right">
-                            <img src="assets/images/hero_sofa.jpg" alt="Sofa Haven Dubai Factory">
+                        <div class="about-image">
+                            <img src="assets/images/about.jpg" alt="About Sofa Haven">
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 5 Feature Badges Row -->
-            <section class="features-icon-bar">
+            <!-- Feature/Benefit Icons -->
+            <section class="features-section">
                 <div class="container">
-                    <div class="features-icon-grid">
-                        <div class="features-icon-item">
-                            <div class="features-icon-circle">🛠️</div>
-                            <h4>Custom Designs</h4>
-                            <p>Tailored layouts</p>
+                    <h2 class="section-title">Why Choose Us</h2>
+                    <div class="features-grid" id="featuresGrid">
+                        <div class="feature-item">
+                            <div class="feature-icon">🛋️</div>
+                            <h3>Wide Selection</h3>
+                            <p>Extensive range of sofa designs and styles</p>
                         </div>
-                        <div class="features-icon-item">
-                            <div class="features-icon-circle">🎨</div>
-                            <h4>Premium Fabric</h4>
-                            <p>Durable choices</p>
+                        <div class="feature-item">
+                            <div class="feature-icon">🎨</div>
+                            <h3>Custom Colors</h3>
+                            <p>Choose from various fabric colors and textures</p>
                         </div>
-                        <div class="features-icon-item">
-                            <div class="features-icon-circle">🌳</div>
-                            <h4>Solid Wooden Frame</h4>
-                            <p>10 Year Warranty</p>
+                        <div class="feature-item">
+                            <div class="feature-icon">📏</div>
+                            <h3>Custom Sizes</h3>
+                            <p>Sofas made to fit your space perfectly</p>
                         </div>
-                        <div class="features-icon-item">
-                            <div class="features-icon-circle">🛡️</div>
-                            <h4>Easy Maintenance</h4>
-                            <p>Washable covers</p>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔧</div>
+                            <h3>Free Installation</h3>
+                            <p>Professional installation at no extra cost</p>
                         </div>
-                        <div class="features-icon-item">
-                            <div class="features-icon-circle">🚚</div>
-                            <h4>Quick Delivery</h4>
-                            <p>Assembly included</p>
+                        <div class="feature-item">
+                            <div class="feature-icon">🛡️</div>
+                            <h3>Warranty</h3>
+                            <p>Comprehensive warranty on all products</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">💰</div>
+                            <h3>Flexible Payment</h3>
+                            <p>Multiple payment options available</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Our Best Selling Collections -->
+            <!-- Best-Selling Sofa Collection -->
             <section class="bestsellers-section" id="products">
                 <div class="container">
-                    <h2 class="section-title">Our Best Selling Collections</h2>
+                    <h2 class="section-title">Best-Selling Sofas</h2>
                     <div class="products-grid" id="bestsellersGrid">
-                        <!-- Best sellers will be loaded from JSON -->
+                        <!-- Best sellers will be loaded from CMS -->
                     </div>
-                    <div class="section-cta" style="margin-top: 50px; text-align: center;">
+                    <div class="section-cta">
                         <a href="/products" class="btn btn-secondary">View All Products</a>
                     </div>
                 </div>
             </section>
 
-            <!-- Made in UAE Trust Box (3 items) -->
-            <section class="uae-trust-bar">
+            <!-- Sofa/Product Features -->
+            <section class="product-features-section">
                 <div class="container">
-                    <div class="uae-trust-box">
-                        <div class="uae-trust-item">
-                            <div class="uae-trust-icon">🇦🇪</div>
-                            <div class="uae-trust-text">
-                                <h4>Made in UAE</h4>
-                                <p>100% Quality Sofa Factory in Dubai</p>
-                            </div>
+                    <h2 class="section-title">Our Sofa Features</h2>
+                    <div class="product-features">
+                        <div class="feature-card">
+                            <img src="assets/images/feature1.jpg" alt="High Density Foam">
+                            <h3>High Density Foam</h3>
+                            <p>Premium foam for long-lasting comfort and support</p>
                         </div>
-                        <div class="uae-trust-item">
-                            <div class="uae-trust-icon">🛡️</div>
-                            <div class="uae-trust-text">
-                                <h4>10 Year Frame Warranty</h4>
-                                <p>Sturdy frame made of premium wood</p>
-                            </div>
+                        <div class="feature-card">
+                            <img src="assets/images/feature2.jpg" alt="Premium Fabric">
+                            <h3>Premium Fabric</h3>
+                            <p>High-quality, durable fabrics in various colors</p>
                         </div>
-                        <div class="uae-trust-item">
-                            <div class="uae-trust-icon">🚚</div>
-                            <div class="uae-trust-text">
-                                <h4>Free UAE Delivery</h4>
-                                <p>Professional delivery and setup in Dubai</p>
-                            </div>
+                        <div class="feature-card">
+                            <img src="assets/images/feature3.jpg" alt="Sturdy Frame">
+                            <h3>Sturdy Frame</h3>
+                            <p>Solid wood frame for durability and stability</p>
+                        </div>
+                        <div class="feature-card">
+                            <img src="assets/images/feature4.jpg" alt="Easy Maintenance">
+                            <h3>Easy Maintenance</h3>
+                            <p>Easy to clean and maintain for long-lasting beauty</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- OUR WORKING PROCESS -->
+            <!-- Working Process -->
             <section class="process-section">
                 <div class="container">
-                    <h2 class="section-title">OUR WORKING PROCESS</h2>
-                    <p style="text-align: center; color: var(--text-light); max-width: 600px; margin: -30px auto 50px auto; font-size: 14px;">
-                        Four simple steps to get your custom sofa in Dubai
-                    </p>
-                    <div class="process-split">
-                        <div class="process-left">
-                            <img src="assets/images/service_upholstery.jpg" alt="Our Working Process">
+                    <h2 class="section-title">How It Works</h2>
+                    <div class="process-steps" id="processSteps">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <h3>Consultation</h3>
+                            <p>Discuss your requirements and preferences with our experts</p>
                         </div>
-                        <div class="process-right">
-                            <h2>Get Your Sofa Fitting Process</h2>
-                            <p class="process-sub">Four simple steps to get your custom sofa in Dubai</p>
-                            <div class="process-steps-list">
-                                <div class="process-step-item">
-                                    <div class="process-step-num">1</div>
-                                    <div class="process-step-info">
-                                        <h4>Free Consultation</h4>
-                                        <p>Discussing requirements, sizes, configurations, and checking fabric options.</p>
-                                    </div>
-                                </div>
-                                <div class="process-step-item">
-                                    <div class="process-step-num">2</div>
-                                    <div class="process-step-info">
-                                        <h4>Material Selection</h4>
-                                        <p>Choosing from a wide range of premium fabrics and foam density for ultimate comfort.</p>
-                                    </div>
-                                </div>
-                                <div class="process-step-item">
-                                    <div class="process-step-num">3</div>
-                                    <div class="process-step-info">
-                                        <h4>Master Craftsmanship</h4>
-                                        <p>Handcrafted to perfection in our local Dubai factory by skilled carpenters and upholsterers.</p>
-                                    </div>
-                                </div>
-                                <div class="process-step-item">
-                                    <div class="process-step-num">4</div>
-                                    <div class="process-step-info">
-                                        <h4>Prompt Delivery</h4>
-                                        <p>Delivered, assembled, and perfectly installed at your place with no extra charge.</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <h3>Design</h3>
+                            <p>Choose your design, fabric, and customization options</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <h3>Production</h3>
+                            <p>Our craftsmen create your custom sofa with care</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <h3>Delivery</h3>
+                            <p>Free delivery and professional installation</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Consultation & Contact Section -->
+            <!-- Consultation/Contact Form -->
             <section class="consultation-section" id="contact">
                 <div class="container">
-                    <div class="consultation-grid">
-                        <div class="consultation-form-card">
-                            <h2>Get Your Free Consultation</h2>
-                            <p>Fill out the form below, and our sofa specialists will get back to you with custom quotes and options.</p>
-                            <form id="consultationForm">
-                                <div class="form-row">
-                                    <input type="text" name="name" placeholder="Your Name" required>
-                                    <input type="tel" name="phone" placeholder="Phone Number" required>
-                                </div>
-                                <div class="form-row">
-                                    <input type="email" name="email" placeholder="Email Address" required>
-                                    <select name="service" required>
-                                        <option value="">Select Service</option>
-                                        <option value="sofa-bed">Sofa Bed</option>
-                                        <option value="upholstery">Upholstery</option>
-                                        <option value="custom-sofa">Custom Sofa</option>
-                                        <option value="repair">Repair</option>
-                                    </select>
-                                </div>
-                                <textarea name="message" placeholder="Tell us about your requirements" required></textarea>
-                                <button type="submit" class="btn btn-primary">Request Free Consultation</button>
-                            </form>
+                    <h2 class="section-title">Get Free Consultation</h2>
+                    <div class="consultation-form">
+                        <form id="consultationForm">
+                            <div class="form-row">
+                                <input type="text" name="name" placeholder="Your Name" required>
+                                <input type="tel" name="phone" placeholder="Phone Number" required>
+                            </div>
+                            <div class="form-row">
+                                <input type="email" name="email" placeholder="Email Address" required>
+                                <select name="service" required>
+                                    <option value="">Select Service</option>
+                                    <option value="sofa-bed">Sofa Bed</option>
+                                    <option value="upholstery">Upholstery</option>
+                                    <option value="custom-sofa">Custom Sofa</option>
+                                    <option value="repair">Repair</option>
+                                </select>
+                            </div>
+                            <textarea name="message" placeholder="Tell us about your requirements" required></textarea>
+                            <button type="submit" class="btn btn-primary">Request Consultation</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Information -->
+            <section class="contact-info-section">
+                <div class="container">
+                    <h2 class="section-title">Contact Information</h2>
+                    <div class="contact-info" id="contactInfo">
+                        <div class="contact-item">
+                            <div class="contact-icon">📍</div>
+                            <h3>Location</h3>
+                            <p id="address">Dubai, United Arab Emirates</p>
                         </div>
-                        <div class="consultation-contact-info">
-                            <div class="contact-card-item">
-                                <div class="contact-card-icon">📍</div>
-                                <div class="contact-card-text">
-                                    <h4>Our Location</h4>
-                                    <p id="address">Dubai, UAE</p>
-                                </div>
-                            </div>
-                            <div class="contact-card-item">
-                                <div class="contact-card-icon">📞</div>
-                                <div class="contact-card-text">
-                                    <h4>Call Us</h4>
-                                    <p><a href="#" id="phone">+971 50 000 0000</a></p>
-                                </div>
-                            </div>
-                            <div class="contact-card-item" style="background-color: #25D366;">
-                                <div class="contact-card-icon">📱</div>
-                                <div class="contact-card-text">
-                                    <h4>WhatsApp Us</h4>
-                                    <p><a href="#" id="whatsapp" target="_blank">+971 50 000 0000</a></p>
-                                </div>
-                            </div>
-                            <div class="contact-card-item">
-                                <div class="contact-card-icon">✉️</div>
-                                <div class="contact-card-text">
-                                    <h4>Email Us</h4>
-                                    <p><a href="#" id="email">info@sofahaven.ae</a></p>
-                                </div>
-                            </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📞</div>
+                            <h3>Phone</h3>
+                            <p><a href="#" id="phone">+971 50 000 0000</a></p>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📱</div>
+                            <h3>WhatsApp</h3>
+                            <p><a href="#" id="whatsapp" target="_blank">+971 50 000 0000</a></p>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">✉️</div>
+                            <h3>Email</h3>
+                            <p><a href="#" id="email">info@sofahaven.ae</a></p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Customer Reviews Section -->
-            <section class="reviews-section" id="reviews">
+            <!-- Location Information -->
+            <section class="location-section">
                 <div class="container">
-                    <h2 class="section-title">What Our Customers Say</h2>
-                    <div class="reviews-carousel">
-                        <button class="review-arrow prev" onclick="prevReview()">❮</button>
-                        <div class="reviews-slider" id="reviewsSlider">
-                            <!-- Reviews will be loaded from JSON -->
-                        </div>
-                        <button class="review-arrow next" onclick="nextReview()">❯</button>
-                    </div>
-                    <div class="reviews-nav" id="reviewsNav">
-                        <!-- Review navigation dots will be added here -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- Serving Areas Tag Cloud -->
-            <section class="serving-locations-section">
-                <div class="container">
-                    <h3>Serving All of Dubai</h3>
-                    <div class="locations-cloud">
-                        <span class="location-tag">Dubai Marina</span>
-                        <span class="location-tag">Palm Jumeirah</span>
-                        <span class="location-tag">Downtown Dubai</span>
-                        <span class="location-tag">Jumeirah</span>
-                        <span class="location-tag">Business Bay</span>
-                        <span class="location-tag">Dubai Hills</span>
-                        <span class="location-tag">Arabian Ranches</span>
-                        <span class="location-tag">Al Barsha</span>
-                        <span class="location-tag">Mirdif</span>
-                        <span class="location-tag">Dubai Sports City</span>
-                        <span class="location-tag">Jumeirah Lake Towers (JLT)</span>
-                        <span class="location-tag">Dubai Silicon Oasis</span>
-                        <span class="location-tag">Jumeirah Beach Residence (JBR)</span>
-                        <span class="location-tag">Discovery Gardens</span>
+                    <h2 class="section-title">Find Us</h2>
+                    <div class="location-map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.1234567890123!2d55.12345678901234!3d25.12345678901234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDA3JzI0LjQiTiA1NcKwMDcnMjQuNCJF!5e0!3m2!1sen!2sae!4v1234567890123!5m2!1sen!2sae"
+                            width="100%" 
+                            height="400" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                        </iframe>
                     </div>
                 </div>
             </section>
         `;
-
-        // Helper for hero thumbnail backgrounds
-        window.changeHeroBg = function(imageUrl, element) {
-            const slides = document.querySelectorAll('.hero-slide');
-            if (slides.length > 0) {
-                const activeSlide = document.querySelector('.hero-slide.active') || slides[0];
-                activeSlide.style.backgroundImage = `url(${imageUrl})`;
-            }
-            const thumbs = document.querySelectorAll('.hero-thumbnail-item');
-            thumbs.forEach(t => t.classList.remove('active'));
-            element.classList.add('active');
-        };
-
-        // Helpers for Black Testimonial Slider
-        window.goToHighlightSlide = function(index) {
-            const slides = document.querySelectorAll('.highlight-slide');
-            const bullets = document.querySelectorAll('.highlight-bullet');
-            if (slides.length === 0) return;
-            
-            slides.forEach(s => s.classList.remove('active'));
-            bullets.forEach(b => b.classList.remove('active'));
-            
-            const targetSlide = document.querySelector(`.highlight-slide[data-highlight-index="${index}"]`);
-            if (targetSlide) targetSlide.classList.add('active');
-            if (bullets[index]) bullets[index].classList.add('active');
-        };
-
-        // Auto-scroll for highlight slides
-        let activeHighlightIndex = 0;
-        if (window.highlightInterval) clearInterval(window.highlightInterval);
-        window.highlightInterval = setInterval(() => {
-            const slides = document.querySelectorAll('.highlight-slide');
-            if (slides.length > 0) {
-                activeHighlightIndex = (activeHighlightIndex + 1) % slides.length;
-                window.goToHighlightSlide(activeHighlightIndex);
-            }
-        }, 5000);
 
         // Initialize main app functionality
         if (typeof initializeApp === 'function') {
@@ -800,7 +715,7 @@ const Router = {
                 <div class="login-container">
                     <div class="login-box">
                         <div class="login-header">
-                            <img src="assets/logo.jpg" alt="Sofa Haven Logo" class="login-logo">
+                            <img src="../assets/logo.jpg" alt="Sofa Haven Logo" class="login-logo">
                             <h1>Admin Dashboard</h1>
                             <p>Sign in to manage your website content</p>
                         </div>
@@ -854,7 +769,7 @@ const Router = {
                 <!-- Sidebar -->
                 <aside class="sidebar" id="sidebar">
                     <div class="sidebar-header">
-                        <img src="assets/logo.jpg" alt="Sofa Haven Logo" class="sidebar-logo">
+                        <img src="../assets/logo.jpg" alt="Sofa Haven Logo" class="sidebar-logo">
                         <span class="sidebar-title">Sofa Haven</span>
                     </div>
                     
@@ -1373,25 +1288,18 @@ const Router = {
         alert('Business information saved! (Note: This is a demo - actual saving requires backend implementation)');
     },
 
-    // Admin helper functions
-    saveBusinessInfo() {
-        const businessInfo = {
-            shopName: document.getElementById('shopName').value,
-            phone: document.getElementById('phone').value,
-            whatsapp: document.getElementById('whatsapp').value,
-            email: document.getElementById('email').value,
-            address: document.getElementById('address').value,
-            openingHours: document.getElementById('openingHours').value,
-            socialLinks: {
-                facebook: document.getElementById('facebook')?.value || '#',
-                instagram: document.getElementById('instagram')?.value || '#',
-                twitter: document.getElementById('twitter')?.value || '#'
-            }
+    formatSectionName(section) {
+        const names = {
+            'dashboard': 'Dashboard',
+            'admin-products': 'Products',
+            'admin-services': 'Services',
+            'admin-reviews': 'Reviews',
+            'admin-hero': 'Hero Slider',
+            'admin-business': 'Business Info',
+            'admin-contact': 'Contact Requests',
+            'admin-settings': 'Settings'
         };
-        
-        // In a real implementation, this would save to a backend
-        console.log('Saving business info:', businessInfo);
-        alert('Business information saved! (Note: This is a demo - actual saving requires backend implementation)');
+        return names[section] || 'Dashboard';
     },
 
     initializeMobileMenu() {

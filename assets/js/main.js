@@ -24,7 +24,7 @@ function initializeApp() {
         
         fetchAllContent().then(() => {
             renderHeroSlider();
-            renderGallery();
+            renderCategoryBar();
             renderReviews();
             renderServices();
             renderBestsellers();
@@ -36,10 +36,15 @@ function initializeApp() {
             initHighlightSlider();
             
             hideLoading();
+        }).catch(error => {
+            console.error('Error in content loading:', error);
+            hideLoading(); // Ensure loading is hidden even on error
+            showError('Some content failed to load. Please refresh the page.');
         });
         
     } catch (error) {
         console.error('Error initializing app:', error);
+        hideLoading(); // Ensure loading is hidden even on error
         showError('Failed to load content. Please refresh the page.');
     }
 }
@@ -59,33 +64,37 @@ async function fetchAllContent() {
 async function fetchHeroSlides() {
     try {
         const timestamp = new Date().getTime();
-        const r = await fetch(`public/data/hero-slides.json?t=${timestamp}`);
-        if (!r.ok) throw new Error();
-        return await r.json();
-    } catch {
-        return [{
-            id: 1,
-            image: 'assets/images/hero_sofa.jpg',
-            badge: 'Dubai Sofa Factory',
-            title: 'Custom Sofa Beds & Upholstery Solutions in Dubai',
-            description: 'Transform your living space with our custom-made sofa beds and premium upholstery services.',
-            primaryButtonText: 'WhatsApp Us',
-            primaryButtonLink: 'whatsapp',
-            secondaryButtonText: 'Call Now',
-            secondaryButtonLink: 'phone',
-            order: 1,
-            active: true
-        }];
+        const response = await fetch(`data/hero-slides.json?t=${timestamp}`);
+        if (!response.ok) throw new Error('Failed to load hero slides');
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading hero slides:', error);
+        return [
+            {
+                id: 1,
+                image: 'assets/images/hero_sofa.jpg',
+                badge: 'Dubai Sofa Factory',
+                title: 'Custom Sofa Beds & Upholstery Solutions in Dubai',
+                description: 'Transform your living space with our custom-made sofa beds and premium upholstery services.',
+                primaryButtonText: 'WhatsApp Us',
+                primaryButtonLink: 'whatsapp',
+                secondaryButtonText: 'Call Now',
+                secondaryButtonLink: 'phone',
+                order: 1,
+                active: true
+            }
+        ];
     }
 }
 
 async function fetchProducts() {
     try {
         const timestamp = new Date().getTime();
-        const r = await fetch(`public/data/products.json?t=${timestamp}`);
-        if (!r.ok) throw new Error();
-        return await r.json();
-    } catch {
+        const response = await fetch(`data/products.json?t=${timestamp}`);
+        if (!response.ok) throw new Error('Failed to load products');
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading products:', error);
         return [];
     }
 }
@@ -93,10 +102,11 @@ async function fetchProducts() {
 async function fetchServices() {
     try {
         const timestamp = new Date().getTime();
-        const r = await fetch(`public/data/services.json?t=${timestamp}`);
-        if (!r.ok) throw new Error();
-        return await r.json();
-    } catch {
+        const response = await fetch(`data/services.json?t=${timestamp}`);
+        if (!response.ok) throw new Error('Failed to load services');
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading services:', error);
         return [];
     }
 }
@@ -104,10 +114,11 @@ async function fetchServices() {
 async function fetchReviews() {
     try {
         const timestamp = new Date().getTime();
-        const r = await fetch(`public/data/reviews.json?t=${timestamp}`);
-        if (!r.ok) throw new Error();
-        return await r.json();
-    } catch {
+        const response = await fetch(`data/reviews.json?t=${timestamp}`);
+        if (!response.ok) throw new Error('Failed to load reviews');
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading reviews:', error);
         return [];
     }
 }
@@ -115,22 +126,18 @@ async function fetchReviews() {
 async function fetchBusinessInfo() {
     try {
         const timestamp = new Date().getTime();
-        const r = await fetch(`public/data/business-info.json?t=${timestamp}`);
-        if (!r.ok) throw new Error();
-        return await r.json();
-    } catch {
+        const response = await fetch(`data/business-info.json?t=${timestamp}`);
+        if (!response.ok) throw new Error('Failed to load business info');
+        return await response.json();
+    } catch (error) {
+        console.error('Error loading business info:', error);
         return {
             shopName: 'Sofa Haven',
             phone: '+971 50 000 0000',
             whatsapp: '+971 50 000 0000',
             email: 'info@sofahaven.ae',
             address: 'Dubai, United Arab Emirates',
-            logo: 'assets/images/logo.png',
-            socialLinks: {
-                facebook: '#',
-                instagram: '#',
-                twitter: '#'
-            }
+            openingHours: '9:00 AM - 10:00 PM'
         };
     }
 }
@@ -145,7 +152,7 @@ function renderHeroSlider() {
     // Fix image paths to use correct relative path
     const slidesWithFixedPaths = activeSlides.map(slide => ({
         ...slide,
-        image: slide.image.startsWith('http') ? slide.image : `assets/images/${slide.image.split('/').pop()}`
+        image: slide.image.startsWith('http') ? slide.image : slide.image
     }));
     
     // Get business info for dynamic links
@@ -158,7 +165,7 @@ function renderHeroSlider() {
         const secondaryLink = slide.secondaryButtonLink === 'phone' ? phoneLink : slide.secondaryButtonLink;
         
         return `
-        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" style="background-image: url('${slide.image}')">
+        <div class="hero-slide ${index === 0 ? 'active' : ''}" data-slide="${index}" data-image="${slide.image}" data-title="${slide.title}" style="background-image: url('${slide.image}');">
             <div class="hero-content">
                 <span class="hero-badge">${slide.badge}</span>
                 <h2 class="hero-title">${slide.title}</h2>
@@ -171,24 +178,30 @@ function renderHeroSlider() {
         </div>
     `;
     }).join('') + `
-        <button class="hero-arrow prev" onclick="prevSlide()">❮</button>
-        <button class="hero-arrow next" onclick="nextSlide()">❯</button>
+        <button class="hero-arrow prev" onclick="window.prevSlide()">❮</button>
+        <button class="hero-arrow next" onclick="window.nextSlide()">❯</button>
         <div class="hero-nav">
             ${slidesWithFixedPaths.map((_, index) => `
-                <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>
+                <div class="hero-nav-dot ${index === 0 ? 'active' : ''}" onclick="window.goToSlide(${index})"></div>
             `).join('')}
         </div>
     `;
 }
 
-function renderGallery() {
-    const galleryCarousel = document.getElementById('galleryCarousel');
-    if (!galleryCarousel || state.products.length === 0) return;
+function renderCategoryBar() {
+    const categoryBarGrid = document.getElementById('categoryBarGrid');
+    if (!categoryBarGrid || state.services.length === 0) return;
     
-    galleryCarousel.innerHTML = state.products.map(product => `
-        <div class="gallery-item">
-            <img src="${product.mainImage}" alt="${product.name}" loading="lazy">
-        </div>
+    // Extract unique categories from services
+    const categories = [...new Set(state.services.map(service => {
+        // Extract category from service title (e.g., "Custom Sofa Beds" -> "Sofa Beds")
+        return service.title.replace(/^(Custom |Corner )/, '').trim();
+    }))];
+    
+    categoryBarGrid.innerHTML = categories.map(category => `
+        <a href="#services" class="category-bar-item">
+            <span class="category-bar-label">${category}</span>
+        </a>
     `).join('');
 }
 
@@ -221,12 +234,12 @@ function renderReviews() {
     
     // Render navigation dots
     reviewsNav.innerHTML = approvedReviews.map((_, index) => `
-        <div class="review-nav-dot ${index === 0 ? 'active' : ''}" onclick="goToReview(${index})"></div>
+        <div class="review-nav-dot ${index === 0 ? 'active' : ''}" onclick="window.goToReview(${index})"></div>
     `).join('');
     
     // Start auto-slide for reviews if there are multiple reviews
     if (approvedReviews.length > 1) {
-        startReviewAutoSlide();
+        window.startReviewAutoSlide();
     }
 }
 
@@ -278,7 +291,7 @@ function renderBestsellers() {
                 <div class="product-price">AED ${product.price.toLocaleString()}</div>
                 <p class="product-description">${product.shortDescription}</p>
                 <div class="product-actions">
-                    <a href="${whatsappLink}?text=I%20want%20a%20custom%20quote%20for%20${encodeURIComponent(product.name)}" class="btn btn-primary" target="_blank" style="width:100%;">Get Custom Quote</a>
+                    <a href="${whatsappLink}?text=I%20want%20to%20get%20a%20custom%20quote%20for%20${encodeURIComponent(product.name)}" class="btn btn-primary" target="_blank" style="width:100%;">Get Custom Quote</a>
                 </div>
             </div>
         </div>
@@ -290,28 +303,17 @@ function renderBusinessInfo() {
     
     const elements = {
         shopName: document.getElementById('shopName'),
-        logo: document.getElementById('logo'),
         address: document.getElementById('address'),
         phone: document.getElementById('phone'),
         whatsapp: document.getElementById('whatsapp'),
         email: document.getElementById('email'),
         topBarHours: document.getElementById('topBarHours'),
-        topBarWhatsapp: document.getElementById('topBarWhatsapp'),
-        headerWhatsapp: document.getElementById('headerWhatsapp'),
-        whyWhatsapp: document.getElementById('whyWhatsapp'),
-        whyPhone: document.getElementById('whyPhone'),
         consultationPhone: document.getElementById('consultationPhone'),
         consultationWhatsapp: document.getElementById('consultationWhatsapp'),
-        consultationEmail: document.getElementById('consultationEmail'),
-        contactPhone: document.getElementById('contactPhone'),
-        contactWhatsapp: document.getElementById('contactWhatsapp'),
-        contactEmail: document.getElementById('contactEmail'),
-        modalWhatsapp: document.getElementById('modalWhatsapp'),
-        modalPhone: document.getElementById('modalPhone')
+        consultationEmail: document.getElementById('consultationEmail')
     };
     
     if (elements.shopName) elements.shopName.textContent = state.businessInfo.shopName;
-    if (elements.logo) elements.logo.src = state.businessInfo.logo;
     if (elements.address) {
         if (elements.address.tagName === 'A') {
             elements.address.textContent = state.businessInfo.address;
@@ -327,19 +329,9 @@ function renderBusinessInfo() {
             elements.phone.href = phoneLink;
         }
     }
-    if (elements.whyPhone) {
-        elements.whyPhone.href = phoneLink;
-    }
     if (elements.consultationPhone) {
         elements.consultationPhone.textContent = state.businessInfo.phone;
         elements.consultationPhone.href = phoneLink;
-    }
-    if (elements.contactPhone) {
-        elements.contactPhone.textContent = state.businessInfo.phone;
-        elements.contactPhone.href = phoneLink;
-    }
-    if (elements.modalPhone) {
-        elements.modalPhone.href = phoneLink;
     }
     
     // Update WhatsApp links
@@ -350,19 +342,9 @@ function renderBusinessInfo() {
             elements.whatsapp.href = whatsappLink;
         }
     }
-    if (elements.topBarWhatsapp) elements.topBarWhatsapp.href = whatsappLink;
-    if (elements.headerWhatsapp) elements.headerWhatsapp.href = whatsappLink;
-    if (elements.whyWhatsapp) elements.whyWhatsapp.href = whatsappLink;
     if (elements.consultationWhatsapp) {
         elements.consultationWhatsapp.textContent = state.businessInfo.whatsapp;
         elements.consultationWhatsapp.href = whatsappLink;
-    }
-    if (elements.contactWhatsapp) {
-        elements.contactWhatsapp.textContent = state.businessInfo.whatsapp;
-        elements.contactWhatsapp.href = whatsappLink;
-    }
-    if (elements.modalWhatsapp) {
-        elements.modalWhatsapp.href = whatsappLink;
     }
     
     // Update email links
@@ -377,12 +359,6 @@ function renderBusinessInfo() {
         if (elements.consultationEmail.tagName === 'A') {
             elements.consultationEmail.textContent = state.businessInfo.email;
             elements.consultationEmail.href = emailLink;
-        }
-    }
-    if (elements.contactEmail) {
-        if (elements.contactEmail.tagName === 'A') {
-            elements.contactEmail.textContent = state.businessInfo.email;
-            elements.contactEmail.href = emailLink;
         }
     }
     
@@ -412,15 +388,24 @@ function renderBusinessInfo() {
     
     // Update social links if they exist
     if (state.businessInfo.socialLinks) {
-        const socialLinks = document.querySelectorAll('.social-link');
-        if (socialLinks.length > 0 && state.businessInfo.socialLinks.facebook) {
-            socialLinks[0].href = state.businessInfo.socialLinks.facebook;
+        const facebookLink = document.getElementById('socialFacebook');
+        const instagramLink = document.getElementById('socialInstagram');
+        
+        if (facebookLink && state.businessInfo.socialLinks.facebook) {
+            facebookLink.href = state.businessInfo.socialLinks.facebook;
         }
-        if (socialLinks.length > 1 && state.businessInfo.socialLinks.instagram) {
-            socialLinks[1].href = state.businessInfo.socialLinks.instagram;
+        if (instagramLink && state.businessInfo.socialLinks.instagram) {
+            instagramLink.href = state.businessInfo.socialLinks.instagram;
         }
-        if (socialLinks.length > 2 && state.businessInfo.socialLinks.twitter) {
-            socialLinks[2].href = state.businessInfo.socialLinks.twitter;
+    }
+
+    // Update Google Maps button link dynamically
+    const mapLinkBtn = document.querySelector('.location-map a.btn');
+    if (mapLinkBtn) {
+        if (state.businessInfo.mapCoordinates && state.businessInfo.mapCoordinates.lat) {
+            mapLinkBtn.href = `https://www.google.com/maps?q=${state.businessInfo.mapCoordinates.lat},${state.businessInfo.mapCoordinates.lng}`;
+        } else if (state.businessInfo.address) {
+            mapLinkBtn.href = `https://maps.google.com/?q=${encodeURIComponent(state.businessInfo.address)}`;
         }
     }
 }
@@ -428,131 +413,153 @@ function renderBusinessInfo() {
 // Hero Slider Functions
 function initializeHeroSlider() {
     if (state.heroSlides.length < 2) return;
-    
-    startAutoSlide();
+
+    window.startAutoSlide();
 }
 
 // Review Slider Functions
-function startReviewAutoSlide() {
-    stopReviewAutoSlide();
+window.startReviewAutoSlide = function() {
+    window.stopReviewAutoSlide();
     state.reviewAutoSlideInterval = setInterval(() => {
-        nextReview();
+        // Inline the review logic to avoid function reference issues
+        const reviews = document.querySelectorAll('.review-slide');
+        const dots = document.querySelectorAll('.review-nav-dot');
+
+        if (reviews.length === 0) return;
+
+        reviews[state.currentReview].classList.remove('active');
+        if (dots[state.currentReview]) dots[state.currentReview].classList.remove('active');
+
+        state.currentReview = (state.currentReview + 1) % reviews.length;
+
+        reviews[state.currentReview].classList.add('active');
+        if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
     }, 5000);
 }
 
-function stopReviewAutoSlide() {
+window.stopReviewAutoSlide = function() {
     if (state.reviewAutoSlideInterval) {
         clearInterval(state.reviewAutoSlideInterval);
         state.reviewAutoSlideInterval = null;
     }
 }
 
-function nextReview() {
+window.nextReview = function() {
     const reviews = document.querySelectorAll('.review-slide');
     const dots = document.querySelectorAll('.review-nav-dot');
-    
+
     if (reviews.length === 0) return;
-    
+
     reviews[state.currentReview].classList.remove('active');
-    dots[state.currentReview].classList.remove('active');
-    
+    if (dots[state.currentReview]) dots[state.currentReview].classList.remove('active');
+
     state.currentReview = (state.currentReview + 1) % reviews.length;
-    
+
     reviews[state.currentReview].classList.add('active');
-    dots[state.currentReview].classList.add('active');
+    if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
 }
 
-function prevReview() {
+window.prevReview = function() {
     const reviews = document.querySelectorAll('.review-slide');
     const dots = document.querySelectorAll('.review-nav-dot');
-    
+
     if (reviews.length === 0) return;
-    
+
     reviews[state.currentReview].classList.remove('active');
-    dots[state.currentReview].classList.remove('active');
-    
+    if (dots[state.currentReview]) dots[state.currentReview].classList.remove('active');
+
     state.currentReview = (state.currentReview - 1 + reviews.length) % reviews.length;
-    
+
     reviews[state.currentReview].classList.add('active');
-    dots[state.currentReview].classList.add('active');
+    if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
 }
 
-function goToReview(index) {
+window.goToReview = function(index) {
     const reviews = document.querySelectorAll('.review-slide');
     const dots = document.querySelectorAll('.review-nav-dot');
-    
+
     if (reviews.length === 0 || index < 0 || index >= reviews.length) return;
-    
+
     reviews[state.currentReview].classList.remove('active');
-    dots[state.currentReview].classList.remove('active');
-    
+    if (dots[state.currentReview]) dots[state.currentReview].classList.remove('active');
+
     state.currentReview = index;
-    
+
     reviews[state.currentReview].classList.add('active');
-    dots[state.currentReview].classList.add('active');
-    
-    startReviewAutoSlide();
+    if (dots[state.currentReview]) dots[state.currentReview].classList.add('active');
+
+    window.startReviewAutoSlide();
 }
 
-function startAutoSlide() {
-    stopAutoSlide();
+window.startAutoSlide = function() {
+    window.stopAutoSlide();
     state.autoSlideInterval = setInterval(() => {
-        nextSlide();
+        // Inline the slide logic to avoid function reference issues
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.hero-nav-dot');
+
+        if (slides.length === 0) return;
+
+        slides[state.currentSlide].classList.remove('active');
+        if (dots[state.currentSlide]) dots[state.currentSlide].classList.remove('active');
+
+        state.currentSlide = (state.currentSlide + 1) % slides.length;
+
+        slides[state.currentSlide].classList.add('active');
+        if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
     }, 5000);
 }
 
-function stopAutoSlide() {
+window.stopAutoSlide = function() {
     if (state.autoSlideInterval) {
         clearInterval(state.autoSlideInterval);
         state.autoSlideInterval = null;
     }
 }
 
-function nextSlide() {
+window.nextSlide = function() {
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-nav-dot');
-    
+
     if (slides.length === 0) return;
-    
+
     slides[state.currentSlide].classList.remove('active');
-    dots[state.currentSlide].classList.remove('active');
-    
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.remove('active');
+
     state.currentSlide = (state.currentSlide + 1) % slides.length;
-    
+
     slides[state.currentSlide].classList.add('active');
-    dots[state.currentSlide].classList.add('active');
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
 }
 
-function prevSlide() {
+window.prevSlide = function() {
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-nav-dot');
-    
+
     if (slides.length === 0) return;
-    
+
     slides[state.currentSlide].classList.remove('active');
-    dots[state.currentSlide].classList.remove('active');
-    
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.remove('active');
+
     state.currentSlide = (state.currentSlide - 1 + slides.length) % slides.length;
-    
+
     slides[state.currentSlide].classList.add('active');
-    dots[state.currentSlide].classList.add('active');
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
 }
 
-function goToSlide(index) {
+window.goToSlide = function(index) {
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-nav-dot');
-    
+
     if (slides.length === 0 || index < 0 || index >= slides.length) return;
-    
+
     slides[state.currentSlide].classList.remove('active');
-    dots[state.currentSlide].classList.remove('active');
-    
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.remove('active');
+
     state.currentSlide = index;
-    
+
     slides[state.currentSlide].classList.add('active');
-    dots[state.currentSlide].classList.add('active');
-    
-    startAutoSlide();
+    if (dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
 }
 
 // Mobile Menu Initialization
@@ -654,16 +661,58 @@ async function handleConsultationSubmit(e) {
     };
     
     try {
-        // In production, send to your API endpoint
-        console.log('Consultation requested:', consultationData);
+        // Get WhatsApp number from business info
+        const whatsappNumber = state.businessInfo.whatsapp ? state.businessInfo.whatsapp.replace(/\D/g, '') : '';
         
-        // Show success message
-        alert('Thank you for your inquiry! We will contact you shortly.');
-        e.target.reset();
+        if (!whatsappNumber) {
+            alert('WhatsApp number not configured. Please contact us directly.');
+            return;
+        }
+        
+        // Format the WhatsApp message
+        const serviceLabels = {
+            'sofa-bed': 'Sofa Bed',
+            'upholstery': 'Upholstery',
+            'custom-sofa': 'Custom Sofa',
+            'repair': 'Repair'
+        };
+        
+        const serviceLabel = serviceLabels[consultationData.service] || consultationData.service;
+        
+        const whatsappMessage = `*New Consultation Request*
+
+*Name:* ${consultationData.name}
+*Phone:* ${consultationData.phone}
+*Email:* ${consultationData.email}
+*Service:* ${serviceLabel}
+*Message:* ${consultationData.message}
+
+---
+Sent from Sofa Haven Website`;
+        
+        // Encode the message for URL
+        const encodedMessage = encodeURIComponent(whatsappMessage);
+        
+        // Create WhatsApp URL
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        
+        // Show confirmation before redirecting
+        const confirmed = confirm(`Your consultation request will be sent to WhatsApp.\n\nName: ${consultationData.name}\nService: ${serviceLabel}\n\nClick OK to open WhatsApp or Cancel to edit.`);
+        
+        if (confirmed) {
+            // Open WhatsApp in new tab
+            window.open(whatsappUrl, '_blank');
+            
+            // Reset form after successful submission
+            e.target.reset();
+            
+            // Show success message
+            alert('Thank you for your interest! WhatsApp has been opened with your pre-filled message. Please click send to complete your request.');
+        }
         
     } catch (error) {
         console.error('Error submitting consultation:', error);
-        alert('Failed to submit inquiry. Please try again.');
+        alert('Failed to process your request. Please try again or contact us directly via WhatsApp.');
     }
 }
 
@@ -708,14 +757,37 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Pause auto-slide on hover
-const heroSlider = document.getElementById('heroSlider');
-if (heroSlider) {
-    heroSlider.addEventListener('mouseenter', stopAutoSlide);
-    heroSlider.addEventListener('mouseleave', startAutoSlide);
-}
+// Initialize the app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initializeApp();
 
-// Highlight/Testimonial Slider (called from router after page renders)
+    // Pause auto-slide on hover - only after DOM is ready
+    const heroSlider = document.getElementById('heroSlider');
+    if (heroSlider) {
+        heroSlider.addEventListener('mouseenter', window.stopAutoSlide);
+        heroSlider.addEventListener('mouseleave', window.startAutoSlide);
+    }
+
+    // Add click listeners to arrow buttons to restart auto-slide
+    const prevArrow = document.querySelector('.hero-arrow.prev');
+    const nextArrow = document.querySelector('.hero-arrow.next');
+
+    if (prevArrow) {
+        prevArrow.addEventListener('click', () => {
+            window.stopAutoSlide();
+            setTimeout(() => window.startAutoSlide(), 100);
+        });
+    }
+
+    if (nextArrow) {
+        nextArrow.addEventListener('click', () => {
+            window.stopAutoSlide();
+            setTimeout(() => window.startAutoSlide(), 100);
+        });
+    }
+});
+
+// Highlight/Testimonial Slider
 function initHighlightSlider() {
     let activeIndex = 0;
 
@@ -731,6 +803,7 @@ function initHighlightSlider() {
         activeIndex = index;
     };
 
+    // Auto-scroll every 5s
     if (window.highlightInterval) clearInterval(window.highlightInterval);
     window.highlightInterval = setInterval(() => {
         const slides = document.querySelectorAll('.highlight-slide');
@@ -743,7 +816,17 @@ function initHighlightSlider() {
 // Hero thumbnail background switcher
 window.changeHeroBg = function(imageUrl, element) {
     const activeSlide = document.querySelector('.hero-slide.active');
-    if (activeSlide) activeSlide.style.backgroundImage = `url(${imageUrl})`;
+    if (activeSlide) {
+        activeSlide.style.backgroundImage = `url(${imageUrl})`;
+        // Update the data-image attribute to match the new background
+        activeSlide.setAttribute('data-image', imageUrl);
+    }
     document.querySelectorAll('.hero-thumbnail-item').forEach(t => t.classList.remove('active'));
     element.classList.add('active');
+
+    // Restart auto-slide timer when manually changing background
+    window.startAutoSlide();
 };
+
+// Lightbox functionality removed - images now only change background
+// Lightbox functions are no longer needed

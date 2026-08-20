@@ -46,7 +46,7 @@ function initializeProductsPage() {
 async function fetchProducts() {
     try {
         const timestamp = new Date().getTime();
-        const response = await fetch(`public/data/products.json?t=${timestamp}`);
+        const response = await fetch(`data/products.json?t=${timestamp}`);
         if (!response.ok) {
             throw new Error('Failed to load products');
         }
@@ -68,76 +68,6 @@ async function fetchProducts() {
                 bestSeller: true,
                 available: true,
                 displayOrder: 1
-            },
-            {
-                id: 2,
-                name: 'L-Shaped Modern',
-                price: 3500,
-                shortDescription: 'Contemporary L-shaped sofa with sleek design',
-                fullDescription: 'Modern L-shaped sofa with clean lines and comfortable seating. Perfect for contemporary homes. Features premium fabric upholstery and sturdy wooden frame.',
-                category: 'sectional',
-                mainImage: 'assets/images/product2.jpg',
-                galleryImages: ['assets/images/product2-1.jpg', 'assets/images/product2-2.jpg'],
-                featured: true,
-                bestSeller: false,
-                available: true,
-                displayOrder: 2
-            },
-            {
-                id: 3,
-                name: 'Chesterfield Classic',
-                price: 5500,
-                shortDescription: 'Timeless Chesterfield design with tufted upholstery',
-                fullDescription: 'Classic Chesterfield sofa with button-tufted detailing and premium leather upholstery. A timeless piece that adds elegance to any room.',
-                category: 'sofa',
-                mainImage: 'assets/images/product3.jpg',
-                galleryImages: ['assets/images/product3-1.jpg', 'assets/images/product3-2.jpg'],
-                featured: false,
-                bestSeller: true,
-                available: true,
-                displayOrder: 3
-            },
-            {
-                id: 4,
-                name: 'Premium Sofa Bed',
-                price: 4800,
-                shortDescription: 'Luxurious sofa bed with easy conversion mechanism',
-                fullDescription: 'Premium sofa bed that easily converts from comfortable seating to a cozy bed. Features high-quality mechanism and premium mattress for optimal comfort.',
-                category: 'sofa-bed',
-                mainImage: 'assets/images/product4.jpg',
-                galleryImages: ['assets/images/product4-1.jpg', 'assets/images/product4-2.jpg'],
-                featured: true,
-                bestSeller: false,
-                available: true,
-                displayOrder: 4
-            },
-            {
-                id: 5,
-                name: 'Recliner Comfort',
-                price: 2800,
-                shortDescription: 'Plush recliner with multiple positioning options',
-                fullDescription: 'Luxurious recliner with smooth reclining mechanism and multiple positioning options. Features premium leather upholstery and padded armrests for maximum comfort.',
-                category: 'recliner',
-                mainImage: 'assets/images/product5.jpg',
-                galleryImages: ['assets/images/product5-1.jpg'],
-                featured: false,
-                bestSeller: false,
-                available: true,
-                displayOrder: 5
-            },
-            {
-                id: 6,
-                name: 'Three-Seater Classic',
-                price: 3200,
-                shortDescription: 'Elegant three-seater sofa with timeless design',
-                fullDescription: 'Classic three-seater sofa with elegant design and comfortable seating. Features premium fabric upholstery and sturdy construction.',
-                category: 'sofa',
-                mainImage: 'assets/images/product6.jpg',
-                galleryImages: ['assets/images/product6-1.jpg', 'assets/images/product6-2.jpg'],
-                featured: false,
-                bestSeller: true,
-                available: true,
-                displayOrder: 6
             }
         ];
     }
@@ -147,7 +77,7 @@ async function fetchProducts() {
 async function fetchBusinessInfo() {
     try {
         const timestamp = new Date().getTime();
-        const response = await fetch(`public/data/business-info.json?t=${timestamp}`);
+        const response = await fetch(`data/business-info.json?t=${timestamp}`);
         if (!response.ok) {
             throw new Error('Failed to load business info');
         }
@@ -175,12 +105,8 @@ function updateBusinessInfoElements() {
     
     // Update header elements
     const topBarHours = document.getElementById('topBarHours');
-    const topBarWhatsapp = document.getElementById('topBarWhatsapp');
-    const headerWhatsapp = document.getElementById('headerWhatsapp');
     
     if (topBarHours) topBarHours.textContent = `Open Today ${businessInfo.openingHours}`;
-    if (topBarWhatsapp) topBarWhatsapp.href = whatsappLink;
-    if (headerWhatsapp) headerWhatsapp.href = whatsappLink;
     
     // Update modal elements
     const modalWhatsapp = document.getElementById('modalWhatsapp');
@@ -226,7 +152,6 @@ function renderProducts() {
     if (productsToShow.length === 0) {
         productsGrid.innerHTML = `
             <div class="no-results" style="grid-column: 1 / -1;">
-                <div class="no-results-icon">🔍</div>
                 <h3>No products found</h3>
                 <p>Try adjusting your filters or search criteria</p>
             </div>
@@ -473,15 +398,22 @@ function handleModalKeydown(e) {
     }
 }
 
-// Close modal when clicking outside
-const productModal = document.getElementById('productModal');
-if (productModal) {
-    productModal.addEventListener('click', (e) => {
-        if (e.target === productModal) {
-            closeProductModal();
-        }
-    });
-}
+// Close modal when clicking outside - only on products page
+document.addEventListener('DOMContentLoaded', () => {
+    const productModal = document.getElementById('productModal');
+    if (productModal) {
+        productModal.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                closeProductModal();
+            }
+        });
+    }
+    
+    // Only initialize products page if we're on the products page
+    if (document.getElementById('productsGrid')) {
+        initializeProductsPage();
+    }
+});
 
 // Utility Functions
 function showLoading() {
