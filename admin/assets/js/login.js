@@ -1,15 +1,25 @@
 // Admin Login JavaScript
 const loginForm = document.getElementById('loginForm');
 
+function getAdminDashboardUrl() {
+    if (window.location.pathname.includes('/Home-Sofa-fork')) {
+        return '/Home-Sofa-fork/admin/dashboard.html';
+    }
+    return '/admin/dashboard.html';
+}
+
 // Form submission
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const formData = new FormData(loginForm);
+    const emailEl = document.getElementById('email');
+    const passEl = document.getElementById('password');
+    const rememberEl = document.querySelector('input[name="remember"]');
+    
     const loginData = {
-        email: (formData.get('email') || '').trim().toLowerCase(),
-        password: (formData.get('password') || '').trim(),
-        remember: formData.get('remember') === 'on'
+        email: (emailEl ? emailEl.value : '').trim().toLowerCase(),
+        password: (passEl ? passEl.value : '').trim(),
+        remember: rememberEl ? rememberEl.checked : false
     };
     
     const submitBtn = loginForm.querySelector('button[type="submit"]');
@@ -29,8 +39,8 @@ loginForm.addEventListener('submit', async (e) => {
                 localStorage.setItem('rememberAdmin', 'true');
             }
             
-            // Redirect to dashboard
-            window.location.href = 'dashboard.html';
+            // Redirect to dashboard with absolute path
+            window.location.href = getAdminDashboardUrl();
         } else {
             showError('Invalid email or password');
             submitBtn.textContent = originalText;
@@ -107,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
             
             if (tokenAge < maxAge) {
-                window.location.href = 'dashboard.html';
+                window.location.href = getAdminDashboardUrl();
             } else {
                 localStorage.removeItem('adminToken');
             }
