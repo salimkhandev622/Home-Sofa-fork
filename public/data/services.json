@@ -1,20 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "Custom Sofa Beds for you and me ",
-    "description": "Transform your living space with our custom-made sofa beds designed for comfort and style. Perfect for Dubai apartments and modern homes.",
-    "image": "assets/images/service_1787243855883.jpg",
-    "features": [
-      "High-density foam for lasting comfort",
-      "Premium fabric options including Italian leather",
-      "Customizable sizes and configurations",
-      "Easy conversion mechanism from sofa to bed",
-      "Storage compartments available"
-    ],
-    "buttonText": "Get Quote",
-    "buttonLink": "whatsapp"
-  },
-  {
     "id": 2,
     "title": "Corner Sofa Beds",
     "description": "Maximize your space with our stylish corner sofa beds that combine functionality with elegance. Ideal for compact living spaces.",
