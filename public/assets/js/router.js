@@ -207,7 +207,7 @@ const Router = {
                 <div class="container">
                     <div class="header-content">
                         <div class="logo-section">
-                            <img src="assets/images/logo.jpg" alt="Sofa Haven Logo" class="logo-image">
+                            <img src="assets/images/logo.webp" alt="Sofa Haven Logo" class="logo-image">
                         </div>
                         <nav class="nav-menu" id="navMenu">
                             <ul>
@@ -715,7 +715,7 @@ const Router = {
                 <div class="login-container">
                     <div class="login-box">
                         <div class="login-header">
-                            <img src="../assets/logo.jpg" alt="Sofa Haven Logo" class="login-logo">
+                            <img src="../assets/logo.webp" alt="Sofa Haven Logo" class="login-logo">
                             <h1>Admin Dashboard</h1>
                             <p>Sign in to manage your website content</p>
                         </div>
@@ -769,7 +769,7 @@ const Router = {
                 <!-- Sidebar -->
                 <aside class="sidebar" id="sidebar">
                     <div class="sidebar-header">
-                        <img src="../assets/logo.jpg" alt="Sofa Haven Logo" class="sidebar-logo">
+                        <img src="../assets/logo.webp" alt="Sofa Haven Logo" class="sidebar-logo">
                         <span class="sidebar-title">Sofa Haven</span>
                     </div>
                     
