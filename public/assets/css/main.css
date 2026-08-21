@@ -128,12 +128,12 @@ input, select, textarea, button {
 }
 
 .logo {
-    height: 50px;
+    height: 80px;
     width: auto;
 }
 
 .logo-image {
-    height: 50px;
+    height: 80px;
     width: auto;
     object-fit: contain;
 }
